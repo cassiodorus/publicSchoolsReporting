@@ -1,0 +1,754 @@
+school_code	name	grade_span	subject	grade	type	subgroup	num_tested	num_l1	pct_l1	num_l2	pct_l2	num_l3	pct_l3	num_l4	pct_l4	num_l5	pct_l5	num_ccr	pct_ccr	num_glp	pct_glp	avg_score
+
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	AIG	14	-	<5	-	<5	-	-	-	-	-	-	12	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	AIG_MATH	14	-	<5	-	<5	-	-	-	-	-	-	12	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	AIG_READ	14	-	<5	-	<5	-	-	-	-	-	-	12	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	ALL	107	17	15.9	21	19.6	19	17.8	42	39.3	8	7.5	50	46.7	69	64.5	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	BLCK	10	2	20.0	2	20.0	1	10.0	4	40.0	1	10.0	5	50.0	6	60.0	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	EDS	49	7	14.3	14	28.6	10	20.4	15	30.6	3	6.1	18	36.7	28	57.1	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	FEM	56	8	14.3	9	16.1	10	17.9	24	42.9	5	8.9	29	51.8	39	69.6	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	FEM_HISP	16	-	-	-	-	-	-	-	-	-	<5	7	43.8	9	56.3	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	FEM_WHTE	34	-	<5	-	-	-	-	-	-	-	-	19	55.9	26	76.5	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	HISP	20	-	-	-	-	-	-	-	-	-	<5	8	40.0	12	60.0	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	LEP	8	2	25.0	1	12.5	1	12.5	3	37.5	1	12.5	4	50.0	5	62.5	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	MALE	51	9	17.6	12	23.5	9	17.6	18	35.3	3	5.9	21	41.2	30	58.8	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	MALE_BLCK	6	-	-	-	-	-	<5	-	-	-	<5	2	33.3	2	33.3	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	MALE_WHTE	37	7	18.9	7	18.9	6	16.2	14	37.8	3	8.1	17	45.9	23	62.2	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	NOT_EDS	58	10	17.2	7	12.1	9	15.5	27	46.6	5	8.6	32	55.2	41	70.7	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	NOT_LEP	99	15	15.2	20	20.2	18	18.2	39	39.4	7	7.1	46	46.5	64	64.6	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	NOT_SWD	80	9	11.3	12	15.0	14	17.5	37	46.3	8	10.0	45	56.3	59	73.8	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	SWD	27	-	-	-	-	-	-	-	-	-	<5	5	18.5	10	37.0	
+110444	Woodfin Elementary	0K-05	ALL	ALL	ALL	WHTE	71	8	11.3	14	19.7	13	18.3	29	40.8	7	9.9	36	50.7	49	69.0	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	AIG	14	-	<5	-	<5	-	-	-	-	-	-	12	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	AIG_MATH	14	-	<5	-	<5	-	-	-	-	-	-	12	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	AIG_READ	14	-	<5	-	<5	-	-	-	-	-	-	12	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	ALL	101	17	16.8	18	17.8	18	17.8	40	39.6	8	7.9	48	47.5	66	65.3	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	BLCK	10	2	20.0	2	20.0	1	10.0	4	40.0	1	10.0	5	50.0	6	60.0	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	EDS	45	7	15.6	11	24.4	10	22.2	14	31.1	3	6.7	17	37.8	27	60.0	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	FEM	56	8	14.3	9	16.1	10	17.9	24	42.9	5	8.9	29	51.8	39	69.6	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	FEM_HISP	16	-	-	-	-	-	-	-	-	-	<5	7	43.8	9	56.3	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	FEM_WHTE	34	-	<5	-	-	-	-	-	-	-	-	19	55.9	26	76.5	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	HISP	20	-	-	-	-	-	-	-	-	-	<5	8	40.0	12	60.0	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	LEP	8	2	25.0	1	12.5	1	12.5	3	37.5	1	12.5	4	50.0	5	62.5	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	MALE	45	9	20.0	9	20.0	8	17.8	16	35.6	3	6.7	19	42.2	27	60.0	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	MALE_BLCK	6	-	-	-	-	-	<5	-	-	-	<5	2	33.3	2	33.3	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	MALE_WHTE	33	7	21.2	4	12.1	6	18.2	13	39.4	3	9.1	16	48.5	22	66.7	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	NOT_EDS	56	10	17.9	7	12.5	8	14.3	26	46.4	5	8.9	31	55.4	39	69.6	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	NOT_LEP	93	15	16.1	17	18.3	17	18.3	37	39.8	7	7.5	44	47.3	61	65.6	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	NOT_SWD	80	9	11.3	12	15.0	14	17.5	37	46.3	8	10.0	45	56.3	59	73.8	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	SWD	21	-	-	-	-	-	-	-	-	-	<5	3	14.3	7	33.3	
+110444	Woodfin Elementary	0K-05	ALL	ALL	RG	WHTE	67	8	11.9	11	16.4	13	19.4	28	41.8	7	10.4	35	52.2	48	71.6	
+110444	Woodfin Elementary	0K-05	ALL	ALL	X1	ALL	6	-	<5	-	-	-	-	-	-	-	<5	2	33.3	3	50.0	
+110444	Woodfin Elementary	0K-05	ALL	ALL	X1	MALE	6	-	<5	-	-	-	-	-	-	-	<5	2	33.3	3	50.0	
+110444	Woodfin Elementary	0K-05	ALL	ALL	X1	NOT_LEP	6	-	<5	-	-	-	-	-	-	-	<5	2	33.3	3	50.0	
+110444	Woodfin Elementary	0K-05	ALL	ALL	X1	SWD	6	-	<5	-	-	-	-	-	-	-	<5	2	33.3	3	50.0	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	AIG	8	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	AIG_MATH	8	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	AIG_READ	8	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	ALL	58	11	19.0	12	20.7	8	13.8	22	37.9	5	8.6	27	46.6	35	60.3	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	BLCK	8	-	-	-	-	-	-	-	-	-	<5	3	37.5	4	50.0	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	EDS	26	3	11.5	8	30.8	5	19.2	8	30.8	2	7.7	10	38.5	15	57.7	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	FEM	34	6	17.6	4	11.8	5	14.7	15	44.1	4	11.8	19	55.9	24	70.6	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	FEM_HISP	10	-	-	-	-	-	-	-	-	-	<5	5	50.0	6	60.0	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	FEM_WHTE	20	1	5.0	3	15.0	3	15.0	9	45.0	4	20.0	13	65.0	16	80.0	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	HISP	12	-	-	-	-	-	-	-	-	-	<5	5	41.7	7	58.3	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	LEP	6	-	-	-	-	-	<5	-	-	-	-	3	50.0	3	50.0	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	MALE	24	-	-	-	-	-	-	-	-	-	<5	8	33.3	11	45.8	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	MALE_BLCK	6	-	-	-	-	-	<5	-	-	-	<5	2	33.3	2	33.3	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	MALE_WHTE	14	3	21.4	3	21.4	2	14.3	5	35.7	1	7.1	6	42.9	8	57.1	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	NOT_EDS	32	8	25.0	4	12.5	3	9.4	14	43.8	3	9.4	17	53.1	20	62.5	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	NOT_LEP	52	9	17.3	11	21.2	8	15.4	20	38.5	4	7.7	24	46.2	32	61.5	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	NOT_SWD	44	7	15.9	6	13.6	6	13.6	20	45.5	5	11.4	25	56.8	31	70.5	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	SWD	14	-	-	-	-	-	-	-	-	-	<5	2	14.3	4	28.6	
+110444	Woodfin Elementary	0K-05	EOG	03	ALL	WHTE	34	4	11.8	6	17.6	5	14.7	14	41.2	5	14.7	19	55.9	24	70.6	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	AIG	8	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	AIG_MATH	8	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	AIG_READ	8	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	ALL	56	11	19.6	11	19.6	8	14.3	21	37.5	5	8.9	26	46.4	34	60.7	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	BLCK	8	-	-	-	-	-	-	-	-	-	<5	3	37.5	4	50.0	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	EDS	24	3	12.5	7	29.2	5	20.8	7	29.2	2	8.3	9	37.5	14	58.3	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	FEM	34	6	17.6	4	11.8	5	14.7	15	44.1	4	11.8	19	55.9	24	70.6	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	FEM_HISP	10	-	-	-	-	-	-	-	-	-	<5	5	50.0	6	60.0	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	FEM_WHTE	20	1	5.0	3	15.0	3	15.0	9	45.0	4	20.0	13	65.0	16	80.0	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	HISP	12	-	-	-	-	-	-	-	-	-	<5	5	41.7	7	58.3	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	LEP	6	-	-	-	-	-	<5	-	-	-	-	3	50.0	3	50.0	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	MALE	22	-	-	-	-	-	-	-	-	-	<5	7	31.8	10	45.5	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	MALE_BLCK	6	-	-	-	-	-	<5	-	-	-	<5	2	33.3	2	33.3	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	MALE_WHTE	12	3	25.0	2	16.7	2	16.7	4	33.3	1	8.3	5	41.7	7	58.3	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	NOT_EDS	32	8	25.0	4	12.5	3	9.4	14	43.8	3	9.4	17	53.1	20	62.5	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	NOT_LEP	50	9	18.0	10	20.0	8	16.0	19	38.0	4	8.0	23	46.0	31	62.0	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	NOT_SWD	44	7	15.9	6	13.6	6	13.6	20	45.5	5	11.4	25	56.8	31	70.5	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	SWD	12	-	-	-	-	-	-	-	-	-	<5	1	8.3	3	25.0	
+110444	Woodfin Elementary	0K-05	EOG	03	RG	WHTE	32	4	12.5	5	15.6	5	15.6	13	40.6	5	15.6	18	56.3	23	71.9	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	AIG	6	-	<5	-	<5	-	-	-	-	-	-	4	66.7	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	AIG_MATH	6	-	<5	-	<5	-	-	-	-	-	-	4	66.7	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	AIG_READ	6	-	<5	-	<5	-	-	-	-	-	-	4	66.7	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	ALL	46	3	6.5	9	19.6	11	23.9	20	43.5	3	6.5	23	50.0	34	73.9	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	EDS	20	1	5.0	6	30.0	5	25.0	7	35.0	1	5.0	8	40.0	13	65.0	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	FEM	22	-	-	-	-	-	-	-	-	-	<5	10	45.5	15	68.2	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	FEM_HISP	6	-	-	-	-	-	-	-	-	-	<5	2	33.3	3	50.0	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	FEM_WHTE	14	-	<5	-	-	-	-	-	-	-	<5	6	42.9	10	71.4	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	HISP	8	-	-	-	-	-	-	-	-	-	<5	3	37.5	5	62.5	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	MALE	24	-	<5	-	-	-	-	-	-	-	-	13	54.2	19	79.2	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	MALE_WHTE	20	1	5.0	4	20.0	4	20.0	9	45.0	2	10.0	11	55.0	15	75.0	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	NOT_EDS	26	2	7.7	3	11.5	6	23.1	13	50.0	2	7.7	15	57.7	21	80.8	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	NOT_LEP	44	3	6.8	9	20.5	10	22.7	19	43.2	3	6.8	22	50.0	32	72.7	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	NOT_SWD	36	2	5.6	6	16.7	8	22.2	17	47.2	3	8.3	20	55.6	28	77.8	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	SWD	10	-	-	-	-	-	-	-	-	-	<5	3	30.0	6	60.0	
+110444	Woodfin Elementary	0K-05	EOG	04	ALL	WHTE	34	-	<5	-	-	-	-	-	-	-	-	17	50.0	25	73.5	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	AIG	6	-	<5	-	<5	-	-	-	-	-	-	4	66.7	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	AIG_MATH	6	-	<5	-	<5	-	-	-	-	-	-	4	66.7	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	AIG_READ	6	-	<5	-	<5	-	-	-	-	-	-	4	66.7	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	ALL	42	3	7.1	7	16.7	10	23.8	19	45.2	3	7.1	22	52.4	32	76.2	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	EDS	18	1	5.6	4	22.2	5	27.8	7	38.9	1	5.6	8	44.4	13	72.2	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	FEM	22	-	-	-	-	-	-	-	-	-	<5	10	45.5	15	68.2	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	FEM_HISP	6	-	-	-	-	-	-	-	-	-	<5	2	33.3	3	50.0	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	FEM_WHTE	14	-	<5	-	-	-	-	-	-	-	<5	6	42.9	10	71.4	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	HISP	8	-	-	-	-	-	-	-	-	-	<5	3	37.5	5	62.5	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	MALE	20	1	5.0	2	10.0	5	25.0	10	50.0	2	10.0	12	60.0	17	85.0	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	MALE_WHTE	18	1	5.6	2	11.1	4	22.2	9	50.0	2	11.1	11	61.1	15	83.3	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	NOT_EDS	24	2	8.3	3	12.5	5	20.8	12	50.0	2	8.3	14	58.3	19	79.2	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	NOT_LEP	40	3	7.5	7	17.5	9	22.5	18	45.0	3	7.5	21	52.5	30	75.0	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	NOT_SWD	36	2	5.6	6	16.7	8	22.2	17	47.2	3	8.3	20	55.6	28	77.8	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	SWD	6	-	-	-	-	-	-	-	-	-	<5	2	33.3	4	66.7	
+110444	Woodfin Elementary	0K-05	EOG	04	RG	WHTE	32	-	<5	-	-	-	-	-	-	-	-	17	53.1	25	78.1	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	AIG	14	-	<5	-	<5	-	-	-	-	-	-	12	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	AIG_MATH	14	-	<5	-	<5	-	-	-	-	-	-	12	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	AIG_READ	14	-	<5	-	<5	-	-	-	-	-	-	12	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	ALL	107	17	15.9	21	19.6	19	17.8	42	39.3	8	7.5	50	46.7	69	64.5	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	BLCK	10	2	20.0	2	20.0	1	10.0	4	40.0	1	10.0	5	50.0	6	60.0	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	EDS	49	7	14.3	14	28.6	10	20.4	15	30.6	3	6.1	18	36.7	28	57.1	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	FEM	56	8	14.3	9	16.1	10	17.9	24	42.9	5	8.9	29	51.8	39	69.6	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	FEM_HISP	16	-	-	-	-	-	-	-	-	-	<5	7	43.8	9	56.3	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	FEM_WHTE	34	-	<5	-	-	-	-	-	-	-	-	19	55.9	26	76.5	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	HISP	20	-	-	-	-	-	-	-	-	-	<5	8	40.0	12	60.0	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	LEP	8	2	25.0	1	12.5	1	12.5	3	37.5	1	12.5	4	50.0	5	62.5	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	MALE	51	9	17.6	12	23.5	9	17.6	18	35.3	3	5.9	21	41.2	30	58.8	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	MALE_BLCK	6	-	-	-	-	-	<5	-	-	-	<5	2	33.3	2	33.3	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	MALE_WHTE	37	7	18.9	7	18.9	6	16.2	14	37.8	3	8.1	17	45.9	23	62.2	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	NOT_EDS	58	10	17.2	7	12.1	9	15.5	27	46.6	5	8.6	32	55.2	41	70.7	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	NOT_LEP	99	15	15.2	20	20.2	18	18.2	39	39.4	7	7.1	46	46.5	64	64.6	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	NOT_SWD	80	9	11.3	12	15.0	14	17.5	37	46.3	8	10.0	45	56.3	59	73.8	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	SWD	27	-	-	-	-	-	-	-	-	-	<5	5	18.5	10	37.0	
+110444	Woodfin Elementary	0K-05	EOG	GS	ALL	WHTE	71	8	11.3	14	19.7	13	18.3	29	40.8	7	9.9	36	50.7	49	69.0	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	AIG	14	-	<5	-	<5	-	-	-	-	-	-	12	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	AIG_MATH	14	-	<5	-	<5	-	-	-	-	-	-	12	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	AIG_READ	14	-	<5	-	<5	-	-	-	-	-	-	12	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	ALL	101	17	16.8	18	17.8	18	17.8	40	39.6	8	7.9	48	47.5	66	65.3	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	BLCK	10	2	20.0	2	20.0	1	10.0	4	40.0	1	10.0	5	50.0	6	60.0	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	EDS	45	7	15.6	11	24.4	10	22.2	14	31.1	3	6.7	17	37.8	27	60.0	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	FEM	56	8	14.3	9	16.1	10	17.9	24	42.9	5	8.9	29	51.8	39	69.6	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	FEM_HISP	16	-	-	-	-	-	-	-	-	-	<5	7	43.8	9	56.3	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	FEM_WHTE	34	-	<5	-	-	-	-	-	-	-	-	19	55.9	26	76.5	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	HISP	20	-	-	-	-	-	-	-	-	-	<5	8	40.0	12	60.0	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	LEP	8	2	25.0	1	12.5	1	12.5	3	37.5	1	12.5	4	50.0	5	62.5	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	MALE	45	9	20.0	9	20.0	8	17.8	16	35.6	3	6.7	19	42.2	27	60.0	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	MALE_BLCK	6	-	-	-	-	-	<5	-	-	-	<5	2	33.3	2	33.3	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	MALE_WHTE	33	7	21.2	4	12.1	6	18.2	13	39.4	3	9.1	16	48.5	22	66.7	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	NOT_EDS	56	10	17.9	7	12.5	8	14.3	26	46.4	5	8.9	31	55.4	39	69.6	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	NOT_LEP	93	15	16.1	17	18.3	17	18.3	37	39.8	7	7.5	44	47.3	61	65.6	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	NOT_SWD	80	9	11.3	12	15.0	14	17.5	37	46.3	8	10.0	45	56.3	59	73.8	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	SWD	21	-	-	-	-	-	-	-	-	-	<5	3	14.3	7	33.3	
+110444	Woodfin Elementary	0K-05	EOG	GS	RG	WHTE	67	8	11.9	11	16.4	13	19.4	28	41.8	7	10.4	35	52.2	48	71.6	
+110444	Woodfin Elementary	0K-05	EOG	GS	X1	ALL	6	-	<5	-	-	-	-	-	-	-	<5	2	33.3	3	50.0	
+110444	Woodfin Elementary	0K-05	EOG	GS	X1	MALE	6	-	<5	-	-	-	-	-	-	-	<5	2	33.3	3	50.0	
+110444	Woodfin Elementary	0K-05	EOG	GS	X1	NOT_LEP	6	-	<5	-	-	-	-	-	-	-	<5	2	33.3	3	50.0	
+110444	Woodfin Elementary	0K-05	EOG	GS	X1	SWD	6	-	<5	-	-	-	-	-	-	-	<5	2	33.3	3	50.0	
+110444	Woodfin Elementary	0K-05	MA	03	ALL	ALL	29	6	20.7	4	13.8	6	20.7	11	37.9	2	6.9	13	44.8	19	65.5	
+110444	Woodfin Elementary	0K-05	MA	03	ALL	EDS	13	2	15.4	3	23.1	4	30.8	3	23.1	1	7.7	4	30.8	8	61.5	
+110444	Woodfin Elementary	0K-05	MA	03	ALL	FEM	17	2	11.8	1	5.9	5	29.4	7	41.2	2	11.8	9	52.9	14	82.4	
+110444	Woodfin Elementary	0K-05	MA	03	ALL	FEM_HISP	5	-	-	-	<5	-	-	-	-	-	<5	3	60.0	4	80.0	
+110444	Woodfin Elementary	0K-05	MA	03	ALL	FEM_WHTE	10	-	<5	-	-	-	-	-	-	-	-	6	60.0	9	90.0	
+110444	Woodfin Elementary	0K-05	MA	03	ALL	HISP	6	-	-	-	<5	-	-	-	-	-	<5	3	50.0	5	83.3	
+110444	Woodfin Elementary	0K-05	MA	03	ALL	MALE	12	-	-	-	-	-	-	-	-	-	<5	4	33.3	5	41.7	
+110444	Woodfin Elementary	0K-05	MA	03	ALL	MALE_WHTE	7	-	-	-	-	-	<5	-	-	-	<5	3	42.9	3	42.9	
+110444	Woodfin Elementary	0K-05	MA	03	ALL	NOT_EDS	16	4	25.0	1	6.3	2	12.5	8	50.0	1	6.3	9	56.3	11	68.8	
+110444	Woodfin Elementary	0K-05	MA	03	ALL	NOT_LEP	26	5	19.2	4	15.4	6	23.1	9	34.6	2	7.7	11	42.3	17	65.4	
+110444	Woodfin Elementary	0K-05	MA	03	ALL	NOT_SWD	22	-	-	-	<5	-	-	-	-	-	-	12	54.5	17	77.3	
+110444	Woodfin Elementary	0K-05	MA	03	ALL	SWD	7	-	-	-	-	-	-	-	-	-	<5	1	14.3	2	28.6	
+110444	Woodfin Elementary	0K-05	MA	03	ALL	WHTE	17	3	17.6	2	11.8	3	17.6	7	41.2	2	11.8	9	52.9	12	70.6	
+110444	Woodfin Elementary	0K-05	MA	03	RG	ALL	28	6	21.4	3	10.7	6	21.4	11	39.3	2	7.1	13	46.4	19	67.9	448.6
+110444	Woodfin Elementary	0K-05	MA	03	RG	EDS	12	2	16.7	2	16.7	4	33.3	3	25.0	1	8.3	4	33.3	8	66.7	448.0
+110444	Woodfin Elementary	0K-05	MA	03	RG	FEM	17	2	11.8	1	5.9	5	29.4	7	41.2	2	11.8	9	52.9	14	82.4	450.7
+110444	Woodfin Elementary	0K-05	MA	03	RG	FEM_HISP	5	-	-	-	<5	-	-	-	-	-	<5	3	60.0	4	80.0	447.0
+110444	Woodfin Elementary	0K-05	MA	03	RG	FEM_WHTE	10	-	<5	-	-	-	-	-	-	-	-	6	60.0	9	90.0	453.9
+110444	Woodfin Elementary	0K-05	MA	03	RG	HISP	6	-	-	-	<5	-	-	-	-	-	<5	3	50.0	5	83.3	447.2
+110444	Woodfin Elementary	0K-05	MA	03	RG	MALE	11	-	-	-	-	-	-	-	-	-	<5	4	36.4	5	45.5	445.5
+110444	Woodfin Elementary	0K-05	MA	03	RG	MALE_WHTE	6	-	-	-	<5	-	<5	-	-	-	<5	3	50.0	3	50.0	446.3
+110444	Woodfin Elementary	0K-05	MA	03	RG	NOT_EDS	16	4	25.0	1	6.3	2	12.5	8	50.0	1	6.3	9	56.3	11	68.8	449.1
+110444	Woodfin Elementary	0K-05	MA	03	RG	NOT_LEP	25	5	20.0	3	12.0	6	24.0	9	36.0	2	8.0	11	44.0	17	68.0	448.8
+110444	Woodfin Elementary	0K-05	MA	03	RG	NOT_SWD	22	-	-	-	<5	-	-	-	-	-	-	12	54.5	17	77.3	450.1
+110444	Woodfin Elementary	0K-05	MA	03	RG	SWD	6	-	-	-	-	-	-	-	-	-	<5	1	16.7	2	33.3	443.3
+110444	Woodfin Elementary	0K-05	MA	03	RG	WHTE	16	3	18.8	1	6.3	3	18.8	7	43.8	2	12.5	9	56.3	12	75.0	451.1
+110444	Woodfin Elementary	0K-05	MA	04	ALL	ALL	23	-	<5	-	-	-	-	-	-	-	-	13	56.5	17	73.9	
+110444	Woodfin Elementary	0K-05	MA	04	ALL	EDS	10	-	-	-	-	-	-	-	-	-	<5	5	50.0	6	60.0	
+110444	Woodfin Elementary	0K-05	MA	04	ALL	FEM	11	-	<5	-	-	-	-	-	-	-	<5	5	45.5	8	72.7	
+110444	Woodfin Elementary	0K-05	MA	04	ALL	FEM_WHTE	7	-	<5	-	-	-	-	-	-	-	<5	3	42.9	5	71.4	
+110444	Woodfin Elementary	0K-05	MA	04	ALL	MALE	12	1	8.3	2	16.7	1	8.3	6	50.0	2	16.7	8	66.7	9	75.0	
+110444	Woodfin Elementary	0K-05	MA	04	ALL	MALE_WHTE	10	1	10.0	2	20.0	1	10.0	4	40.0	2	20.0	6	60.0	7	70.0	
+110444	Woodfin Elementary	0K-05	MA	04	ALL	NOT_EDS	13	-	<5	-	-	-	-	-	-	-	-	8	61.5	11	84.6	
+110444	Woodfin Elementary	0K-05	MA	04	ALL	NOT_LEP	22	-	<5	-	-	-	-	-	-	-	-	12	54.5	16	72.7	
+110444	Woodfin Elementary	0K-05	MA	04	ALL	NOT_SWD	18	-	<5	-	-	-	-	-	-	-	-	12	66.7	15	83.3	
+110444	Woodfin Elementary	0K-05	MA	04	ALL	SWD	5	-	-	-	-	-	-	-	-	-	<5	1	20.0	2	40.0	
+110444	Woodfin Elementary	0K-05	MA	04	ALL	WHTE	17	1	5.9	4	23.5	3	17.6	7	41.2	2	11.8	9	52.9	12	70.6	
+110444	Woodfin Elementary	0K-05	MA	04	RG	ALL	21	-	<5	-	-	-	-	-	-	-	-	12	57.1	16	76.2	451.8
+110444	Woodfin Elementary	0K-05	MA	04	RG	EDS	9	-	-	-	-	-	-	-	-	-	<5	5	55.6	6	66.7	450.1
+110444	Woodfin Elementary	0K-05	MA	04	RG	FEM	11	-	<5	-	-	-	-	-	-	-	<5	5	45.5	8	72.7	450.4
+110444	Woodfin Elementary	0K-05	MA	04	RG	FEM_WHTE	7	-	<5	-	-	-	-	-	-	-	<5	3	42.9	5	71.4	449.6
+110444	Woodfin Elementary	0K-05	MA	04	RG	MALE	10	1	10.0	1	10.0	1	10.0	5	50.0	2	20.0	7	70.0	8	80.0	453.3
+110444	Woodfin Elementary	0K-05	MA	04	RG	MALE_WHTE	9	1	11.1	1	11.1	1	11.1	4	44.4	2	22.2	6	66.7	7	77.8	453.3
+110444	Woodfin Elementary	0K-05	MA	04	RG	NOT_EDS	12	-	<5	-	-	-	-	-	-	-	-	7	58.3	10	83.3	453.0
+110444	Woodfin Elementary	0K-05	MA	04	RG	NOT_LEP	20	1	5.0	4	20.0	4	20.0	9	45.0	2	10.0	11	55.0	15	75.0	451.7
+110444	Woodfin Elementary	0K-05	MA	04	RG	NOT_SWD	18	-	<5	-	-	-	-	-	-	-	-	12	66.7	15	83.3	453.0
+110444	Woodfin Elementary	0K-05	MA	04	RG	WHTE	16	1	6.3	3	18.8	3	18.8	7	43.8	2	12.5	9	56.3	12	75.0	451.7
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	AIG	7	-	<5	-	<5	-	-	-	-	-	-	6	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	AIG_MATH	7	-	<5	-	<5	-	-	-	-	-	-	6	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	AIG_READ	7	-	<5	-	<5	-	-	-	-	-	-	6	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	ALL	53	8	15.1	9	17.0	10	18.9	22	41.5	4	7.5	26	49.1	36	67.9	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	BLCK	5	-	-	-	-	-	-	-	-	-	<5	2	40.0	3	60.0	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	EDS	24	-	-	-	-	-	-	-	-	-	<5	9	37.5	14	58.3	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	FEM	28	2	7.1	4	14.3	8	28.6	12	42.9	2	7.1	14	50.0	22	78.6	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	FEM_HISP	8	-	-	-	-	-	-	-	-	-	<5	4	50.0	6	75.0	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	FEM_WHTE	17	-	<5	-	-	-	-	-	-	-	-	9	52.9	14	82.4	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	HISP	10	-	-	-	-	-	-	-	-	-	<5	5	50.0	8	80.0	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	MALE	25	6	24.0	5	20.0	2	8.0	10	40.0	2	8.0	12	48.0	14	56.0	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	MALE_WHTE	18	5	27.8	3	16.7	1	5.6	7	38.9	2	11.1	9	50.0	10	55.6	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	NOT_EDS	29	4	13.8	3	10.3	5	17.2	14	48.3	3	10.3	17	58.6	22	75.9	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	NOT_LEP	49	7	14.3	9	18.4	10	20.4	19	38.8	4	8.2	23	46.9	33	67.3	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	NOT_SWD	40	4	10.0	4	10.0	8	20.0	20	50.0	4	10.0	24	60.0	32	80.0	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	SWD	13	-	-	-	-	-	-	-	-	-	<5	2	15.4	4	30.8	
+110444	Woodfin Elementary	0K-05	MA	GS	ALL	WHTE	35	5	14.3	6	17.1	6	17.1	14	40.0	4	11.4	18	51.4	24	68.6	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	AIG	7	-	<5	-	<5	-	-	-	-	-	-	6	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	AIG_MATH	7	-	<5	-	<5	-	-	-	-	-	-	6	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	AIG_READ	7	-	<5	-	<5	-	-	-	-	-	-	6	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	ALL	50	8	16.0	7	14.0	10	20.0	21	42.0	4	8.0	25	50.0	35	70.0	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	BLCK	5	-	-	-	-	-	-	-	-	-	<5	2	40.0	3	60.0	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	EDS	22	-	-	-	-	-	-	-	-	-	<5	9	40.9	14	63.6	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	FEM	28	2	7.1	4	14.3	8	28.6	12	42.9	2	7.1	14	50.0	22	78.6	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	FEM_HISP	8	-	-	-	-	-	-	-	-	-	<5	4	50.0	6	75.0	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	FEM_WHTE	17	-	<5	-	-	-	-	-	-	-	-	9	52.9	14	82.4	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	HISP	10	-	-	-	-	-	-	-	-	-	<5	5	50.0	8	80.0	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	MALE	22	6	27.3	3	13.6	2	9.1	9	40.9	2	9.1	11	50.0	13	59.1	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	MALE_WHTE	16	5	31.3	1	6.3	1	6.3	7	43.8	2	12.5	9	56.3	10	62.5	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	NOT_EDS	28	4	14.3	3	10.7	5	17.9	13	46.4	3	10.7	16	57.1	21	75.0	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	NOT_LEP	46	7	15.2	7	15.2	10	21.7	18	39.1	4	8.7	22	47.8	32	69.6	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	NOT_SWD	40	4	10.0	4	10.0	8	20.0	20	50.0	4	10.0	24	60.0	32	80.0	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	SWD	10	-	-	-	-	-	-	-	-	-	<5	1	10.0	3	30.0	
+110444	Woodfin Elementary	0K-05	MA	GS	RG	WHTE	33	5	15.2	4	12.1	6	18.2	14	42.4	4	12.1	18	54.5	24	72.7	
+110444	Woodfin Elementary	0K-05	RD	03	ALL	ALL	29	5	17.2	8	27.6	2	6.9	11	37.9	3	10.3	14	48.3	16	55.2	
+110444	Woodfin Elementary	0K-05	RD	03	ALL	EDS	13	1	7.7	5	38.5	1	7.7	5	38.5	1	7.7	6	46.2	7	53.8	
+110444	Woodfin Elementary	0K-05	RD	03	ALL	FEM	17	-	-	-	-	-	<5	-	-	-	-	10	58.8	10	58.8	
+110444	Woodfin Elementary	0K-05	RD	03	ALL	FEM_HISP	5	-	-	-	-	-	<5	-	-	-	<5	2	40.0	2	40.0	
+110444	Woodfin Elementary	0K-05	RD	03	ALL	FEM_WHTE	10	-	-	-	-	-	<5	-	-	-	-	7	70.0	7	70.0	
+110444	Woodfin Elementary	0K-05	RD	03	ALL	HISP	6	-	-	-	-	-	<5	-	-	-	<5	2	33.3	2	33.3	
+110444	Woodfin Elementary	0K-05	RD	03	ALL	MALE	12	1	8.3	5	41.7	2	16.7	3	25.0	1	8.3	4	33.3	6	50.0	
+110444	Woodfin Elementary	0K-05	RD	03	ALL	MALE_WHTE	7	-	<5	-	-	-	-	-	-	-	-	3	42.9	5	71.4	
+110444	Woodfin Elementary	0K-05	RD	03	ALL	NOT_EDS	16	4	25.0	3	18.8	1	6.3	6	37.5	2	12.5	8	50.0	9	56.3	
+110444	Woodfin Elementary	0K-05	RD	03	ALL	NOT_LEP	26	4	15.4	7	26.9	2	7.7	11	42.3	2	7.7	13	50.0	15	57.7	
+110444	Woodfin Elementary	0K-05	RD	03	ALL	NOT_SWD	22	-	-	-	-	-	<5	-	-	-	-	13	59.1	14	63.6	
+110444	Woodfin Elementary	0K-05	RD	03	ALL	SWD	7	-	-	-	-	-	-	-	-	-	<5	1	14.3	2	28.6	
+110444	Woodfin Elementary	0K-05	RD	03	ALL	WHTE	17	1	5.9	4	23.5	2	11.8	7	41.2	3	17.6	10	58.8	12	70.6	
+110444	Woodfin Elementary	0K-05	RD	03	RG	ALL	28	5	17.9	8	28.6	2	7.1	10	35.7	3	10.7	13	46.4	15	53.6	439.4
+110444	Woodfin Elementary	0K-05	RD	03	RG	EDS	12	1	8.3	5	41.7	1	8.3	4	33.3	1	8.3	5	41.7	6	50.0	439.2
+110444	Woodfin Elementary	0K-05	RD	03	RG	FEM	17	-	-	-	-	-	<5	-	-	-	-	10	58.8	10	58.8	440.4
+110444	Woodfin Elementary	0K-05	RD	03	RG	FEM_HISP	5	-	-	-	-	-	<5	-	-	-	<5	2	40.0	2	40.0	434.6
+110444	Woodfin Elementary	0K-05	RD	03	RG	FEM_WHTE	10	-	-	-	-	-	<5	-	-	-	-	7	70.0	7	70.0	445.6
+110444	Woodfin Elementary	0K-05	RD	03	RG	HISP	6	-	-	-	-	-	<5	-	-	-	<5	2	33.3	2	33.3	434.7
+110444	Woodfin Elementary	0K-05	RD	03	RG	MALE	11	1	9.1	5	45.5	2	18.2	2	18.2	1	9.1	3	27.3	5	45.5	437.9
+110444	Woodfin Elementary	0K-05	RD	03	RG	MALE_WHTE	6	-	<5	-	-	-	-	-	-	-	-	2	33.3	4	66.7	442.2
+110444	Woodfin Elementary	0K-05	RD	03	RG	NOT_EDS	16	4	25.0	3	18.8	1	6.3	6	37.5	2	12.5	8	50.0	9	56.3	439.6
+110444	Woodfin Elementary	0K-05	RD	03	RG	NOT_LEP	25	4	16.0	7	28.0	2	8.0	10	40.0	2	8.0	12	48.0	14	56.0	439.7
+110444	Woodfin Elementary	0K-05	RD	03	RG	NOT_SWD	22	-	-	-	-	-	<5	-	-	-	-	13	59.1	14	63.6	442.8
+110444	Woodfin Elementary	0K-05	RD	03	RG	SWD	6	-	-	-	-	-	-	-	<5	-	<5	-	<5	1	16.7	427.0
+110444	Woodfin Elementary	0K-05	RD	03	RG	WHTE	16	1	6.3	4	25.0	2	12.5	6	37.5	3	18.8	9	56.3	11	68.8	444.3
+110444	Woodfin Elementary	0K-05	RD	04	ALL	ALL	23	-	-	-	-	-	-	-	-	-	<5	10	43.5	17	73.9	
+110444	Woodfin Elementary	0K-05	RD	04	ALL	EDS	10	-	<5	-	-	-	-	-	-	-	-	3	30.0	7	70.0	
+110444	Woodfin Elementary	0K-05	RD	04	ALL	FEM	11	2	18.2	2	18.2	2	18.2	4	36.4	1	9.1	5	45.5	7	63.6	
+110444	Woodfin Elementary	0K-05	RD	04	ALL	FEM_WHTE	7	-	<5	-	-	-	-	-	-	-	<5	3	42.9	5	71.4	
+110444	Woodfin Elementary	0K-05	RD	04	ALL	MALE	12	-	<5	-	-	-	-	-	-	-	<5	5	41.7	10	83.3	
+110444	Woodfin Elementary	0K-05	RD	04	ALL	MALE_WHTE	10	-	<5	-	-	-	-	-	-	-	<5	5	50.0	8	80.0	
+110444	Woodfin Elementary	0K-05	RD	04	ALL	NOT_EDS	13	-	-	-	-	-	-	-	-	-	<5	7	53.8	10	76.9	
+110444	Woodfin Elementary	0K-05	RD	04	ALL	NOT_LEP	22	-	-	-	-	-	-	-	-	-	<5	10	45.5	16	72.7	
+110444	Woodfin Elementary	0K-05	RD	04	ALL	NOT_SWD	18	2	11.1	3	16.7	5	27.8	7	38.9	1	5.6	8	44.4	13	72.2	
+110444	Woodfin Elementary	0K-05	RD	04	ALL	SWD	5	-	<5	-	-	-	-	-	-	-	<5	2	40.0	4	80.0	
+110444	Woodfin Elementary	0K-05	RD	04	ALL	WHTE	17	-	<5	-	-	-	-	-	-	-	<5	8	47.1	13	76.5	
+110444	Woodfin Elementary	0K-05	RD	04	RG	ALL	21	-	-	-	-	-	-	-	-	-	<5	10	47.6	16	76.2	448.0
+110444	Woodfin Elementary	0K-05	RD	04	RG	EDS	9	-	<5	-	-	-	-	-	-	-	-	3	33.3	7	77.8	448.0
+110444	Woodfin Elementary	0K-05	RD	04	RG	FEM	11	2	18.2	2	18.2	2	18.2	4	36.4	1	9.1	5	45.5	7	63.6	447.2
+110444	Woodfin Elementary	0K-05	RD	04	RG	FEM_WHTE	7	-	<5	-	-	-	-	-	-	-	<5	3	42.9	5	71.4	447.6
+110444	Woodfin Elementary	0K-05	RD	04	RG	MALE	10	-	<5	-	-	-	-	-	-	-	<5	5	50.0	9	90.0	449.0
+110444	Woodfin Elementary	0K-05	RD	04	RG	MALE_WHTE	9	-	<5	-	-	-	-	-	-	-	<5	5	55.6	8	88.9	449.3
+110444	Woodfin Elementary	0K-05	RD	04	RG	NOT_EDS	12	-	-	-	-	-	-	-	-	-	<5	7	58.3	9	75.0	448.1
+110444	Woodfin Elementary	0K-05	RD	04	RG	NOT_LEP	20	2	10.0	3	15.0	5	25.0	9	45.0	1	5.0	10	50.0	15	75.0	448.2
+110444	Woodfin Elementary	0K-05	RD	04	RG	NOT_SWD	18	2	11.1	3	16.7	5	27.8	7	38.9	1	5.6	8	44.4	13	72.2	447.6
+110444	Woodfin Elementary	0K-05	RD	04	RG	WHTE	16	-	<5	-	-	-	-	-	-	-	<5	8	50.0	13	81.3	448.6
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	AIG	7	-	<5	-	<5	-	-	-	-	-	-	6	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	AIG_MATH	7	-	<5	-	<5	-	-	-	-	-	-	6	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	AIG_READ	7	-	<5	-	<5	-	-	-	-	-	-	6	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	ALL	53	8	15.1	12	22.6	9	17.0	20	37.7	4	7.5	24	45.3	33	62.3	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	BLCK	5	-	-	-	-	-	<5	-	-	-	-	3	60.0	3	60.0	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	EDS	24	2	8.3	8	33.3	5	20.8	7	29.2	2	8.3	9	37.5	14	58.3	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	FEM	28	6	21.4	5	17.9	2	7.1	12	42.9	3	10.7	15	53.6	17	60.7	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	FEM_HISP	8	-	-	-	-	-	<5	-	-	-	<5	3	37.5	3	37.5	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	FEM_WHTE	17	1	5.9	4	23.5	2	11.8	8	47.1	2	11.8	10	58.8	12	70.6	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	HISP	10	-	-	-	-	-	-	-	-	-	<5	3	30.0	4	40.0	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	MALE	25	-	-	-	-	-	-	-	-	-	<5	9	36.0	16	64.0	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	MALE_WHTE	18	1	5.6	4	22.2	5	27.8	7	38.9	1	5.6	8	44.4	13	72.2	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	NOT_EDS	29	6	20.7	4	13.8	4	13.8	13	44.8	2	6.9	15	51.7	19	65.5	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	NOT_LEP	49	7	14.3	11	22.4	8	16.3	20	40.8	3	6.1	23	46.9	31	63.3	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	NOT_SWD	40	5	12.5	8	20.0	6	15.0	17	42.5	4	10.0	21	52.5	27	67.5	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	SWD	13	-	-	-	-	-	-	-	-	-	<5	3	23.1	6	46.2	
+110444	Woodfin Elementary	0K-05	RD	GS	ALL	WHTE	35	2	5.7	8	22.9	7	20.0	15	42.9	3	8.6	18	51.4	25	71.4	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	AIG	7	-	<5	-	<5	-	-	-	-	-	-	6	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	AIG_MATH	7	-	<5	-	<5	-	-	-	-	-	-	6	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	AIG_READ	7	-	<5	-	<5	-	-	-	-	-	-	6	85.7	-	>95	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	ALL	50	8	16.0	11	22.0	8	16.0	19	38.0	4	8.0	23	46.0	31	62.0	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	BLCK	5	-	-	-	-	-	<5	-	-	-	-	3	60.0	3	60.0	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	EDS	22	2	9.1	7	31.8	5	22.7	6	27.3	2	9.1	8	36.4	13	59.1	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	FEM	28	6	21.4	5	17.9	2	7.1	12	42.9	3	10.7	15	53.6	17	60.7	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	FEM_HISP	8	-	-	-	-	-	<5	-	-	-	<5	3	37.5	3	37.5	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	FEM_WHTE	17	1	5.9	4	23.5	2	11.8	8	47.1	2	11.8	10	58.8	12	70.6	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	HISP	10	-	-	-	-	-	-	-	-	-	<5	3	30.0	4	40.0	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	MALE	22	-	-	-	-	-	-	-	-	-	<5	8	36.4	14	63.6	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	MALE_WHTE	16	1	6.3	3	18.8	5	31.3	6	37.5	1	6.3	7	43.8	12	75.0	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	NOT_EDS	28	6	21.4	4	14.3	3	10.7	13	46.4	2	7.1	15	53.6	18	64.3	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	NOT_LEP	46	7	15.2	10	21.7	7	15.2	19	41.3	3	6.5	22	47.8	29	63.0	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	NOT_SWD	40	5	12.5	8	20.0	6	15.0	17	42.5	4	10.0	21	52.5	27	67.5	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	SWD	10	-	-	-	-	-	-	-	-	-	<5	2	20.0	4	40.0	
+110444	Woodfin Elementary	0K-05	RD	GS	RG	WHTE	33	2	6.1	7	21.2	7	21.2	14	42.4	3	9.1	17	51.5	24	72.7	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	AIG	55	-	<5	-	<5	-	<5	-	-	-	-	52	94.5	-	>95	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	AIG_MATH	41	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	AIG_READ	40	-	<5	-	<5	-	<5	-	-	-	-	38	95.0	-	>95	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	ALL	466	76	16.3	114	24.5	39	8.4	192	41.2	45	9.7	237	50.9	276	59.2	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	EDS	285	54	18.9	78	27.4	27	9.5	108	37.9	18	6.3	126	44.2	153	53.7	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	FEM	224	32	14.3	57	25.4	15	6.7	96	42.9	24	10.7	120	53.6	135	60.3	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	FEM_HISP	15	4	26.7	5	33.3	2	13.3	3	20.0	1	6.7	4	26.7	6	40.0	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	FEM_WHTE	206	28	13.6	50	24.3	13	6.3	92	44.7	23	11.2	115	55.8	128	62.1	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	HISP	17	4	23.5	5	29.4	3	17.6	4	23.5	1	5.9	5	29.4	8	47.1	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	MALE	242	44	18.2	57	23.6	24	9.9	96	39.7	21	8.7	117	48.3	141	58.3	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	MALE_MULT	7	-	-	-	-	-	-	-	-	-	<5	1	14.3	2	28.6	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	MALE_WHTE	231	41	17.7	53	22.9	22	9.5	94	40.7	21	9.1	115	49.8	137	59.3	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	MULT	10	-	-	-	-	-	-	-	-	-	<5	2	20.0	3	30.0	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	NOT_EDS	181	22	12.2	36	19.9	12	6.6	84	46.4	27	14.9	111	61.3	123	68.0	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	NOT_LEP	464	74	15.9	114	24.6	39	8.4	192	41.4	45	9.7	237	51.1	276	59.5	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	NOT_SWD	406	42	10.3	93	22.9	37	9.1	189	46.6	45	11.1	234	57.6	271	66.7	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	SWD	60	-	-	-	-	-	<5	-	-	-	<5	3	5.0	5	8.3	
+140304	Baton Elementary	PK-05	ALL	ALL	ALL	WHTE	437	69	15.8	103	23.6	35	8.0	186	42.6	44	10.1	230	52.6	265	60.6	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	AIG	55	-	<5	-	<5	-	<5	-	-	-	-	52	94.5	-	>95	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	AIG_MATH	41	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	AIG_READ	40	-	<5	-	<5	-	<5	-	-	-	-	38	95.0	-	>95	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	ALL	466	76	16.3	114	24.5	39	8.4	192	41.2	45	9.7	237	50.9	276	59.2	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	EDS	285	54	18.9	78	27.4	27	9.5	108	37.9	18	6.3	126	44.2	153	53.7	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	FEM	224	32	14.3	57	25.4	15	6.7	96	42.9	24	10.7	120	53.6	135	60.3	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	FEM_HISP	15	4	26.7	5	33.3	2	13.3	3	20.0	1	6.7	4	26.7	6	40.0	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	FEM_WHTE	206	28	13.6	50	24.3	13	6.3	92	44.7	23	11.2	115	55.8	128	62.1	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	HISP	17	4	23.5	5	29.4	3	17.6	4	23.5	1	5.9	5	29.4	8	47.1	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	MALE	242	44	18.2	57	23.6	24	9.9	96	39.7	21	8.7	117	48.3	141	58.3	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	MALE_MULT	7	-	-	-	-	-	-	-	-	-	<5	1	14.3	2	28.6	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	MALE_WHTE	231	41	17.7	53	22.9	22	9.5	94	40.7	21	9.1	115	49.8	137	59.3	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	MULT	10	-	-	-	-	-	-	-	-	-	<5	2	20.0	3	30.0	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	NOT_EDS	181	22	12.2	36	19.9	12	6.6	84	46.4	27	14.9	111	61.3	123	68.0	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	NOT_LEP	464	74	15.9	114	24.6	39	8.4	192	41.4	45	9.7	237	51.1	276	59.5	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	NOT_SWD	406	42	10.3	93	22.9	37	9.1	189	46.6	45	11.1	234	57.6	271	66.7	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	SWD	60	-	-	-	-	-	<5	-	-	-	<5	3	5.0	5	8.3	
+140304	Baton Elementary	PK-05	ALL	ALL	RG	WHTE	437	69	15.8	103	23.6	35	8.0	186	42.6	44	10.1	230	52.6	265	60.6	
+140304	Baton Elementary	PK-05	EOG	03	ALL	AIG	6	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	EOG	03	ALL	AIG_MATH	6	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	EOG	03	ALL	ALL	140	23	16.4	34	24.3	11	7.9	64	45.7	8	5.7	72	51.4	83	59.3	
+140304	Baton Elementary	PK-05	EOG	03	ALL	EDS	84	-	-	-	-	-	-	-	-	-	<5	42	50.0	48	57.1	
+140304	Baton Elementary	PK-05	EOG	03	ALL	FEM	66	-	-	-	-	-	<5	-	-	-	<5	39	59.1	42	63.6	
+140304	Baton Elementary	PK-05	EOG	03	ALL	FEM_WHTE	62	-	-	-	-	-	<5	-	-	-	<5	37	59.7	40	64.5	
+140304	Baton Elementary	PK-05	EOG	03	ALL	MALE	74	14	18.9	19	25.7	8	10.8	27	36.5	6	8.1	33	44.6	41	55.4	
+140304	Baton Elementary	PK-05	EOG	03	ALL	MALE_WHTE	74	14	18.9	19	25.7	8	10.8	27	36.5	6	8.1	33	44.6	41	55.4	
+140304	Baton Elementary	PK-05	EOG	03	ALL	NOT_EDS	56	9	16.1	12	21.4	5	8.9	26	46.4	4	7.1	30	53.6	35	62.5	
+140304	Baton Elementary	PK-05	EOG	03	ALL	NOT_LEP	140	23	16.4	34	24.3	11	7.9	64	45.7	8	5.7	72	51.4	83	59.3	
+140304	Baton Elementary	PK-05	EOG	03	ALL	NOT_SWD	120	15	12.5	26	21.7	10	8.3	61	50.8	8	6.7	69	57.5	79	65.8	
+140304	Baton Elementary	PK-05	EOG	03	ALL	SWD	20	-	-	-	-	-	-	-	-	-	<5	3	15.0	4	20.0	
+140304	Baton Elementary	PK-05	EOG	03	ALL	WHTE	136	23	16.9	32	23.5	11	8.1	63	46.3	7	5.1	70	51.5	81	59.6	
+140304	Baton Elementary	PK-05	EOG	03	RG	AIG	6	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	EOG	03	RG	AIG_MATH	6	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	EOG	03	RG	ALL	140	23	16.4	34	24.3	11	7.9	64	45.7	8	5.7	72	51.4	83	59.3	
+140304	Baton Elementary	PK-05	EOG	03	RG	EDS	84	-	-	-	-	-	-	-	-	-	<5	42	50.0	48	57.1	
+140304	Baton Elementary	PK-05	EOG	03	RG	FEM	66	-	-	-	-	-	<5	-	-	-	<5	39	59.1	42	63.6	
+140304	Baton Elementary	PK-05	EOG	03	RG	FEM_WHTE	62	-	-	-	-	-	<5	-	-	-	<5	37	59.7	40	64.5	
+140304	Baton Elementary	PK-05	EOG	03	RG	MALE	74	14	18.9	19	25.7	8	10.8	27	36.5	6	8.1	33	44.6	41	55.4	
+140304	Baton Elementary	PK-05	EOG	03	RG	MALE_WHTE	74	14	18.9	19	25.7	8	10.8	27	36.5	6	8.1	33	44.6	41	55.4	
+140304	Baton Elementary	PK-05	EOG	03	RG	NOT_EDS	56	9	16.1	12	21.4	5	8.9	26	46.4	4	7.1	30	53.6	35	62.5	
+140304	Baton Elementary	PK-05	EOG	03	RG	NOT_LEP	140	23	16.4	34	24.3	11	7.9	64	45.7	8	5.7	72	51.4	83	59.3	
+140304	Baton Elementary	PK-05	EOG	03	RG	NOT_SWD	120	15	12.5	26	21.7	10	8.3	61	50.8	8	6.7	69	57.5	79	65.8	
+140304	Baton Elementary	PK-05	EOG	03	RG	SWD	20	-	-	-	-	-	-	-	-	-	<5	3	15.0	4	20.0	
+140304	Baton Elementary	PK-05	EOG	03	RG	WHTE	136	23	16.9	32	23.5	11	8.1	63	46.3	7	5.1	70	51.5	81	59.6	
+140304	Baton Elementary	PK-05	EOG	04	ALL	AIG	22	-	<5	-	-	-	<5	-	-	-	-	20	90.9	20	90.9	
+140304	Baton Elementary	PK-05	EOG	04	ALL	AIG_MATH	14	-	<5	-	-	-	<5	-	-	-	-	13	92.9	13	92.9	
+140304	Baton Elementary	PK-05	EOG	04	ALL	AIG_READ	12	-	<5	-	-	-	<5	-	-	-	-	11	91.7	11	91.7	
+140304	Baton Elementary	PK-05	EOG	04	ALL	ALL	122	-	-	-	-	-	-	-	-	-	<5	51	41.8	62	50.8	
+140304	Baton Elementary	PK-05	EOG	04	ALL	EDS	66	-	-	-	-	-	-	-	-	-	<5	20	30.3	28	42.4	
+140304	Baton Elementary	PK-05	EOG	04	ALL	FEM	56	-	-	-	-	-	-	-	-	-	<5	21	37.5	26	46.4	
+140304	Baton Elementary	PK-05	EOG	04	ALL	FEM_WHTE	54	-	-	-	-	-	-	-	-	-	<5	21	38.9	26	48.1	
+140304	Baton Elementary	PK-05	EOG	04	ALL	MALE	66	-	-	-	-	-	-	-	-	-	<5	30	45.5	36	54.5	
+140304	Baton Elementary	PK-05	EOG	04	ALL	MALE_WHTE	58	12	20.7	12	20.7	5	8.6	26	44.8	3	5.2	29	50.0	34	58.6	
+140304	Baton Elementary	PK-05	EOG	04	ALL	NOT_EDS	56	8	14.3	14	25.0	3	5.4	27	48.2	4	7.1	31	55.4	34	60.7	
+140304	Baton Elementary	PK-05	EOG	04	ALL	NOT_LEP	120	-	-	-	-	-	-	-	-	-	<5	51	42.5	62	51.7	
+140304	Baton Elementary	PK-05	EOG	04	ALL	NOT_SWD	112	-	-	-	-	-	-	-	-	-	<5	51	45.5	62	55.4	
+140304	Baton Elementary	PK-05	EOG	04	ALL	SWD	10	-	-	-	-	-	<5	-	<5	-	<5	-	<5	-	<5	
+140304	Baton Elementary	PK-05	EOG	04	ALL	WHTE	112	-	-	-	-	-	-	-	-	-	<5	50	44.6	60	53.6	
+140304	Baton Elementary	PK-05	EOG	04	RG	AIG	22	-	<5	-	-	-	<5	-	-	-	-	20	90.9	20	90.9	
+140304	Baton Elementary	PK-05	EOG	04	RG	AIG_MATH	14	-	<5	-	-	-	<5	-	-	-	-	13	92.9	13	92.9	
+140304	Baton Elementary	PK-05	EOG	04	RG	AIG_READ	12	-	<5	-	-	-	<5	-	-	-	-	11	91.7	11	91.7	
+140304	Baton Elementary	PK-05	EOG	04	RG	ALL	122	-	-	-	-	-	-	-	-	-	<5	51	41.8	62	50.8	
+140304	Baton Elementary	PK-05	EOG	04	RG	EDS	66	-	-	-	-	-	-	-	-	-	<5	20	30.3	28	42.4	
+140304	Baton Elementary	PK-05	EOG	04	RG	FEM	56	-	-	-	-	-	-	-	-	-	<5	21	37.5	26	46.4	
+140304	Baton Elementary	PK-05	EOG	04	RG	FEM_WHTE	54	-	-	-	-	-	-	-	-	-	<5	21	38.9	26	48.1	
+140304	Baton Elementary	PK-05	EOG	04	RG	MALE	66	-	-	-	-	-	-	-	-	-	<5	30	45.5	36	54.5	
+140304	Baton Elementary	PK-05	EOG	04	RG	MALE_WHTE	58	12	20.7	12	20.7	5	8.6	26	44.8	3	5.2	29	50.0	34	58.6	
+140304	Baton Elementary	PK-05	EOG	04	RG	NOT_EDS	56	8	14.3	14	25.0	3	5.4	27	48.2	4	7.1	31	55.4	34	60.7	
+140304	Baton Elementary	PK-05	EOG	04	RG	NOT_LEP	120	-	-	-	-	-	-	-	-	-	<5	51	42.5	62	51.7	
+140304	Baton Elementary	PK-05	EOG	04	RG	NOT_SWD	112	-	-	-	-	-	-	-	-	-	<5	51	45.5	62	55.4	
+140304	Baton Elementary	PK-05	EOG	04	RG	SWD	10	-	-	-	-	-	<5	-	<5	-	<5	-	<5	-	<5	
+140304	Baton Elementary	PK-05	EOG	04	RG	WHTE	112	-	-	-	-	-	-	-	-	-	<5	50	44.6	60	53.6	
+140304	Baton Elementary	PK-05	EOG	05	ALL	AIG	27	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	EOG	05	ALL	AIG_MATH	21	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	EOG	05	ALL	AIG_READ	24	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	EOG	05	ALL	ALL	204	30	14.7	43	21.1	17	8.3	81	39.7	33	16.2	114	55.9	131	64.2	
+140304	Baton Elementary	PK-05	EOG	05	ALL	EDS	135	25	18.5	33	24.4	13	9.6	50	37.0	14	10.4	64	47.4	77	57.0	
+140304	Baton Elementary	PK-05	EOG	05	ALL	FEM	102	15	14.7	20	19.6	7	6.9	39	38.2	21	20.6	60	58.8	67	65.7	
+140304	Baton Elementary	PK-05	EOG	05	ALL	FEM_HISP	9	-	-	-	-	-	-	-	-	-	<5	2	22.2	4	44.4	
+140304	Baton Elementary	PK-05	EOG	05	ALL	FEM_WHTE	90	13	14.4	15	16.7	5	5.6	36	40.0	21	23.3	57	63.3	62	68.9	
+140304	Baton Elementary	PK-05	EOG	05	ALL	HISP	9	-	-	-	-	-	-	-	-	-	<5	2	22.2	4	44.4	
+140304	Baton Elementary	PK-05	EOG	05	ALL	MALE	102	15	14.7	23	22.5	10	9.8	42	41.2	12	11.8	54	52.9	64	62.7	
+140304	Baton Elementary	PK-05	EOG	05	ALL	MALE_WHTE	99	15	15.2	22	22.2	9	9.1	41	41.4	12	12.1	53	53.5	62	62.6	
+140304	Baton Elementary	PK-05	EOG	05	ALL	MULT	6	-	<5	-	-	-	-	-	-	-	<5	2	33.3	3	50.0	
+140304	Baton Elementary	PK-05	EOG	05	ALL	NOT_EDS	69	5	7.2	10	14.5	4	5.8	31	44.9	19	27.5	50	72.5	54	78.3	
+140304	Baton Elementary	PK-05	EOG	05	ALL	NOT_LEP	204	30	14.7	43	21.1	17	8.3	81	39.7	33	16.2	114	55.9	131	64.2	
+140304	Baton Elementary	PK-05	EOG	05	ALL	NOT_SWD	174	11	6.3	33	19.0	16	9.2	81	46.6	33	19.0	114	65.5	130	74.7	
+140304	Baton Elementary	PK-05	EOG	05	ALL	SWD	30	-	-	-	-	-	<5	-	<5	-	<5	-	<5	-	<5	
+140304	Baton Elementary	PK-05	EOG	05	ALL	WHTE	189	28	14.8	37	19.6	14	7.4	77	40.7	33	17.5	110	58.2	124	65.6	
+140304	Baton Elementary	PK-05	EOG	05	RG	AIG	27	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	EOG	05	RG	AIG_MATH	21	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	EOG	05	RG	AIG_READ	24	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	EOG	05	RG	ALL	204	30	14.7	43	21.1	17	8.3	81	39.7	33	16.2	114	55.9	131	64.2	
+140304	Baton Elementary	PK-05	EOG	05	RG	EDS	135	25	18.5	33	24.4	13	9.6	50	37.0	14	10.4	64	47.4	77	57.0	
+140304	Baton Elementary	PK-05	EOG	05	RG	FEM	102	15	14.7	20	19.6	7	6.9	39	38.2	21	20.6	60	58.8	67	65.7	
+140304	Baton Elementary	PK-05	EOG	05	RG	FEM_HISP	9	-	-	-	-	-	-	-	-	-	<5	2	22.2	4	44.4	
+140304	Baton Elementary	PK-05	EOG	05	RG	FEM_WHTE	90	13	14.4	15	16.7	5	5.6	36	40.0	21	23.3	57	63.3	62	68.9	
+140304	Baton Elementary	PK-05	EOG	05	RG	HISP	9	-	-	-	-	-	-	-	-	-	<5	2	22.2	4	44.4	
+140304	Baton Elementary	PK-05	EOG	05	RG	MALE	102	15	14.7	23	22.5	10	9.8	42	41.2	12	11.8	54	52.9	64	62.7	
+140304	Baton Elementary	PK-05	EOG	05	RG	MALE_WHTE	99	15	15.2	22	22.2	9	9.1	41	41.4	12	12.1	53	53.5	62	62.6	
+140304	Baton Elementary	PK-05	EOG	05	RG	MULT	6	-	<5	-	-	-	-	-	-	-	<5	2	33.3	3	50.0	
+140304	Baton Elementary	PK-05	EOG	05	RG	NOT_EDS	69	5	7.2	10	14.5	4	5.8	31	44.9	19	27.5	50	72.5	54	78.3	
+140304	Baton Elementary	PK-05	EOG	05	RG	NOT_LEP	204	30	14.7	43	21.1	17	8.3	81	39.7	33	16.2	114	55.9	131	64.2	
+140304	Baton Elementary	PK-05	EOG	05	RG	NOT_SWD	174	11	6.3	33	19.0	16	9.2	81	46.6	33	19.0	114	65.5	130	74.7	
+140304	Baton Elementary	PK-05	EOG	05	RG	SWD	30	-	-	-	-	-	<5	-	<5	-	<5	-	<5	-	<5	
+140304	Baton Elementary	PK-05	EOG	05	RG	WHTE	189	28	14.8	37	19.6	14	7.4	77	40.7	33	17.5	110	58.2	124	65.6	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	AIG	55	-	<5	-	<5	-	<5	-	-	-	-	52	94.5	-	>95	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	AIG_MATH	41	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	AIG_READ	40	-	<5	-	<5	-	<5	-	-	-	-	38	95.0	-	>95	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	ALL	466	76	16.3	114	24.5	39	8.4	192	41.2	45	9.7	237	50.9	276	59.2	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	EDS	285	54	18.9	78	27.4	27	9.5	108	37.9	18	6.3	126	44.2	153	53.7	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	FEM	224	32	14.3	57	25.4	15	6.7	96	42.9	24	10.7	120	53.6	135	60.3	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	FEM_HISP	15	4	26.7	5	33.3	2	13.3	3	20.0	1	6.7	4	26.7	6	40.0	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	FEM_WHTE	206	28	13.6	50	24.3	13	6.3	92	44.7	23	11.2	115	55.8	128	62.1	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	HISP	17	4	23.5	5	29.4	3	17.6	4	23.5	1	5.9	5	29.4	8	47.1	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	MALE	242	44	18.2	57	23.6	24	9.9	96	39.7	21	8.7	117	48.3	141	58.3	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	MALE_MULT	7	-	-	-	-	-	-	-	-	-	<5	1	14.3	2	28.6	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	MALE_WHTE	231	41	17.7	53	22.9	22	9.5	94	40.7	21	9.1	115	49.8	137	59.3	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	MULT	10	-	-	-	-	-	-	-	-	-	<5	2	20.0	3	30.0	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	NOT_EDS	181	22	12.2	36	19.9	12	6.6	84	46.4	27	14.9	111	61.3	123	68.0	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	NOT_LEP	464	74	15.9	114	24.6	39	8.4	192	41.4	45	9.7	237	51.1	276	59.5	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	NOT_SWD	406	42	10.3	93	22.9	37	9.1	189	46.6	45	11.1	234	57.6	271	66.7	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	SWD	60	-	-	-	-	-	<5	-	-	-	<5	3	5.0	5	8.3	
+140304	Baton Elementary	PK-05	EOG	GS	ALL	WHTE	437	69	15.8	103	23.6	35	8.0	186	42.6	44	10.1	230	52.6	265	60.6	
+140304	Baton Elementary	PK-05	EOG	GS	RG	AIG	55	-	<5	-	<5	-	<5	-	-	-	-	52	94.5	-	>95	
+140304	Baton Elementary	PK-05	EOG	GS	RG	AIG_MATH	41	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	EOG	GS	RG	AIG_READ	40	-	<5	-	<5	-	<5	-	-	-	-	38	95.0	-	>95	
+140304	Baton Elementary	PK-05	EOG	GS	RG	ALL	466	76	16.3	114	24.5	39	8.4	192	41.2	45	9.7	237	50.9	276	59.2	
+140304	Baton Elementary	PK-05	EOG	GS	RG	EDS	285	54	18.9	78	27.4	27	9.5	108	37.9	18	6.3	126	44.2	153	53.7	
+140304	Baton Elementary	PK-05	EOG	GS	RG	FEM	224	32	14.3	57	25.4	15	6.7	96	42.9	24	10.7	120	53.6	135	60.3	
+140304	Baton Elementary	PK-05	EOG	GS	RG	FEM_HISP	15	4	26.7	5	33.3	2	13.3	3	20.0	1	6.7	4	26.7	6	40.0	
+140304	Baton Elementary	PK-05	EOG	GS	RG	FEM_WHTE	206	28	13.6	50	24.3	13	6.3	92	44.7	23	11.2	115	55.8	128	62.1	
+140304	Baton Elementary	PK-05	EOG	GS	RG	HISP	17	4	23.5	5	29.4	3	17.6	4	23.5	1	5.9	5	29.4	8	47.1	
+140304	Baton Elementary	PK-05	EOG	GS	RG	MALE	242	44	18.2	57	23.6	24	9.9	96	39.7	21	8.7	117	48.3	141	58.3	
+140304	Baton Elementary	PK-05	EOG	GS	RG	MALE_MULT	7	-	-	-	-	-	-	-	-	-	<5	1	14.3	2	28.6	
+140304	Baton Elementary	PK-05	EOG	GS	RG	MALE_WHTE	231	41	17.7	53	22.9	22	9.5	94	40.7	21	9.1	115	49.8	137	59.3	
+140304	Baton Elementary	PK-05	EOG	GS	RG	MULT	10	-	-	-	-	-	-	-	-	-	<5	2	20.0	3	30.0	
+140304	Baton Elementary	PK-05	EOG	GS	RG	NOT_EDS	181	22	12.2	36	19.9	12	6.6	84	46.4	27	14.9	111	61.3	123	68.0	
+140304	Baton Elementary	PK-05	EOG	GS	RG	NOT_LEP	464	74	15.9	114	24.6	39	8.4	192	41.4	45	9.7	237	51.1	276	59.5	
+140304	Baton Elementary	PK-05	EOG	GS	RG	NOT_SWD	406	42	10.3	93	22.9	37	9.1	189	46.6	45	11.1	234	57.6	271	66.7	
+140304	Baton Elementary	PK-05	EOG	GS	RG	SWD	60	-	-	-	-	-	<5	-	-	-	<5	3	5.0	5	8.3	
+140304	Baton Elementary	PK-05	EOG	GS	RG	WHTE	437	69	15.8	103	23.6	35	8.0	186	42.6	44	10.1	230	52.6	265	60.6	
+140304	Baton Elementary	PK-05	MA	03	ALL	ALL	70	-	-	-	-	-	-	-	-	-	<5	38	54.3	42	60.0	
+140304	Baton Elementary	PK-05	MA	03	ALL	EDS	42	-	-	-	-	-	<5	-	-	-	<5	21	50.0	23	54.8	
+140304	Baton Elementary	PK-05	MA	03	ALL	FEM	33	-	-	-	-	-	<5	-	-	-	<5	22	66.7	22	66.7	
+140304	Baton Elementary	PK-05	MA	03	ALL	FEM_WHTE	31	-	-	-	-	-	<5	-	-	-	<5	21	67.7	21	67.7	
+140304	Baton Elementary	PK-05	MA	03	ALL	MALE	37	6	16.2	11	29.7	4	10.8	13	35.1	3	8.1	16	43.2	20	54.1	
+140304	Baton Elementary	PK-05	MA	03	ALL	MALE_WHTE	37	6	16.2	11	29.7	4	10.8	13	35.1	3	8.1	16	43.2	20	54.1	
+140304	Baton Elementary	PK-05	MA	03	ALL	NOT_EDS	28	-	-	-	-	-	-	-	-	-	<5	17	60.7	19	67.9	
+140304	Baton Elementary	PK-05	MA	03	ALL	NOT_LEP	70	-	-	-	-	-	-	-	-	-	<5	38	54.3	42	60.0	
+140304	Baton Elementary	PK-05	MA	03	ALL	NOT_SWD	60	8	13.3	12	20.0	4	6.7	33	55.0	3	5.0	36	60.0	40	66.7	
+140304	Baton Elementary	PK-05	MA	03	ALL	SWD	10	-	-	-	-	-	<5	-	-	-	<5	2	20.0	2	20.0	
+140304	Baton Elementary	PK-05	MA	03	ALL	WHTE	68	-	-	-	-	-	-	-	-	-	<5	37	54.4	41	60.3	
+140304	Baton Elementary	PK-05	MA	03	RG	ALL	70	-	-	-	-	-	-	-	-	-	<5	38	54.3	42	60.0	448.9
+140304	Baton Elementary	PK-05	MA	03	RG	EDS	42	-	-	-	-	-	<5	-	-	-	<5	21	50.0	23	54.8	447.7
+140304	Baton Elementary	PK-05	MA	03	RG	FEM	33	-	-	-	-	-	<5	-	-	-	<5	22	66.7	22	66.7	449.2
+140304	Baton Elementary	PK-05	MA	03	RG	FEM_WHTE	31	-	-	-	-	-	<5	-	-	-	<5	21	67.7	21	67.7	449.2
+140304	Baton Elementary	PK-05	MA	03	RG	MALE	37	6	16.2	11	29.7	4	10.8	13	35.1	3	8.1	16	43.2	20	54.1	448.6
+140304	Baton Elementary	PK-05	MA	03	RG	MALE_WHTE	37	6	16.2	11	29.7	4	10.8	13	35.1	3	8.1	16	43.2	20	54.1	448.6
+140304	Baton Elementary	PK-05	MA	03	RG	NOT_EDS	28	-	-	-	-	-	-	-	-	-	<5	17	60.7	19	67.9	450.6
+140304	Baton Elementary	PK-05	MA	03	RG	NOT_LEP	70	-	-	-	-	-	-	-	-	-	<5	38	54.3	42	60.0	448.9
+140304	Baton Elementary	PK-05	MA	03	RG	NOT_SWD	60	8	13.3	12	20.0	4	6.7	33	55.0	3	5.0	36	60.0	40	66.7	450.0
+140304	Baton Elementary	PK-05	MA	03	RG	SWD	10	-	-	-	-	-	<5	-	-	-	<5	2	20.0	2	20.0	442.2
+140304	Baton Elementary	PK-05	MA	03	RG	WHTE	68	-	-	-	-	-	-	-	-	-	<5	37	54.4	41	60.3	448.8
+140304	Baton Elementary	PK-05	MA	04	ALL	AIG	11	-	<5	-	-	-	<5	-	-	-	-	10	90.9	10	90.9	
+140304	Baton Elementary	PK-05	MA	04	ALL	AIG_MATH	7	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	MA	04	ALL	AIG_READ	6	-	<5	-	-	-	<5	-	-	-	-	5	83.3	5	83.3	
+140304	Baton Elementary	PK-05	MA	04	ALL	ALL	61	-	-	-	-	-	<5	-	-	-	<5	24	39.3	27	44.3	
+140304	Baton Elementary	PK-05	MA	04	ALL	EDS	33	-	-	-	-	-	-	-	-	-	<5	9	27.3	11	33.3	
+140304	Baton Elementary	PK-05	MA	04	ALL	FEM	28	-	-	-	-	-	<5	-	-	-	<5	8	28.6	9	32.1	
+140304	Baton Elementary	PK-05	MA	04	ALL	FEM_WHTE	27	-	-	-	-	-	<5	-	-	-	<5	8	29.6	9	33.3	
+140304	Baton Elementary	PK-05	MA	04	ALL	MALE	33	-	-	-	-	-	-	-	-	-	<5	16	48.5	18	54.5	
+140304	Baton Elementary	PK-05	MA	04	ALL	MALE_WHTE	29	-	-	-	-	-	-	-	-	-	<5	15	51.7	17	58.6	
+140304	Baton Elementary	PK-05	MA	04	ALL	NOT_EDS	28	-	-	-	-	-	<5	-	-	-	-	15	53.6	16	57.1	
+140304	Baton Elementary	PK-05	MA	04	ALL	NOT_LEP	60	-	-	-	-	-	-	-	-	-	<5	24	40.0	27	45.0	
+140304	Baton Elementary	PK-05	MA	04	ALL	NOT_SWD	56	-	-	-	-	-	-	-	-	-	<5	24	42.9	27	48.2	
+140304	Baton Elementary	PK-05	MA	04	ALL	SWD	5	-	-	-	-	-	<5	-	<5	-	<5	-	<5	-	<5	
+140304	Baton Elementary	PK-05	MA	04	ALL	WHTE	56	-	-	-	-	-	-	-	-	-	<5	23	41.1	26	46.4	
+140304	Baton Elementary	PK-05	MA	04	RG	AIG	11	-	<5	-	-	-	<5	-	-	-	-	10	90.9	10	90.9	454.4
+140304	Baton Elementary	PK-05	MA	04	RG	AIG_MATH	7	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	455.4
+140304	Baton Elementary	PK-05	MA	04	RG	AIG_READ	6	-	<5	-	-	-	<5	-	-	-	-	5	83.3	5	83.3	454.8
+140304	Baton Elementary	PK-05	MA	04	RG	ALL	61	-	-	-	-	-	<5	-	-	-	<5	24	39.3	27	44.3	447.0
+140304	Baton Elementary	PK-05	MA	04	RG	EDS	33	-	-	-	-	-	-	-	-	-	<5	9	27.3	11	33.3	445.0
+140304	Baton Elementary	PK-05	MA	04	RG	FEM	28	-	-	-	-	-	<5	-	-	-	<5	8	28.6	9	32.1	446.7
+140304	Baton Elementary	PK-05	MA	04	RG	FEM_WHTE	27	-	-	-	-	-	<5	-	-	-	<5	8	29.6	9	33.3	447.1
+140304	Baton Elementary	PK-05	MA	04	RG	MALE	33	-	-	-	-	-	-	-	-	-	<5	16	48.5	18	54.5	447.2
+140304	Baton Elementary	PK-05	MA	04	RG	MALE_WHTE	29	-	-	-	-	-	-	-	-	-	<5	15	51.7	17	58.6	448.0
+140304	Baton Elementary	PK-05	MA	04	RG	NOT_EDS	28	-	-	-	-	-	<5	-	-	-	-	15	53.6	16	57.1	449.3
+140304	Baton Elementary	PK-05	MA	04	RG	NOT_LEP	60	-	-	-	-	-	-	-	-	-	<5	24	40.0	27	45.0	447.2
+140304	Baton Elementary	PK-05	MA	04	RG	NOT_SWD	56	-	-	-	-	-	-	-	-	-	<5	24	42.9	27	48.2	447.7
+140304	Baton Elementary	PK-05	MA	04	RG	SWD	5	-	-	-	-	-	<5	-	<5	-	<5	-	<5	-	<5	438.8
+140304	Baton Elementary	PK-05	MA	04	RG	WHTE	56	-	-	-	-	-	-	-	-	-	<5	23	41.1	26	46.4	447.6
+140304	Baton Elementary	PK-05	MA	05	ALL	AIG	9	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	MA	05	ALL	AIG_MATH	7	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	MA	05	ALL	AIG_READ	8	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	MA	05	ALL	ALL	68	9	13.2	20	29.4	4	5.9	24	35.3	11	16.2	35	51.5	39	57.4	
+140304	Baton Elementary	PK-05	MA	05	ALL	EDS	45	7	15.6	13	28.9	3	6.7	17	37.8	5	11.1	22	48.9	25	55.6	
+140304	Baton Elementary	PK-05	MA	05	ALL	FEM	34	-	-	-	-	-	<5	-	-	-	-	18	52.9	19	55.9	
+140304	Baton Elementary	PK-05	MA	05	ALL	FEM_WHTE	30	-	-	-	-	-	<5	-	-	-	-	17	56.7	18	60.0	
+140304	Baton Elementary	PK-05	MA	05	ALL	MALE	34	4	11.8	10	29.4	3	8.8	14	41.2	3	8.8	17	50.0	20	58.8	
+140304	Baton Elementary	PK-05	MA	05	ALL	MALE_WHTE	33	4	12.1	10	30.3	3	9.1	13	39.4	3	9.1	16	48.5	19	57.6	
+140304	Baton Elementary	PK-05	MA	05	ALL	NOT_EDS	23	-	-	-	-	-	<5	-	-	-	-	13	56.5	14	60.9	
+140304	Baton Elementary	PK-05	MA	05	ALL	NOT_LEP	68	9	13.2	20	29.4	4	5.9	24	35.3	11	16.2	35	51.5	39	57.4	
+140304	Baton Elementary	PK-05	MA	05	ALL	NOT_SWD	58	3	5.2	16	27.6	4	6.9	24	41.4	11	19.0	35	60.3	39	67.2	
+140304	Baton Elementary	PK-05	MA	05	ALL	SWD	10	-	-	-	-	-	<5	-	<5	-	<5	-	<5	-	<5	
+140304	Baton Elementary	PK-05	MA	05	ALL	WHTE	63	8	12.7	18	28.6	4	6.3	22	34.9	11	17.5	33	52.4	37	58.7	
+140304	Baton Elementary	PK-05	MA	05	RG	AIG	9	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	461.2
+140304	Baton Elementary	PK-05	MA	05	RG	AIG_MATH	7	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	461.3
+140304	Baton Elementary	PK-05	MA	05	RG	AIG_READ	8	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	461.0
+140304	Baton Elementary	PK-05	MA	05	RG	ALL	68	9	13.2	20	29.4	4	5.9	24	35.3	11	16.2	35	51.5	39	57.4	450.3
+140304	Baton Elementary	PK-05	MA	05	RG	EDS	45	7	15.6	13	28.9	3	6.7	17	37.8	5	11.1	22	48.9	25	55.6	449.2
+140304	Baton Elementary	PK-05	MA	05	RG	FEM	34	-	-	-	-	-	<5	-	-	-	-	18	52.9	19	55.9	450.9
+140304	Baton Elementary	PK-05	MA	05	RG	FEM_WHTE	30	-	-	-	-	-	<5	-	-	-	-	17	56.7	18	60.0	451.8
+140304	Baton Elementary	PK-05	MA	05	RG	MALE	34	4	11.8	10	29.4	3	8.8	14	41.2	3	8.8	17	50.0	20	58.8	449.7
+140304	Baton Elementary	PK-05	MA	05	RG	MALE_WHTE	33	4	12.1	10	30.3	3	9.1	13	39.4	3	9.1	16	48.5	19	57.6	449.5
+140304	Baton Elementary	PK-05	MA	05	RG	NOT_EDS	23	-	-	-	-	-	<5	-	-	-	-	13	56.5	14	60.9	452.4
+140304	Baton Elementary	PK-05	MA	05	RG	NOT_LEP	68	9	13.2	20	29.4	4	5.9	24	35.3	11	16.2	35	51.5	39	57.4	450.3
+140304	Baton Elementary	PK-05	MA	05	RG	NOT_SWD	58	3	5.2	16	27.6	4	6.9	24	41.4	11	19.0	35	60.3	39	67.2	452.3
+140304	Baton Elementary	PK-05	MA	05	RG	SWD	10	-	-	-	-	-	<5	-	<5	-	<5	-	<5	-	<5	438.8
+140304	Baton Elementary	PK-05	MA	05	RG	WHTE	63	8	12.7	18	28.6	4	6.3	22	34.9	11	17.5	33	52.4	37	58.7	450.6
+140304	Baton Elementary	PK-05	MA	GS	ALL	AIG	23	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	MA	GS	ALL	AIG_MATH	17	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	MA	GS	ALL	AIG_READ	16	-	<5	-	-	-	<5	-	-	-	-	15	93.8	15	93.8	
+140304	Baton Elementary	PK-05	MA	GS	ALL	ALL	199	32	16.1	59	29.6	11	5.5	81	40.7	16	8.0	97	48.7	108	54.3	
+140304	Baton Elementary	PK-05	MA	GS	ALL	EDS	120	23	19.2	38	31.7	7	5.8	45	37.5	7	5.8	52	43.3	59	49.2	
+140304	Baton Elementary	PK-05	MA	GS	ALL	FEM	95	-	-	-	-	-	<5	-	-	-	-	48	50.5	50	52.6	
+140304	Baton Elementary	PK-05	MA	GS	ALL	FEM_HISP	6	-	-	-	-	-	<5	-	-	-	<5	2	33.3	2	33.3	
+140304	Baton Elementary	PK-05	MA	GS	ALL	FEM_WHTE	88	-	-	-	-	-	<5	-	-	-	-	46	52.3	48	54.5	
+140304	Baton Elementary	PK-05	MA	GS	ALL	HISP	7	-	-	-	-	-	<5	-	-	-	<5	3	42.9	3	42.9	
+140304	Baton Elementary	PK-05	MA	GS	ALL	MALE	104	19	18.3	27	26.0	9	8.7	42	40.4	7	6.7	49	47.1	58	55.8	
+140304	Baton Elementary	PK-05	MA	GS	ALL	MALE_WHTE	99	17	17.2	26	26.3	9	9.1	40	40.4	7	7.1	47	47.5	56	56.6	
+140304	Baton Elementary	PK-05	MA	GS	ALL	NOT_EDS	79	9	11.4	21	26.6	4	5.1	36	45.6	9	11.4	45	57.0	49	62.0	
+140304	Baton Elementary	PK-05	MA	GS	ALL	NOT_LEP	198	31	15.7	59	29.8	11	5.6	81	40.9	16	8.1	97	49.0	108	54.5	
+140304	Baton Elementary	PK-05	MA	GS	ALL	NOT_SWD	174	20	11.5	48	27.6	11	6.3	79	45.4	16	9.2	95	54.6	106	60.9	
+140304	Baton Elementary	PK-05	MA	GS	ALL	SWD	25	-	-	-	-	-	<5	-	-	-	<5	2	8.0	2	8.0	
+140304	Baton Elementary	PK-05	MA	GS	ALL	WHTE	187	28	15.0	55	29.4	11	5.9	77	41.2	16	8.6	93	49.7	104	55.6	
+140304	Baton Elementary	PK-05	MA	GS	RG	AIG	23	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	MA	GS	RG	AIG_MATH	17	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	MA	GS	RG	AIG_READ	16	-	<5	-	-	-	<5	-	-	-	-	15	93.8	15	93.8	
+140304	Baton Elementary	PK-05	MA	GS	RG	ALL	199	32	16.1	59	29.6	11	5.5	81	40.7	16	8.0	97	48.7	108	54.3	
+140304	Baton Elementary	PK-05	MA	GS	RG	EDS	120	23	19.2	38	31.7	7	5.8	45	37.5	7	5.8	52	43.3	59	49.2	
+140304	Baton Elementary	PK-05	MA	GS	RG	FEM	95	-	-	-	-	-	<5	-	-	-	-	48	50.5	50	52.6	
+140304	Baton Elementary	PK-05	MA	GS	RG	FEM_HISP	6	-	-	-	-	-	<5	-	-	-	<5	2	33.3	2	33.3	
+140304	Baton Elementary	PK-05	MA	GS	RG	FEM_WHTE	88	-	-	-	-	-	<5	-	-	-	-	46	52.3	48	54.5	
+140304	Baton Elementary	PK-05	MA	GS	RG	HISP	7	-	-	-	-	-	<5	-	-	-	<5	3	42.9	3	42.9	
+140304	Baton Elementary	PK-05	MA	GS	RG	MALE	104	19	18.3	27	26.0	9	8.7	42	40.4	7	6.7	49	47.1	58	55.8	
+140304	Baton Elementary	PK-05	MA	GS	RG	MALE_WHTE	99	17	17.2	26	26.3	9	9.1	40	40.4	7	7.1	47	47.5	56	56.6	
+140304	Baton Elementary	PK-05	MA	GS	RG	NOT_EDS	79	9	11.4	21	26.6	4	5.1	36	45.6	9	11.4	45	57.0	49	62.0	
+140304	Baton Elementary	PK-05	MA	GS	RG	NOT_LEP	198	31	15.7	59	29.8	11	5.6	81	40.9	16	8.1	97	49.0	108	54.5	
+140304	Baton Elementary	PK-05	MA	GS	RG	NOT_SWD	174	20	11.5	48	27.6	11	6.3	79	45.4	16	9.2	95	54.6	106	60.9	
+140304	Baton Elementary	PK-05	MA	GS	RG	SWD	25	-	-	-	-	-	<5	-	-	-	<5	2	8.0	2	8.0	
+140304	Baton Elementary	PK-05	MA	GS	RG	WHTE	187	28	15.0	55	29.4	11	5.9	77	41.2	16	8.6	93	49.7	104	55.6	
+140304	Baton Elementary	PK-05	RD	03	ALL	ALL	70	12	17.1	17	24.3	7	10.0	29	41.4	5	7.1	34	48.6	41	58.6	
+140304	Baton Elementary	PK-05	RD	03	ALL	EDS	42	-	-	-	-	-	-	-	-	-	<5	21	50.0	25	59.5	
+140304	Baton Elementary	PK-05	RD	03	ALL	FEM	33	4	12.1	9	27.3	3	9.1	15	45.5	2	6.1	17	51.5	20	60.6	
+140304	Baton Elementary	PK-05	RD	03	ALL	FEM_WHTE	31	-	-	-	-	-	-	-	-	-	<5	16	51.6	19	61.3	
+140304	Baton Elementary	PK-05	RD	03	ALL	MALE	37	8	21.6	8	21.6	4	10.8	14	37.8	3	8.1	17	45.9	21	56.8	
+140304	Baton Elementary	PK-05	RD	03	ALL	MALE_WHTE	37	8	21.6	8	21.6	4	10.8	14	37.8	3	8.1	17	45.9	21	56.8	
+140304	Baton Elementary	PK-05	RD	03	ALL	NOT_EDS	28	6	21.4	6	21.4	3	10.7	10	35.7	3	10.7	13	46.4	16	57.1	
+140304	Baton Elementary	PK-05	RD	03	ALL	NOT_LEP	70	12	17.1	17	24.3	7	10.0	29	41.4	5	7.1	34	48.6	41	58.6	
+140304	Baton Elementary	PK-05	RD	03	ALL	NOT_SWD	60	7	11.7	14	23.3	6	10.0	28	46.7	5	8.3	33	55.0	39	65.0	
+140304	Baton Elementary	PK-05	RD	03	ALL	SWD	10	-	-	-	-	-	-	-	-	-	<5	1	10.0	2	20.0	
+140304	Baton Elementary	PK-05	RD	03	ALL	WHTE	68	12	17.6	16	23.5	7	10.3	29	42.6	4	5.9	33	48.5	40	58.8	
+140304	Baton Elementary	PK-05	RD	03	RG	ALL	70	12	17.1	17	24.3	7	10.0	29	41.4	5	7.1	34	48.6	41	58.6	439.9
+140304	Baton Elementary	PK-05	RD	03	RG	EDS	42	-	-	-	-	-	-	-	-	-	<5	21	50.0	25	59.5	439.7
+140304	Baton Elementary	PK-05	RD	03	RG	FEM	33	4	12.1	9	27.3	3	9.1	15	45.5	2	6.1	17	51.5	20	60.6	440.4
+140304	Baton Elementary	PK-05	RD	03	RG	FEM_WHTE	31	-	-	-	-	-	-	-	-	-	<5	16	51.6	19	61.3	440.0
+140304	Baton Elementary	PK-05	RD	03	RG	MALE	37	8	21.6	8	21.6	4	10.8	14	37.8	3	8.1	17	45.9	21	56.8	439.5
+140304	Baton Elementary	PK-05	RD	03	RG	MALE_WHTE	37	8	21.6	8	21.6	4	10.8	14	37.8	3	8.1	17	45.9	21	56.8	439.5
+140304	Baton Elementary	PK-05	RD	03	RG	NOT_EDS	28	6	21.4	6	21.4	3	10.7	10	35.7	3	10.7	13	46.4	16	57.1	440.3
+140304	Baton Elementary	PK-05	RD	03	RG	NOT_LEP	70	12	17.1	17	24.3	7	10.0	29	41.4	5	7.1	34	48.6	41	58.6	439.9
+140304	Baton Elementary	PK-05	RD	03	RG	NOT_SWD	60	7	11.7	14	23.3	6	10.0	28	46.7	5	8.3	33	55.0	39	65.0	441.5
+140304	Baton Elementary	PK-05	RD	03	RG	SWD	10	-	-	-	-	-	-	-	-	-	<5	1	10.0	2	20.0	430.4
+140304	Baton Elementary	PK-05	RD	03	RG	WHTE	68	12	17.6	16	23.5	7	10.3	29	42.6	4	5.9	33	48.5	40	58.8	439.8
+140304	Baton Elementary	PK-05	RD	04	ALL	AIG	11	-	<5	-	-	-	<5	-	-	-	-	10	90.9	10	90.9	
+140304	Baton Elementary	PK-05	RD	04	ALL	AIG_MATH	7	-	<5	-	-	-	<5	-	-	-	-	6	85.7	6	85.7	
+140304	Baton Elementary	PK-05	RD	04	ALL	AIG_READ	6	-	<5	-	<5	-	<5	-	>95	-	<5	-	>95	-	>95	
+140304	Baton Elementary	PK-05	RD	04	ALL	ALL	61	-	-	-	-	-	-	-	-	-	<5	27	44.3	35	57.4	
+140304	Baton Elementary	PK-05	RD	04	ALL	EDS	33	-	-	-	-	-	-	-	-	-	<5	11	33.3	17	51.5	
+140304	Baton Elementary	PK-05	RD	04	ALL	FEM	28	-	-	-	-	-	-	-	-	-	<5	13	46.4	17	60.7	
+140304	Baton Elementary	PK-05	RD	04	ALL	FEM_WHTE	27	-	-	-	-	-	-	-	-	-	<5	13	48.1	17	63.0	
+140304	Baton Elementary	PK-05	RD	04	ALL	MALE	33	6	18.2	9	27.3	4	12.1	12	36.4	2	6.1	14	42.4	18	54.5	
+140304	Baton Elementary	PK-05	RD	04	ALL	MALE_WHTE	29	5	17.2	7	24.1	3	10.3	12	41.4	2	6.9	14	48.3	17	58.6	
+140304	Baton Elementary	PK-05	RD	04	ALL	NOT_EDS	28	4	14.3	6	21.4	2	7.1	14	50.0	2	7.1	16	57.1	18	64.3	
+140304	Baton Elementary	PK-05	RD	04	ALL	NOT_LEP	60	-	-	-	-	-	-	-	-	-	<5	27	45.0	35	58.3	
+140304	Baton Elementary	PK-05	RD	04	ALL	NOT_SWD	56	-	-	-	-	-	-	-	-	-	<5	27	48.2	35	62.5	
+140304	Baton Elementary	PK-05	RD	04	ALL	SWD	5	-	-	-	-	-	<5	-	<5	-	<5	-	<5	-	<5	
+140304	Baton Elementary	PK-05	RD	04	ALL	WHTE	56	-	-	-	-	-	-	-	-	-	<5	27	48.2	34	60.7	
+140304	Baton Elementary	PK-05	RD	04	RG	AIG	11	-	<5	-	-	-	<5	-	-	-	-	10	90.9	10	90.9	454.2
+140304	Baton Elementary	PK-05	RD	04	RG	AIG_MATH	7	-	<5	-	-	-	<5	-	-	-	-	6	85.7	6	85.7	454.9
+140304	Baton Elementary	PK-05	RD	04	RG	AIG_READ	6	-	<5	-	<5	-	<5	-	>95	-	<5	-	>95	-	>95	453.5
+140304	Baton Elementary	PK-05	RD	04	RG	ALL	61	-	-	-	-	-	-	-	-	-	<5	27	44.3	35	57.4	446.2
+140304	Baton Elementary	PK-05	RD	04	RG	EDS	33	-	-	-	-	-	-	-	-	-	<5	11	33.3	17	51.5	444.6
+140304	Baton Elementary	PK-05	RD	04	RG	FEM	28	-	-	-	-	-	-	-	-	-	<5	13	46.4	17	60.7	446.5
+140304	Baton Elementary	PK-05	RD	04	RG	FEM_WHTE	27	-	-	-	-	-	-	-	-	-	<5	13	48.1	17	63.0	447.0
+140304	Baton Elementary	PK-05	RD	04	RG	MALE	33	6	18.2	9	27.3	4	12.1	12	36.4	2	6.1	14	42.4	18	54.5	445.9
+140304	Baton Elementary	PK-05	RD	04	RG	MALE_WHTE	29	5	17.2	7	24.1	3	10.3	12	41.4	2	6.9	14	48.3	17	58.6	446.8
+140304	Baton Elementary	PK-05	RD	04	RG	NOT_EDS	28	4	14.3	6	21.4	2	7.1	14	50.0	2	7.1	16	57.1	18	64.3	448.0
+140304	Baton Elementary	PK-05	RD	04	RG	NOT_LEP	60	-	-	-	-	-	-	-	-	-	<5	27	45.0	35	58.3	446.4
+140304	Baton Elementary	PK-05	RD	04	RG	NOT_SWD	56	-	-	-	-	-	-	-	-	-	<5	27	48.2	35	62.5	446.9
+140304	Baton Elementary	PK-05	RD	04	RG	SWD	5	-	-	-	-	-	<5	-	<5	-	<5	-	<5	-	<5	437.8
+140304	Baton Elementary	PK-05	RD	04	RG	WHTE	56	-	-	-	-	-	-	-	-	-	<5	27	48.2	34	60.7	446.9
+140304	Baton Elementary	PK-05	RD	05	ALL	AIG	9	-	<5	-	<5	-	-	-	-	-	-	8	88.9	-	>95	
+140304	Baton Elementary	PK-05	RD	05	ALL	AIG_MATH	7	-	<5	-	<5	-	-	-	-	-	-	6	85.7	-	>95	
+140304	Baton Elementary	PK-05	RD	05	ALL	AIG_READ	8	-	<5	-	<5	-	-	-	-	-	-	7	87.5	-	>95	
+140304	Baton Elementary	PK-05	RD	05	ALL	ALL	68	15	22.1	11	16.2	7	10.3	30	44.1	5	7.4	35	51.5	42	61.8	
+140304	Baton Elementary	PK-05	RD	05	ALL	EDS	45	-	-	-	-	-	-	-	-	-	<5	17	37.8	22	48.9	
+140304	Baton Elementary	PK-05	RD	05	ALL	FEM	34	6	17.6	6	17.6	3	8.8	15	44.1	4	11.8	19	55.9	22	64.7	
+140304	Baton Elementary	PK-05	RD	05	ALL	FEM_WHTE	30	5	16.7	4	13.3	2	6.7	15	50.0	4	13.3	19	63.3	21	70.0	
+140304	Baton Elementary	PK-05	RD	05	ALL	MALE	34	-	-	-	-	-	-	-	-	-	<5	16	47.1	20	58.8	
+140304	Baton Elementary	PK-05	RD	05	ALL	MALE_WHTE	33	-	-	-	-	-	-	-	-	-	<5	16	48.5	20	60.6	
+140304	Baton Elementary	PK-05	RD	05	ALL	NOT_EDS	23	-	-	-	<5	-	-	-	-	-	-	18	78.3	20	87.0	
+140304	Baton Elementary	PK-05	RD	05	ALL	NOT_LEP	68	15	22.1	11	16.2	7	10.3	30	44.1	5	7.4	35	51.5	42	61.8	
+140304	Baton Elementary	PK-05	RD	05	ALL	NOT_SWD	58	5	8.6	11	19.0	7	12.1	30	51.7	5	8.6	35	60.3	42	72.4	
+140304	Baton Elementary	PK-05	RD	05	ALL	SWD	10	-	>95	-	<5	-	<5	-	<5	-	<5	-	<5	-	<5	
+140304	Baton Elementary	PK-05	RD	05	ALL	WHTE	63	14	22.2	8	12.7	6	9.5	30	47.6	5	7.9	35	55.6	41	65.1	
+140304	Baton Elementary	PK-05	RD	05	RG	AIG	9	-	<5	-	<5	-	-	-	-	-	-	8	88.9	-	>95	459.7
+140304	Baton Elementary	PK-05	RD	05	RG	AIG_MATH	7	-	<5	-	<5	-	-	-	-	-	-	6	85.7	-	>95	460.9
+140304	Baton Elementary	PK-05	RD	05	RG	AIG_READ	8	-	<5	-	<5	-	-	-	-	-	-	7	87.5	-	>95	459.4
+140304	Baton Elementary	PK-05	RD	05	RG	ALL	68	15	22.1	11	16.2	7	10.3	30	44.1	5	7.4	35	51.5	42	61.8	451.1
+140304	Baton Elementary	PK-05	RD	05	RG	EDS	45	-	-	-	-	-	-	-	-	-	<5	17	37.8	22	48.9	448.4
+140304	Baton Elementary	PK-05	RD	05	RG	FEM	34	6	17.6	6	17.6	3	8.8	15	44.1	4	11.8	19	55.9	22	64.7	451.9
+140304	Baton Elementary	PK-05	RD	05	RG	FEM_WHTE	30	5	16.7	4	13.3	2	6.7	15	50.0	4	13.3	19	63.3	21	70.0	453.0
+140304	Baton Elementary	PK-05	RD	05	RG	MALE	34	-	-	-	-	-	-	-	-	-	<5	16	47.1	20	58.8	450.3
+140304	Baton Elementary	PK-05	RD	05	RG	MALE_WHTE	33	-	-	-	-	-	-	-	-	-	<5	16	48.5	20	60.6	450.3
+140304	Baton Elementary	PK-05	RD	05	RG	NOT_EDS	23	-	-	-	<5	-	-	-	-	-	-	18	78.3	20	87.0	456.3
+140304	Baton Elementary	PK-05	RD	05	RG	NOT_LEP	68	15	22.1	11	16.2	7	10.3	30	44.1	5	7.4	35	51.5	42	61.8	451.1
+140304	Baton Elementary	PK-05	RD	05	RG	NOT_SWD	58	5	8.6	11	19.0	7	12.1	30	51.7	5	8.6	35	60.3	42	72.4	453.8
+140304	Baton Elementary	PK-05	RD	05	RG	SWD	10	-	>95	-	<5	-	<5	-	<5	-	<5	-	<5	-	<5	435.5
+140304	Baton Elementary	PK-05	RD	05	RG	WHTE	63	14	22.2	8	12.7	6	9.5	30	47.6	5	7.9	35	55.6	41	65.1	451.6
+140304	Baton Elementary	PK-05	RD	GS	ALL	AIG	23	-	<5	-	<5	-	<5	-	-	-	-	21	91.3	-	>95	
+140304	Baton Elementary	PK-05	RD	GS	ALL	AIG_MATH	17	-	<5	-	-	-	-	-	-	-	-	15	88.2	16	94.1	
+140304	Baton Elementary	PK-05	RD	GS	ALL	AIG_READ	16	-	<5	-	<5	-	-	-	-	-	-	15	93.8	-	>95	
+140304	Baton Elementary	PK-05	RD	GS	ALL	ALL	199	38	19.1	43	21.6	22	11.1	84	42.2	12	6.0	96	48.2	118	59.3	
+140304	Baton Elementary	PK-05	RD	GS	ALL	EDS	120	-	-	-	-	-	-	-	-	-	<5	49	40.8	64	53.3	
+140304	Baton Elementary	PK-05	RD	GS	ALL	FEM	95	15	15.8	21	22.1	10	10.5	43	45.3	6	6.3	49	51.6	59	62.1	
+140304	Baton Elementary	PK-05	RD	GS	ALL	FEM_HISP	6	-	-	-	-	-	-	-	<5	-	-	1	16.7	2	33.3	
+140304	Baton Elementary	PK-05	RD	GS	ALL	FEM_WHTE	88	13	14.8	18	20.5	9	10.2	43	48.9	5	5.7	48	54.5	57	64.8	
+140304	Baton Elementary	PK-05	RD	GS	ALL	HISP	7	-	-	-	-	-	-	-	<5	-	-	1	14.3	3	42.9	
+140304	Baton Elementary	PK-05	RD	GS	ALL	MALE	104	23	22.1	22	21.2	12	11.5	41	39.4	6	5.8	47	45.2	59	56.7	
+140304	Baton Elementary	PK-05	RD	GS	ALL	MALE_WHTE	99	22	22.2	19	19.2	11	11.1	41	41.4	6	6.1	47	47.5	58	58.6	
+140304	Baton Elementary	PK-05	RD	GS	ALL	NOT_EDS	79	13	16.5	12	15.2	7	8.9	38	48.1	9	11.4	47	59.5	54	68.4	
+140304	Baton Elementary	PK-05	RD	GS	ALL	NOT_LEP	198	37	18.7	43	21.7	22	11.1	84	42.4	12	6.1	96	48.5	118	59.6	
+140304	Baton Elementary	PK-05	RD	GS	ALL	NOT_SWD	174	19	10.9	39	22.4	21	12.1	83	47.7	12	6.9	95	54.6	116	66.7	
+140304	Baton Elementary	PK-05	RD	GS	ALL	SWD	25	-	-	-	-	-	<5	-	<5	-	<5	-	<5	2	8.0	
+140304	Baton Elementary	PK-05	RD	GS	ALL	WHTE	187	35	18.7	37	19.8	20	10.7	84	44.9	11	5.9	95	50.8	115	61.5	
+140304	Baton Elementary	PK-05	RD	GS	RG	AIG	23	-	<5	-	<5	-	<5	-	-	-	-	21	91.3	-	>95	
+140304	Baton Elementary	PK-05	RD	GS	RG	AIG_MATH	17	-	<5	-	-	-	-	-	-	-	-	15	88.2	16	94.1	
+140304	Baton Elementary	PK-05	RD	GS	RG	AIG_READ	16	-	<5	-	<5	-	-	-	-	-	-	15	93.8	-	>95	
+140304	Baton Elementary	PK-05	RD	GS	RG	ALL	199	38	19.1	43	21.6	22	11.1	84	42.2	12	6.0	96	48.2	118	59.3	
+140304	Baton Elementary	PK-05	RD	GS	RG	EDS	120	-	-	-	-	-	-	-	-	-	<5	49	40.8	64	53.3	
+140304	Baton Elementary	PK-05	RD	GS	RG	FEM	95	15	15.8	21	22.1	10	10.5	43	45.3	6	6.3	49	51.6	59	62.1	
+140304	Baton Elementary	PK-05	RD	GS	RG	FEM_HISP	6	-	-	-	-	-	-	-	<5	-	-	1	16.7	2	33.3	
+140304	Baton Elementary	PK-05	RD	GS	RG	FEM_WHTE	88	13	14.8	18	20.5	9	10.2	43	48.9	5	5.7	48	54.5	57	64.8	
+140304	Baton Elementary	PK-05	RD	GS	RG	HISP	7	-	-	-	-	-	-	-	<5	-	-	1	14.3	3	42.9	
+140304	Baton Elementary	PK-05	RD	GS	RG	MALE	104	23	22.1	22	21.2	12	11.5	41	39.4	6	5.8	47	45.2	59	56.7	
+140304	Baton Elementary	PK-05	RD	GS	RG	MALE_WHTE	99	22	22.2	19	19.2	11	11.1	41	41.4	6	6.1	47	47.5	58	58.6	
+140304	Baton Elementary	PK-05	RD	GS	RG	NOT_EDS	79	13	16.5	12	15.2	7	8.9	38	48.1	9	11.4	47	59.5	54	68.4	
+140304	Baton Elementary	PK-05	RD	GS	RG	NOT_LEP	198	37	18.7	43	21.7	22	11.1	84	42.4	12	6.1	96	48.5	118	59.6	
+140304	Baton Elementary	PK-05	RD	GS	RG	NOT_SWD	174	19	10.9	39	22.4	21	12.1	83	47.7	12	6.9	95	54.6	116	66.7	
+140304	Baton Elementary	PK-05	RD	GS	RG	SWD	25	-	-	-	-	-	<5	-	<5	-	<5	-	<5	2	8.0	
+140304	Baton Elementary	PK-05	RD	GS	RG	WHTE	187	35	18.7	37	19.8	20	10.7	84	44.9	11	5.9	95	50.8	115	61.5	
+140304	Baton Elementary	PK-05	SC	05	ALL	AIG	9	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	SC	05	ALL	AIG_MATH	7	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	SC	05	ALL	AIG_READ	8	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	SC	05	ALL	ALL	68	6	8.8	12	17.6	6	8.8	27	39.7	17	25.0	44	64.7	50	73.5	
+140304	Baton Elementary	PK-05	SC	05	ALL	EDS	45	6	13.3	9	20.0	5	11.1	17	37.8	8	17.8	25	55.6	30	66.7	
+140304	Baton Elementary	PK-05	SC	05	ALL	FEM	34	4	11.8	4	11.8	3	8.8	14	41.2	9	26.5	23	67.6	26	76.5	
+140304	Baton Elementary	PK-05	SC	05	ALL	FEM_WHTE	30	4	13.3	3	10.0	2	6.7	12	40.0	9	30.0	21	70.0	23	76.7	
+140304	Baton Elementary	PK-05	SC	05	ALL	MALE	34	2	5.9	8	23.5	3	8.8	13	38.2	8	23.5	21	61.8	24	70.6	
+140304	Baton Elementary	PK-05	SC	05	ALL	MALE_WHTE	33	2	6.1	8	24.2	2	6.1	13	39.4	8	24.2	21	63.6	23	69.7	
+140304	Baton Elementary	PK-05	SC	05	ALL	NOT_EDS	23	-	<5	-	-	-	<5	-	-	-	-	19	82.6	20	87.0	
+140304	Baton Elementary	PK-05	SC	05	ALL	NOT_LEP	68	6	8.8	12	17.6	6	8.8	27	39.7	17	25.0	44	64.7	50	73.5	
+140304	Baton Elementary	PK-05	SC	05	ALL	NOT_SWD	58	3	5.2	6	10.3	5	8.6	27	46.6	17	29.3	44	75.9	49	84.5	
+140304	Baton Elementary	PK-05	SC	05	ALL	SWD	10	-	-	-	-	-	-	-	<5	-	<5	-	<5	1	10.0	
+140304	Baton Elementary	PK-05	SC	05	ALL	WHTE	63	6	9.5	11	17.5	4	6.3	25	39.7	17	27.0	42	66.7	46	73.0	
+140304	Baton Elementary	PK-05	SC	05	RG	AIG	9	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	264.7
+140304	Baton Elementary	PK-05	SC	05	RG	AIG_MATH	7	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	266.9
+140304	Baton Elementary	PK-05	SC	05	RG	AIG_READ	8	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	264.0
+140304	Baton Elementary	PK-05	SC	05	RG	ALL	68	6	8.8	12	17.6	6	8.8	27	39.7	17	25.0	44	64.7	50	73.5	254.9
+140304	Baton Elementary	PK-05	SC	05	RG	EDS	45	6	13.3	9	20.0	5	11.1	17	37.8	8	17.8	25	55.6	30	66.7	252.5
+140304	Baton Elementary	PK-05	SC	05	RG	FEM	34	4	11.8	4	11.8	3	8.8	14	41.2	9	26.5	23	67.6	26	76.5	255.0
+140304	Baton Elementary	PK-05	SC	05	RG	FEM_WHTE	30	4	13.3	3	10.0	2	6.7	12	40.0	9	30.0	21	70.0	23	76.7	255.4
+140304	Baton Elementary	PK-05	SC	05	RG	MALE	34	2	5.9	8	23.5	3	8.8	13	38.2	8	23.5	21	61.8	24	70.6	254.8
+140304	Baton Elementary	PK-05	SC	05	RG	MALE_WHTE	33	2	6.1	8	24.2	2	6.1	13	39.4	8	24.2	21	63.6	23	69.7	254.9
+140304	Baton Elementary	PK-05	SC	05	RG	NOT_EDS	23	-	<5	-	-	-	<5	-	-	-	-	19	82.6	20	87.0	259.6
+140304	Baton Elementary	PK-05	SC	05	RG	NOT_LEP	68	6	8.8	12	17.6	6	8.8	27	39.7	17	25.0	44	64.7	50	73.5	254.9
+140304	Baton Elementary	PK-05	SC	05	RG	NOT_SWD	58	3	5.2	6	10.3	5	8.6	27	46.6	17	29.3	44	75.9	49	84.5	257.0
+140304	Baton Elementary	PK-05	SC	05	RG	SWD	10	-	-	-	-	-	-	-	<5	-	<5	-	<5	1	10.0	242.7
+140304	Baton Elementary	PK-05	SC	05	RG	WHTE	63	6	9.5	11	17.5	4	6.3	25	39.7	17	27.0	42	66.7	46	73.0	255.1
+140304	Baton Elementary	PK-05	SC	GS	ALL	AIG	9	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	SC	GS	ALL	AIG_MATH	7	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	SC	GS	ALL	AIG_READ	8	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	SC	GS	ALL	ALL	68	6	8.8	12	17.6	6	8.8	27	39.7	17	25.0	44	64.7	50	73.5	
+140304	Baton Elementary	PK-05	SC	GS	ALL	EDS	45	6	13.3	9	20.0	5	11.1	17	37.8	8	17.8	25	55.6	30	66.7	
+140304	Baton Elementary	PK-05	SC	GS	ALL	FEM	34	4	11.8	4	11.8	3	8.8	14	41.2	9	26.5	23	67.6	26	76.5	
+140304	Baton Elementary	PK-05	SC	GS	ALL	FEM_WHTE	30	4	13.3	3	10.0	2	6.7	12	40.0	9	30.0	21	70.0	23	76.7	
+140304	Baton Elementary	PK-05	SC	GS	ALL	MALE	34	2	5.9	8	23.5	3	8.8	13	38.2	8	23.5	21	61.8	24	70.6	
+140304	Baton Elementary	PK-05	SC	GS	ALL	MALE_WHTE	33	2	6.1	8	24.2	2	6.1	13	39.4	8	24.2	21	63.6	23	69.7	
+140304	Baton Elementary	PK-05	SC	GS	ALL	NOT_EDS	23	-	<5	-	-	-	<5	-	-	-	-	19	82.6	20	87.0	
+140304	Baton Elementary	PK-05	SC	GS	ALL	NOT_LEP	68	6	8.8	12	17.6	6	8.8	27	39.7	17	25.0	44	64.7	50	73.5	
+140304	Baton Elementary	PK-05	SC	GS	ALL	NOT_SWD	58	3	5.2	6	10.3	5	8.6	27	46.6	17	29.3	44	75.9	49	84.5	
+140304	Baton Elementary	PK-05	SC	GS	ALL	SWD	10	-	-	-	-	-	-	-	<5	-	<5	-	<5	1	10.0	
+140304	Baton Elementary	PK-05	SC	GS	ALL	WHTE	63	6	9.5	11	17.5	4	6.3	25	39.7	17	27.0	42	66.7	46	73.0	
+140304	Baton Elementary	PK-05	SC	GS	RG	AIG	9	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	SC	GS	RG	AIG_MATH	7	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	SC	GS	RG	AIG_READ	8	-	<5	-	<5	-	<5	-	-	-	-	-	>95	-	>95	
+140304	Baton Elementary	PK-05	SC	GS	RG	ALL	68	6	8.8	12	17.6	6	8.8	27	39.7	17	25.0	44	64.7	50	73.5	
+140304	Baton Elementary	PK-05	SC	GS	RG	EDS	45	6	13.3	9	20.0	5	11.1	17	37.8	8	17.8	25	55.6	30	66.7	
+140304	Baton Elementary	PK-05	SC	GS	RG	FEM	34	4	11.8	4	11.8	3	8.8	14	41.2	9	26.5	23	67.6	26	76.5	
+140304	Baton Elementary	PK-05	SC	GS	RG	FEM_WHTE	30	4	13.3	3	10.0	2	6.7	12	40.0	9	30.0	21	70.0	23	76.7	
+140304	Baton Elementary	PK-05	SC	GS	RG	MALE	34	2	5.9	8	23.5	3	8.8	13	38.2	8	23.5	21	61.8	24	70.6	
+140304	Baton Elementary	PK-05	SC	GS	RG	MALE_WHTE	33	2	6.1	8	24.2	2	6.1	13	39.4	8	24.2	21	63.6	23	69.7	
+140304	Baton Elementary	PK-05	SC	GS	RG	NOT_EDS	23	-	<5	-	-	-	<5	-	-	-	-	19	82.6	20	87.0	
+140304	Baton Elementary	PK-05	SC	GS	RG	NOT_LEP	68	6	8.8	12	17.6	6	8.8	27	39.7	17	25.0	44	64.7	50	73.5	
+140304	Baton Elementary	PK-05	SC	GS	RG	NOT_SWD	58	3	5.2	6	10.3	5	8.6	27	46.6	17	29.3	44	75.9	49	84.5	
+140304	Baton Elementary	PK-05	SC	GS	RG	SWD	10	-	-	-	-	-	-	-	<5	-	<5	-	<5	1	10.0	
+140304	Baton Elementary	PK-05	SC	GS	RG	WHTE	63	6	9.5	11	17.5	4	6.3	25	39.7	17	27.0	42	66.7	46	73.0	

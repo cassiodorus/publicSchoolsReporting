@@ -1,0 +1,1213 @@
+---
+title: "publicSchoolsGLPCCR Project - Read Files"
+author: "D. Hopp"
+date: "June 2017"
+output:
+  html_document: default
+---
+
+```{r omment,eval=FALSE,echo=FALSE}
+# force exit
+if (any(thisname,ls())) {
+	print(paste("Already there:",thisname))
+	knitr::knit_exit() 
+}
+```  
+
+## Scope  
+Creates functions  
+Reads data files  
+Saves image  
+
+SEDA data added 8/24/17
+
+## Requires
+```{r, warnings=FALSE}
+require(rprojroot)
+require(reshape2)
+require(magrittr)
+require(plyr)
+require(tidyverse)
+require(grid)
+require(readr)
+require(taRifx)
+require(R.utils)
+require(ggthemes)
+require(emdist)
+require(rlist)
+require(MASS)
+require(testthat)
+```  
+
+## Initialization Steps  
+
+```{r init}
+#
+# paths
+# presumes scripts are in src/ directory,
+# not in project root directory
+# change these as per your convenience
+#
+# these are read-only folders:
+#
+# this is where the NCDPI files reside:
+dataPath <- "data/"
+# SEDA data
+SEDApath <- "../SEDAdata/"
+#
+# this is where the zipped disag files reside:
+zipPath <- "disagZips/"
+#
+# ##########################################
+# these are write-only folders:
+#
+RDataPath <- "R_Data/"
+graphicsPath <- "graphics/"
+outputPath <- "output/"
+#
+# ##########################################
+# misc
+#
+op <- options()
+options(digits=2)
+forYears <- c("2013-14","2014-15","2015-16","2016-17")
+forSubjects <- c("MA","RD")
+lstSubjLong <- c(MA="Math",RD="Reading")
+forEthnicity <- c("AMIN","ASIA","BLCK","HISP","MULT","WHTE","PACI")
+forGrades345 <- c("03","04","05")
+#
+# convenience in naming files
+# a bit optimistic ...
+acYearToLETTER <- list()
+acYearToLETTER[["2013-14"]] <- "A"
+acYearToLETTER[["2014-15"]] <- "B"
+acYearToLETTER[["2015-16"]] <- "C"
+acYearToLETTER[["2016-17"]] <- "D"
+acYearToLETTER[["2017-18"]] <- "E"
+acYearToLETTER[["2018-19"]] <- "F"
+acYearToLETTER[["2019-20"]] <- "G"
+acYearToLETTER[["2020-21"]] <- "H"
+# ##########################################
+```  
+## Get Alternative and Magnet Schools  
+
+
+```{r alternative}
+# #################################
+# read active_lea_school_district_schools_report.csv
+# does not include charter schools
+# source NCPS EDDIE
+# EDDIE is located at: http://apps.schools.nc.gov/eddie
+# for 2015-16 academic year
+# active_lea_school_district_schools_report.csv
+#
+# USE: 	identify magnets
+#		identify alternative schools
+# #################################
+# alter the column headings to make them acceptable to R
+#
+# LEA Code -> LEA
+# School Code -> SchoolCode -> school_code
+# School Type Description -> SchoolType
+# School Program Type Description -> SchoolProgramType
+# #################################
+dfEDDIEschoolsYrC <- readr::read_csv(paste0(dataPath,"active_lea_school_district_schools_report.csv"),
+				col_types=cols_only(
+						LEA=col_character(), SchoolCode=col_character(), SchoolType=col_character(), SchoolProgramType=col_character() )) %>%
+				dplyr::rename( school_code=SchoolCode )
+str(dfEDDIEschoolsYrC)
+#
+unique(dfEDDIEschoolsYrC$SchoolType)
+ 
+unique(dfEDDIEschoolsYrC$SchoolProgramType)
+#
+dfEDDIEschoolsYrC %>% dplyr::filter( SchoolProgramType=="Magnet") %>% nrow()
+
+dfEDDIEschoolsYrC %>% dplyr::filter( SchoolType=="Alternative Education") %>% nrow()
+
+# #####################################
+#
+# all the magnets in the earlier 2012-13 list are still in this list
+#
+dfMagnetsYrC <- as.data.frame(
+			dfEDDIEschoolsYrC[dfEDDIEschoolsYrC$SchoolProgramType=="Magnet","school_code"],
+			stringsAsFactors = FALSE)
+names(dfMagnetsYrC) <- "school_code"
+str(dfMagnetsYrC)
+# #####################################
+dfAlternativesYrC <- as.data.frame(
+			dfEDDIEschoolsYrC[dfEDDIEschoolsYrC$SchoolType=="Alternative Education","school_code"],
+			stringsAsFactors = FALSE)
+names(dfAlternativesYrC) <- "school_code"
+str(dfAlternativesYrC)
+# #####################################
+```  
+## Some Utility Functions   
+```{r utilities}
+#
+# utility functions
+fn_check_LEA <- function(LEAs){
+# LEAs is a vector of LEA
+	# is there only one element in LEAs?
+	if ( length(LEAs)==1 ) {
+		if ( toupper(LEAs)=="ALL" ) {
+			return("OK")
+		} else if ( length(which(LEAs %in% dfLEA$LEA))!=1 ) {
+			return("ERROR: all LEAs must be in dfLEA$LEA")
+		}
+		return("OK")
+	}
+	# more than one element in LEAs
+	# is ALL in LEAs?
+	if ( length(which("ALL" %in% toupper(LEAs)))==0 ) {
+		# "ALL" not in LEAs
+		if ( length(which(LEAs %in% dfLEA$LEA))!=length(LEAs) ) {
+			return("ERROR: all LEAs must be in dfLEA$LEA.")
+		}
+		return("OK")
+	} else {
+		# "ALL" is in LEAs
+		ALL_ <- which(toupper(LEAs)=="ALL")
+		# see if other elements of LEAs in dfLEA$LEA
+		if ( length(which(LEAs %in% dfLEA$LEA)) != (length(LEAs)-length(ALL_)) ) {
+			return("ERROR: all LEAs must be in dfLEA$LEA.")
+		}
+		return("OK")
+	}
+}
+# #####################################
+#
+fn_multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+# Multiple plot function
+# http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+	# Make a list from the ... arguments and plotlist
+	plots <- c(list(...), plotlist)
+	#
+	numPlots = length(plots)
+	# If layout is NULL, then use 'cols' to determine layout
+	if (is.null(layout)) {
+		# Make the panel
+		# ncol: Number of columns of plots
+		# nrow: Number of rows needed, calculated from # of cols
+		layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+	}
+	#
+	if (numPlots==1) {
+		print(plots[[1]])
+	} else {
+	# Set up the page
+		grid.newpage()
+		pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+		# Make each plot, in the correct location
+		for (i in 1:numPlots) {
+			# Get the i,j matrix positions of the regions that contain this subplot
+			matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+			print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+				layout.pos.col = matchidx$col))
+		}
+	}
+}
+# #################################################################
+fc_ApplyLEA <- function(df) {
+    # usage:
+    # df: any data frame that has a school_code column and does NOT have an LEA column
+    # value: add an LEA column to df
+    # 
+    if (class(df)!="data.frame") {
+        return("ERROR: argument must be a data frame")
+    }
+    # test for column name school_code
+    if (length(which(stringr::str_detect(names(df),"school_code")))==0) {
+        return("Error: argument must have a column named school_code.")
+    }
+    # test for column LEA already there
+	# if so, return df
+    if (length(which(stringr::str_detect(names(df),"LEA")))>0) {
+        return(df)
+    }
+    #
+    return(df %<>% mutate( 
+        LEA=ifelse( grepl("[A-Z]",stringr::str_sub(school_code,3)), 
+                     paste0(stringr::str_sub(school_code,1,2),"0"),
+                     stringr::str_sub(school_code,1,3)
+			)
+		)
+	)
+}
+# #########################################################
+```  
+
+## Process acctsumm DPI files  
+```{r acctsumm}
+#
+# rev. September 2016
+# use the TitleI files at http://www.dpi.state.nc.us/program-monitoring/titleIA/
+# the NCDPI web site is a tangle!
+# #################################
+#
+# the acctsumm14 family of NCPS files
+# has the TitleI and charter characteristics
+#
+# for convenience, all data files are local
+#
+# need 
+# 	acctsumm14.csv, acctsumm15.csv
+#	disag1314.zip, disag1415.zip
+#
+# also uses the (redundant) TitleI files available from
+# http://www.dpi.state.nc.us/program-monitoring/titleIA/
+#
+# some schools are designated "Not Title I" (see below)
+# and are included in dfTitleI_c_T_xx as TitleI FALSE
+# these appears to be consistent with the Title I data in the acctsumm files
+#
+# 'Individual public schools with poverty rates above 40 percent may use Title I funds, along with other Federal, State, and local funds, 
+# to operate a "schoolwide program" to upgrade the instructional program for the whole school. '
+# SW: school-wide program, i.e., not targeted at poorest
+# TAS: 'Schools with poverty rates below 40 percent, or those choosing not to operate a schoolwide program, offer a "targeted assistance program" 
+# in which the school identifies students who are failing, or most at risk of failing, to meet the State's challenging performance standards, 
+# then designs, in consultation with parents, staff, and district staff, an instructional program to meet the needs of those students.'
+#
+# the disagreements in dcast for TitleISchool seem to be because acctsumm has a TRUE/FALSE flag
+# but the "Title I" files have a program model that includes "Not Title I" (or "Not Eligible")
+# and SW and TAS (and combinations thereof)
+#
+# telecon Donna Brown NCDPI 8 sep 2016
+# more or less if SW-SW, TAS-TAS, SW-TAS, TAS-SW then TitleI
+#
+# rev Jul7 17, 2017
+# grab school names
+#
+# #################################
+# 2013-14
+#
+df01AcctsummYrA <- read.csv(
+				paste0(dataPath,"acctsumm14.csv"),
+				sep="\t",
+				header=TRUE,
+				skip=4,
+				colClasses="character")
+str(df01AcctsummYrA)
+#
+dfAcctsumm_c_T_YrA <- df01AcctsummYrA %>%
+		dplyr::filter( nchar(School.Code)==6 ) %>%
+		dplyr::select( District.Name, School.Code, Title.I.School ) %>%
+		dplyr::mutate( charter_school=ifelse(District.Name=="Charter Schools",TRUE,FALSE),
+						TitleISchool=ifelse(Title.I.School=="Y",TRUE,FALSE),
+						acYear='2013-14',
+						f_acYear="A"
+		) %>%
+		dplyr::select( 
+			School.Code, 
+			charter_school, 
+			TitleISchool, 
+			acYear, 
+			f_acYear 
+		) %>%
+		dplyr::rename( 
+			school_code=School.Code 
+		)
+str(dfAcctsumm_c_T_YrA)
+#
+dfAcctsumm_c_T_YrA %>% reshape2::dcast(TitleISchool~.)
+#
+# school names
+#
+dfSchoolNamesYrA <- df01AcctsummYrA %>%
+		dplyr::filter( nchar(School.Code)==6 ) %>%
+		dplyr::select( School.Code, School.Name ) %>%
+		dplyr::mutate( 
+			f_acYear="A"
+		) %>%
+		dplyr::rename( 
+			school_code=School.Code,
+			school_name=School.Name
+		)
+str(dfSchoolNamesYrA)
+```  
+
+## Title I files   
+```{r TitleI}
+# ####################
+#
+# this file is a bit of a mess
+# headings have LF embedded
+# remove LF, remove spaces from headings BY HAND
+# also
+# LEA and school codes are a mess
+# some LEAs do not have leading 0 and neither do the school codes
+df01TitleIYrA <-  read.csv(
+				paste0(dataPath,"TitleI_2013-14.csv"),
+				sep="\t",
+				header=TRUE,
+				colClasses="character")
+str(df01TitleIYrA)
+#
+df01TitleIYrA %>% reshape2::dcast( Eligibility.ProgramModel~. )
+
+#
+# total is 2565, close to the dfAcctsumm_c_T_YrA total of 2564
+# but nothing accounts for the 1209-406=803 difference
+# SW + TAS = 807 looks close but so what?
+#
+# sorting on SCHOOLSERVED gives
+#	No 1217
+#
+# #################################
+# LEA will be added at a later step
+# ignore warnings:
+dfTitleI_c_T_YrA <- df01TitleIYrA %>%
+		dplyr::mutate( 
+			school_code=ifelse(nchar(LEACode)==2 & !is.na(as.numeric(LEACode)),paste0("0",SchoolCode),SchoolCode),
+			TitleISchool=ifelse(Eligibility.ProgramModel %in% c("Not Eligible","Not Title I"),FALSE,TRUE),
+			acYear="2013-14",
+			f_acYear="A"
+		) %>%
+		dplyr::select( 
+			school_code, 
+			CharterSchool, 
+			TitleISchool, 
+			acYear, 
+			f_acYear 
+		) %>%
+		dplyr::rename( 
+			charter_school=CharterSchool 
+		)
+		
+str(dfTitleI_c_T_YrA)
+#
+df01TitleIYrA %>% reshape2::dcast( Eligibility.ProgramModel~. )
+#
+dfTitleI_c_T_YrA %>% reshape2::dcast(TitleISchool~.)
+#
+```  
+
+```{r acctsumm15}
+# ###########################################################
+# 2014-15
+#
+df01AcctsummYrB <- read.csv(
+				paste0(dataPath,"acctsumm15.csv"),
+				sep="\t",
+				header=TRUE,
+				skip=6,
+				colClasses="character")
+str(df01AcctsummYrB)
+#
+dfAcctsumm_c_T_YrB <- df01AcctsummYrB %>%
+		dplyr::filter( nchar(School.Code)==6 ) %>%
+		dplyr::select( 
+			District.Name, 
+			School.Code, 
+			Title.I.School 
+		) %>%
+		dplyr::mutate( 
+			charter_school=ifelse(District.Name=="Charter Schools",TRUE,FALSE),
+			TitleISchool=ifelse(Title.I.School=="Y",TRUE,FALSE), 
+			acYear='2014-15',
+			f_acYear="B"
+		) %>%
+		dplyr::select( 
+			School.Code, 
+			charter_school, 
+			TitleISchool, 
+			acYear, 
+			f_acYear 
+		) %>%
+		dplyr::rename( 
+			school_code=School.Code 
+		)
+str(dfAcctsumm_c_T_YrB)
+#
+# school names
+#
+dfSchoolNamesYrB <- df01AcctsummYrB %>%
+		dplyr::filter( nchar(School.Code)==6 ) %>%
+		dplyr::select( School.Code, School.Name ) %>%
+		dplyr::mutate( 
+			f_acYear="B"
+		) %>%
+		dplyr::rename( 
+			school_code=School.Code,
+			school_name=School.Name
+		)
+str(dfSchoolNamesYrB)
+#
+# ####################
+#
+# this file is a bit better off than was the 2013-14 xls file above
+# LEA and school codes are a mess
+# some LEAs have leading 0 but their school codes do not
+df01TitleIYrB <-  read.csv(
+				paste0(dataPath,"TitleI_2014-15.csv"),
+				sep="\t",
+				header=TRUE,
+				colClasses="character")
+str(df01TitleIYrB)
+#
+dfTitleI_c_T_YrB <- df01TitleIYrB %>%
+		dplyr::mutate( 
+			school_code=ifelse(stringr::str_sub(LEACode,1,1)=="0" & nchar(SchoolCode)==5,paste0("0",SchoolCode),SchoolCode),
+			TitleISchool=ifelse(Eligibility..ProgramModel %in% c("Not Eligible","Not Title I"),FALSE,TRUE),
+			acYear="2014-15",
+			f_acYear="B"
+		) %>%
+		dplyr::select( 
+			school_code, 
+			CharterSchool, 
+			TitleISchool, 
+			acYear, 
+			f_acYear 
+		) %>%
+		dplyr::rename( 
+			charter_school=CharterSchool 
+		)
+str(dfTitleI_c_T_YrB)		
+dfTitleI_c_T_YrB %>% reshape2::dcast( TitleISchool~. )
+#
+```  
+
+```{r acctsumm16}
+# ###########################################################
+# 2015-16
+#
+df01AcctsummYrC <- read.csv(
+				paste0(dataPath,"acctsumm16.0907.csv"),
+				sep="\t",
+				header=TRUE,
+				skip=6,
+				colClasses="character")
+str(df01AcctsummYrC)
+#
+dfAcctsumm_c_T_YrC <- df01AcctsummYrC %>%
+		dplyr::filter( 
+			nchar(School.Code)==6 
+		) %>%
+		dplyr::select( 
+			District.Name, 
+			School.Code, 
+			Title.I.School 
+		) %>%
+		dplyr::mutate( 
+			charter_school=ifelse(District.Name=="Charter Schools",TRUE,FALSE),
+			TitleISchool=ifelse(Title.I.School=="Y",TRUE,FALSE), 
+			acYear='2015-16',
+			f_acYear="C"
+		) %>%
+		dplyr::select( 
+			School.Code, 
+			charter_school, 
+			TitleISchool, 
+			acYear, 
+			f_acYear 
+		) %>%
+		dplyr::rename( 
+			school_code=School.Code 
+		)
+str(dfAcctsumm_c_T_YrC)
+#
+# school names
+#
+dfSchoolNamesYrC <- df01AcctsummYrC %>%
+		dplyr::filter( nchar(School.Code)==6 ) %>%
+		dplyr::select( School.Code, School.Name ) %>%
+		dplyr::mutate( 
+			f_acYear="C"
+		) %>%
+		dplyr::rename( 
+			school_code=School.Code,
+			school_name=School.Name
+		)
+str(dfSchoolNamesYrC)
+#
+# ##################################################
+#
+# back to a mess again, and with different headings
+# remove LF from headings BY HAND
+# LEA and school codes are a mess
+# some LEAs have leading 0 but their school codes do not
+df01TitleIYrC <-  read.csv(
+				paste0(dataPath,"TitleI_2015-16.csv"),
+				sep="\t",
+				header=TRUE,
+				colClasses="character")
+str(df01TitleIYrC)
+df01TitleIYrC %>% reshape2::dcast(ELIGIBILITYMODEL~.)
+#
+dfTitleI_c_T_YrC <- df01TitleIYrC %>%
+		dplyr::mutate( 
+			school_code=ifelse(stringr::str_sub(LEACODE,1,1)=="0" & nchar(SCHOOLCODE)==5,paste0("0",SCHOOLCODE),SCHOOLCODE),
+			TitleISchool=ifelse(ELIGIBILITYMODEL %in% c("Not Eligible","Not Title I"),FALSE,TRUE),
+			acYear="2015-16",
+			f_acYear="C"
+		) %>%
+		dplyr::select( 
+			school_code, 
+			CHARTERSchool, 
+			TitleISchool, 
+			acYear, 
+			f_acYear 
+		) %>%
+		dplyr::rename( 
+			charter_school=CHARTERSchool 
+		)
+str(dfTitleI_c_T_YrC)					
+#
+dfTitleI_c_T_YrC %>% reshape2::dcast( TitleISchool~. )
+#
+```  
+
+```{r acctsumm17}
+# ###########################################################
+# 2016-17
+# added 9/9/17
+#
+df01AcctsummYrD <- read.csv(
+				paste0(dataPath,"acctsumm17.csv"),
+				sep="\t",
+				header=TRUE,
+				skip=6,
+				colClasses="character")
+str(df01AcctsummYrD)
+#
+dfAcctsumm_c_T_YrD <- df01AcctsummYrD %>%
+		dplyr::filter( nchar(School.Code)==6 ) %>%
+		dplyr::select( 
+			District.Name, 
+			School.Code, 
+			Title.I.School 
+		) %>%
+		dplyr::mutate( 
+			charter_school=ifelse(District.Name=="Charter Schools",TRUE,FALSE),
+			TitleISchool=ifelse(Title.I.School=="Y",TRUE,FALSE), 
+			acYear='2016-17',
+			f_acYear="D"
+		) %>%
+		dplyr::select( 
+			School.Code, 
+			charter_school, 
+			TitleISchool, 
+			acYear, 
+			f_acYear 
+		) %>%
+		dplyr::rename( 
+			school_code=School.Code 
+		)
+str(dfAcctsumm_c_T_YrD)
+#
+# school names
+#
+dfSchoolNamesYrD <- df01AcctsummYrD %>%
+		dplyr::filter( nchar(School.Code)==6 ) %>%
+		dplyr::select( School.Code, School.Name ) %>%
+		dplyr::mutate( 
+			f_acYear="D"
+		) %>%
+		dplyr::rename( 
+			school_code=School.Code,
+			school_name=School.Name
+		)
+str(dfSchoolNamesYrD)
+#
+
+df01TitleIYrD <-  read.csv(
+				paste0(dataPath,"TitleI_2016-17.csv"),
+				sep="\t",
+				header=TRUE,
+				colClasses="character")
+str(df01TitleIYrD)
+#
+df01TitleIYrD %>% reshape2::dcast( Eligibility.Model~. )
+#
+dfTitleI_c_T_YrD <- df01TitleIYrD %>%
+		dplyr::mutate( 
+			school_code=ifelse(stringr::str_sub(LEA.Code,1,1)=="0" & nchar(School.Code)==5,paste0("0",School.Code),School.Code),
+			TitleISchool=ifelse(Eligibility.Model %in% c("Not Eligible","Not Title I"),FALSE,TRUE),
+			acYear="2016-17",
+			f_acYear="D"
+		) %>%
+		dplyr::select( 
+			school_code, 
+			Charter.School, 
+			TitleISchool, 
+			acYear, 
+			f_acYear 
+		) %>%
+		dplyr::rename( 
+			charter_school=Charter.School 
+		)
+str(dfTitleI_c_T_YrD)					
+#
+dfTitleI_c_T_YrD %>% reshape2::dcast( TitleISchool~. )
+# ###########################################################
+```
+
+## Combine and winnow data frames  
+
+```{r combine}
+dfTitleI_c_T_Yr <- 
+	rbind(
+		dfTitleI_c_T_YrA,
+		dfTitleI_c_T_YrB,
+		dfTitleI_c_T_YrC,
+		dfTitleI_c_T_YrD
+	) %>%
+	fc_ApplyLEA()
+rm(dfTitleI_c_T_YrA,dfTitleI_c_T_YrB,dfTitleI_c_T_YrC,dfTitleI_c_T_YrD)
+#
+dfTitleI_c_T_Yr %>% reshape2::dcast(acYear+TitleISchool~.)
+#
+# ###########################################################
+#
+dfCharterTitleIyr <- 
+	rbind(
+		dfAcctsumm_c_T_YrA,
+		dfAcctsumm_c_T_YrB,
+		dfAcctsumm_c_T_YrC,
+		dfAcctsumm_c_T_YrD
+		) %>%
+	fc_ApplyLEA()
+rm(dfAcctsumm_c_T_YrA,dfAcctsumm_c_T_YrB,dfAcctsumm_c_T_YrC,dfAcctsumm_c_T_YrD)
+#
+dfCharterTitleIyr %>% reshape2::dcast(acYear+TitleISchool~.)
+#
+#
+# NOTE DIFFERENCE IN THE APPORTIONING OF TITLE I STATUS
+# BETWEEN dfTitleI_c_T_Yr AND dfCharterTitleIyr
+#
+# from two different NCDPI files:
+#	acctsumm14.csv
+#	TitleI_2013-14.csv
+#	etc.
+#
+# dfCharterTitleIyr seems to be more reasonable after comparing
+# to some other sources although somewhat higher than otherwise indicated.
+# http://www.newsobserver.com/news/local/education/article16830371.html
+# http://www.johnston.k12.nc.us/district/central_services/curriculum__instruction__and_accountability/support_services/title_i_information
+# https://www.pitt.k12.nc.us/cms/lib/NC01001178/Centricity/Domain/28/2016-17%20Title%20I%20Schools.pdf
+#
+# totals are same but Title I counts are different
+#
+dfCharterTitleIyr %>% dplyr::filter( LEA=="920") %>% reshape2::dcast(acYear+TitleISchool~.)
+#
+dfTitleI_c_T_Yr %>% dplyr::filter( LEA=="920") %>% reshape2::dcast(acYear+TitleISchool~.)
+#
+# ##########################
+# Johnston
+dfCharterTitleIyr %>% dplyr::filter( LEA=="510") %>% reshape2::dcast(acYear+TitleISchool~.)
+#
+# Pitt
+dfCharterTitleIyr %>% dplyr::filter( LEA=="740") %>% reshape2::dcast(acYear+TitleISchool~.)
+#
+# ###################
+# 
+# school names
+#
+dfSchoolNames <- 
+	rbind(
+		dfSchoolNamesYrA,
+		dfSchoolNamesYrB,
+		dfSchoolNamesYrC,
+		dfSchoolNamesYrD
+		)
+str(dfSchoolNames)
+#
+# are there any school codes with different school names?
+#
+# make pragmatic typographical alterations
+#
+tmp_zap <- " Elementary| Elem| K-8| ES| High| Middle| School| Academy|/.|,"
+dfTmp1 <- data.frame(
+	t(
+	apply(
+		dfSchoolNames %>% dplyr::select(school_code,school_name),
+		1,
+		function(x) gsub(x, pattern = tmp_zap, replacement = "") 
+		)
+	),
+	stringsAsFactors=FALSE
+)
+#
+# keep only the rows per school code with highest row number
+#
+dfSchoolNamesRecent <- dfTmp1[!duplicated(dfTmp1$school_code),]
+str(dfSchoolNamesRecent)
+#
+rm(dfSchoolNames,dfSchoolNamesYrA,dfSchoolNamesYrB,dfSchoolNamesYrC,dfSchoolNamesYrD)
+rm(dfTmp1,tmp_zap)
+# ###########################################################
+```  
+
+## LEA data frame  
+```{r LEA}
+# get LEA list
+# doesn't matter which we use for this:
+dfLEA <- dplyr::distinct(
+			dplyr::select(
+				dplyr::filter(
+					df01AcctsummYrA,nchar(School.Code)==3
+				),
+				District.Name,
+				School.Code)
+			) %>%
+			dplyr::rename( 
+				District=District.Name, 
+				LEA=School.Code 
+			)
+#
+# add column economic development tier as per http://www.ncleg.net/PED/Reports/documents/EDTiers/ED_Tiers_Report.pdf page 33
+# rating for "extra" LEAs are my interpolations
+#
+EDTier <- c(2,2,1,1,1,2,1,1,1,3,3,3,2,3,3,2,1,3,1,2,2,2,3,2,1,1,2,1,1,2,2,2,2,2,2,2,2,2,3,1,3,2,2,1,1,2,1,2,1,1,1,2,3,3,1,2,1,3,3,1,
+3,1,2,1,3,1,2,1,2,3,2,1,3,1,3,1,2,3,3,2,1,3,1,2,2,2,2,2,1,1,1,2,1,2,2,1,2,2,1,1,1,1,2,1,3,1,3,1,1,3,2,2,1,2,2)
+#
+length(EDTier)
+str(dfLEA)
+#
+dfLEA$EDTier <- EDTier
+str(dfLEA)
+#
+# ###########################################################
+```
+## Function to use with reading disag files  
+
+```{r fcnGetZippedLEAdata8}
+#
+# produces dfDisag family of data frames
+# uses the disag1314.zip family of NCPS files
+#
+fcnGetZippedLEAdata8 <- function(zFile,dFile,LEA2=NULL) {
+# if LEA2 omitted, return all
+# else
+# provide LEA2 as character vector
+# grab LEA data from the disag zip files
+# this is an inefficient way but at least it works
+#
+# value: 
+#	errors return list with class(ret[[1]]) of character
+#	success returns list with class of each element of data.frame
+#
+	fcnGetZippedLEAdata6clean <- function(L) {
+		# #####################################################
+		#
+		# clean data
+		#
+		# not necessary to replace * and - with NA since applicable columns not included
+		# trim all fields
+		# exclude records where school_code is really an LEA or NC...
+		#
+		fn_ <- function(x) {
+			x_ <- x
+			if (class(x_)=="character"){
+				x_ <- trimws(x_)
+				x_ <- ifelse ( x_ %in% c("*","-",""), NA, x_ )
+			}
+			return(x_)
+		}
+		#
+		df_ <- L %>%
+			dplyr::filter(  trimws(subject) %in% c("ALL","EOG",forSubjects) & trimws(type)=="ALL" & 
+							trimws(subgroup) %in% c("ALL","AIG","BLCK","EDS","HISP","NOT_EDS","WHTE") & nchar(trimws(school_code))==6 & 
+							stringr::str_sub(trimws(school_code),1,2)!="NC" & 
+							stringr::str_sub(trimws(school_code),4,6)!="LEA" ) %>%
+			dplyr::select( school_code,subject,grade,subgroup,num_tested,
+							num_ccr,num_glp,
+							pct_ccr,pct_glp )
+		df_ <- data.frame( lapply(df_, fn_), stringsAsFactors=FALSE ) %>%
+			dplyr::mutate( 	pct_ccr=as.numeric(ifelse(pct_ccr=="<5","2.5",ifelse(pct_ccr==">95","97.5",pct_ccr))),
+							pct_glp=as.numeric(ifelse(pct_glp=="<5","2.5",ifelse(pct_glp==">95","97.5",pct_glp))),
+							num_ccr=as.numeric(num_ccr),
+							num_glp=as.numeric(num_glp)
+							)
+		#
+		return( df_ )
+		#
+		# replace "<5" with 2.5 and ">95" with 97.5
+		# NOT A GOOD PRACTICE BUT WE WILL KEEP AN EYE ON IT
+		#
+	}
+	#
+	ret <- list()
+	#
+	if (!is.null(LEA2)) {
+		# LEA checks:
+		options(warn=-1)
+		if (!all(lapply(LEA2, function(x) nchar(x) %in% 2:3))) {
+			options(warn=0)
+			ret[["ERROR"]] <- "invalid LEA2, must be 2 or 3 char entries"
+			return(ret)
+		}
+		options(warn=0)
+		if (!all(unlist(lapply(LEA2, function(x) ifelse(nchar(x)==2,paste0(x,"0"),x))) %in% dfLEA$LEA)) {
+			ret[["ERROR"]] <- "all LEA2 entries must be in dfLEA"
+			return(ret)
+		}
+	}
+	# open a connection to the zipped data file
+	Lzcon <- unz( paste0(zipPath,zFile), dFile )
+	Ldft <- read.table( Lzcon, header=TRUE, sep="\t", quote="\"", stringsAsFactors=FALSE )
+	#
+	if (is.null(LEA2)) {
+		ret[["All"]] <- fcnGetZippedLEAdata6clean(Ldft)
+		return(ret)
+	}
+	for (ell in LEA2) {
+		Ldf <- Ldft[ stringr::str_sub(Ldft$school_code,1,nchar(ell))==ell, ]
+		if (is.null(Ldf)) {
+			ret[["ERROR"]] <- paste("cannot match LEA",ell)
+			return(ret)
+		}
+		Ldf <- fcnGetZippedLEAdata6clean(Ldf)
+		#
+		ret[[ell]] <-  Ldf
+	}
+	# #####################################################
+	return(ret)
+}
+# #########################################################
+```
+
+## Read disag files  
+
+```{r disag1314}
+#
+# this looks odd to have separate sections for 2013-14 and 2014-15
+# why not just create functions?
+# because I am not sure of what NCPS will do with their data files
+# they have altered contents before - maybe they will do so again
+# maybe I will create functions ...
+#
+# #####################################################
+#
+# make sure school_code is character
+# can use readr::read_tsv(
+#	paste0(dataPath,"Disag_2014-15_Data.txt"),
+#	col_types=cols_only(school_code=col_character(),name=col_character()))
+#
+# #####################################################
+#
+# use 2-digit codes so that charter schools will be included
+# downstream work will have to separate out Chapel Hill-Carrboro from Orange
+#
+# #######################################################
+# 2013-14
+# 
+# there is no LEA selection here
+#
+dfDisag_YrA <- fcnGetZippedLEAdata8( "disag1314.zip","Disag_2013-14/Disag_2013-14_Data.txt")[["All"]] %>% 
+		dplyr::mutate( 
+			acYear='2013-14', 
+			f_acYear="A" 
+		) %>%
+		dplyr::left_join( dfCharterTitleIyr,
+							by=c("school_code", "acYear", "f_acYear") 
+		) %>%
+		dplyr::mutate( 	num_3=num_glp-num_ccr,
+						pct_3=pct_glp-pct_ccr
+		)
+str(dfDisag_YrA)
+#
+# remove alternative schools
+# remove low count instances
+# 
+dfDisagEx20_YrA <- dfDisag_YrA %>%
+		dplyr::anti_join(
+			dfAlternativesYrC, 
+			by="school_code"
+		) %>%
+		dplyr::filter( 
+			num_tested >= 20 
+		)
+str(dfDisagEx20_YrA)
+#
+# grades 3, 4, 5
+dfDisagEx20_345_YrA <- dfDisagEx20_YrA %>%
+		dplyr::filter( 
+			grade %in% c("03","04","05") & 
+			subject %in% forSubjects 
+		) 
+str(dfDisagEx20_345_YrA)
+#
+```  
+
+```{r disag1415}
+# #######################################################################
+#
+# 2014-15
+#
+dfDisag_YrB <- fcnGetZippedLEAdata8( "disag1415.zip","Disag_2014-15/Disag_2014-15_Data.txt")[["All"]] %>%
+		dplyr::mutate( 
+			acYear='2014-15',
+			f_acYear="B" 
+		) %>%
+		dplyr::left_join( 
+			dfCharterTitleIyr,
+			by=c("school_code", "acYear", "f_acYear") 
+		) %>%
+		dplyr::mutate( 	
+			num_3=num_glp-num_ccr,
+			pct_3=pct_glp-pct_ccr
+		)
+str(dfDisag_YrB)
+#
+dfDisagEx20_YrB <- dfDisag_YrB %>%
+		dplyr::anti_join(dfAlternativesYrC, by="school_code") %>%
+		dplyr::filter( num_tested >= 20 )
+str(dfDisagEx20_YrB)
+#
+dfDisagEx20_345_YrB <- dfDisagEx20_YrB %>%
+		dplyr::filter( grade %in% c("03","04","05") & 
+				subject %in% forSubjects ) 
+str(dfDisagEx20_345_YrB)
+#
+```  
+
+```{r disag1516}
+# #######################################################################
+#
+# 2015-16
+#
+dfDisag_YrC <- fcnGetZippedLEAdata8( "disag1516.zip","Disag_2015-16/Disag_2015-16_Data.txt")[["All"]] %>%
+		dplyr::mutate( 
+			acYear='2015-16',
+			f_acYear="C" 
+		) %>%
+		dplyr::left_join( 
+			dfCharterTitleIyr,
+			by=c("school_code","acYear", "f_acYear") 
+		) %>%
+		dplyr::mutate( 	
+			num_3=num_glp-num_ccr,
+			pct_3=pct_glp-pct_ccr
+		)
+str(dfDisag_YrC)
+#
+dfDisagEx20_YrC <- dfDisag_YrC %>%
+		dplyr::anti_join(
+			dfAlternativesYrC, 
+			by="school_code"
+		) %>%
+		dplyr::filter( 
+			num_tested >= 20 
+		)
+str(dfDisagEx20_YrC)
+#
+dfDisagEx20_345_YrC <- dfDisagEx20_YrC %>%
+		dplyr::filter( 
+			grade %in% c("03","04","05") & 
+			subject %in% forSubjects 
+		) 
+str(dfDisagEx20_345_YrC)
+#
+```  
+
+```{r disag1617}
+# ########################################################
+# 2016-17
+# added 9/7/17
+# there is no LEA selection here
+#
+dfDisag_YrD <- fcnGetZippedLEAdata8( "disag1617.zip","Disag_2016-17/Disag_2016-17_Data.txt")[["All"]] %>% 
+		dplyr::mutate( 
+			acYear='2016-17', 
+			f_acYear="D" 
+		) %>%
+		dplyr::left_join( dfCharterTitleIyr,
+							by=c("school_code", "acYear", "f_acYear") 
+		) %>%
+		dplyr::mutate( 	num_3=num_glp-num_ccr,
+						pct_3=pct_glp-pct_ccr
+		)
+str(dfDisag_YrD)
+#
+# remove alternative schools
+# remove low count instances
+# 
+dfDisagEx20_YrD <- dfDisag_YrD %>%
+		dplyr::anti_join(
+			dfAlternativesYrC, 
+			by="school_code"
+		) %>%
+		dplyr::filter( 
+			num_tested >= 20 
+		)
+str(dfDisagEx20_YrD)
+#
+# grades 3, 4, 5
+dfDisagEx20_345_YrD <- dfDisagEx20_YrD %>%
+		dplyr::filter( 
+			grade %in% c("03","04","05") & 
+			subject %in% forSubjects 
+		) 
+str(dfDisagEx20_345_YrD)
+#
+# #######################################################################
+```
+
+## Combine and winnow data frames  
+```{r more_combine}
+#
+# not needed any longer
+dfDisag_Yr <- rbind(
+				dfDisag_YrA,
+				dfDisag_YrB,
+				dfDisag_YrC,
+				dfDisag_YrD
+			)
+str(dfDisag_Yr)
+#
+save(dfDisag_YrA,file=paste0(RDataPath,"dfDisag_YrA.RData"))
+save(dfDisag_YrB,file=paste0(RDataPath,"dfDisag_YrB.RData"))
+save(dfDisag_YrC,file=paste0(RDataPath,"dfDisag_YrC.RData"))
+save(dfDisag_YrD,file=paste0(RDataPath,"dfDisag_YrD.RData"))
+save(dfDisag_Yr,file=paste0(RDataPath,"dfDisag_Yr.RData"))
+#
+# keep this
+dfDisagEx20_345_Yr <- rbind(
+				dfDisagEx20_345_YrA,
+				dfDisagEx20_345_YrB,
+				dfDisagEx20_345_YrC,
+				dfDisagEx20_345_YrD
+			)
+str(dfDisagEx20_345_Yr)
+#
+save(dfDisagEx20_345_YrA,file=paste0(RDataPath,"dfDisagEx20_345_YrA.RData"))
+save(dfDisagEx20_345_YrB,file=paste0(RDataPath,"dfDisagEx20_345_YrB.RData"))
+save(dfDisagEx20_345_YrC,file=paste0(RDataPath,"dfDisagEx20_345_YrC.RData"))
+save(dfDisagEx20_345_YrD,file=paste0(RDataPath,"dfDisagEx20_345_YrD.RData"))
+save(dfDisagEx20_345_Yr,file=paste0(RDataPath,"dfDisagEx20_345_Yr.RData"))
+#
+# keep this
+dfDisagEx20_Yr <- rbind(
+				dfDisagEx20_YrA,
+#				dfDisagEx20_345_YrB, <- error? changed 9/7/17
+				dfDisagEx20_YrB,
+				dfDisagEx20_YrC,
+				dfDisagEx20_YrD
+			)
+str(dfDisagEx20_Yr)
+#
+save(dfDisagEx20_YrA,file=paste0(RDataPath,"dfDisagEx20_YrA.RData"))
+save(dfDisagEx20_YrB,file=paste0(RDataPath,"dfDisagEx20_YrB.RData"))
+save(dfDisagEx20_YrC,file=paste0(RDataPath,"dfDisagEx20_YrC.RData"))
+save(dfDisagEx20_YrD,file=paste0(RDataPath,"dfDisagEx20_YrD.RData"))
+save(dfDisagEx20_Yr,file=paste0(RDataPath,"dfDisagEx20_Yr.RData"))
+#
+# removal to keep house clean
+# these can be loaded if necessary
+rm(dfDisag_YrA,dfDisag_YrB,dfDisag_YrC,dfDisag_YrD)
+rm(dfDisag_Yr)
+rm(dfDisagEx20_YrA,dfDisagEx20_YrB,dfDisagEx20_YrC,dfDisagEx20_YrD)
+rm(dfDisagEx20_345_YrA,dfDisagEx20_345_YrB,dfDisagEx20_345_YrC,dfDisagEx20_345_YrD)
+# ########################################################
+```  
+
+## Look at grades 3, 4, and 5  
+
+```{r keep_schools}
+#
+# look at number of schools by grade and year
+#
+aggregate( 
+	school_code ~ acYear+grade, 
+	data = dfDisagEx20_345_Yr[dfDisagEx20_345_Yr$subject=="MA" & dfDisagEx20_345_Yr$subgroup=="ALL",], 
+	FUN = length 
+)
+#
+# #################################
+# keep only if in all years
+#
+# make sure schools are in all academic years - or at least are there for 3 years
+# useful particularly when MORE THAN two years of data
+#
+dfSchoolEx20_345_allyears <- dfDisagEx20_345_Yr %>% 
+				dplyr::select( school_code, acYear, f_acYear ) %>% 
+				dplyr::distinct() %>% 
+				dplyr::group_by( school_code ) %>% 
+				dplyr::count() %>% 
+				dplyr::filter( n>2 ) %>%
+				dplyr::ungroup() %>%
+				dplyr::select( school_code )
+str(dfSchoolEx20_345_allyears)
+#
+# #################################
+```  
+
+## Add what may be useful columns to dfLEA
+```{r fn_dfLEAnums}
+fn_dfLEAnums <- function() {
+# silently uses dfDisagEx20_345_Yr
+#
+# add columns to dfLEA
+# number grade 3, 4, 5 schools
+#
+# MA, RD give same counts
+	# 
+	# get number of schools per LEA
+	#
+	df1_ <- dplyr::left_join( 
+		dfLEA %>% 
+			dplyr::select( District, LEA, EDTier ),
+		dfDisagEx20_345_Yr %>% 
+			dplyr::filter( subject=="MA" & subgroup=="ALL" ) %>%
+			rowwise() %>%
+			dplyr::select( -acYear ) %>%
+			dplyr::ungroup() %>% 
+			reshape2::dcast( f_acYear+LEA+grade~., value.var="school_code" ) %>%
+			plyr::rename( c("."="num") ) %>%
+			reshape2::dcast( LEA~f_acYear+grade ),
+		by="LEA"
+	) 
+	#
+	names(df1_)[grep("^[A-Z]_",names(df1_))] <- paste0("n_",names(df1_)[grep("^[A-Z]_",names(df1_))])
+	#
+	# get number of students per LEA
+	#
+	df2_ <- dplyr::left_join( 
+		dfLEA %>% 
+			dplyr::select( District, LEA, EDTier ),
+		dfDisagEx20_345_Yr %>% 
+			dplyr::filter( subject=="MA" & subgroup=="ALL" ) %>%
+			rowwise() %>%
+			dplyr::select( -acYear ) %>%
+			dplyr::ungroup() %>% 
+			reshape2::dcast( f_acYear+LEA+grade~., sum, value.var="num_tested" ) %>%
+			plyr::rename( c("."="students") ) %>%
+			reshape2::dcast( LEA~f_acYear+grade, value.var = "students" ),
+		by="LEA"
+	) %>%
+	dplyr::select( -District, -EDTier )
+	#
+	names(df2_)[grep("^[A-Z]_",names(df2_))] <- paste0("s_",names(df2_)[grep("^[A-Z]_",names(df2_))])
+	#
+	# combine
+	#
+	return( 
+		dplyr::inner_join(
+			df1_,
+			df2_,
+			by="LEA"
+		)
+	)
+}
+#
+# add columns to dfLEA for all years and grades
+dfLEA <- fn_dfLEAnums()
+str(dfLEA)
+# ###################################
+```  
+  
+
+## Save R objects
+```{r save_image}
+save.image(file="1.RData")
+```  

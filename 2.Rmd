@@ -1,0 +1,2240 @@
+---
+title: "publicSchoolsGLPCCR Project - Some Plotting Functions"
+author: "D. Hopp"
+date: "July 2017"
+output:
+  html_document: default
+---
+
+## Requires
+```{r, warnings=FALSE}
+require(rprojroot)
+require(reshape2)
+require(magrittr)
+require(plyr)
+require(tidyverse)
+require(cowplot)
+require(grid)
+require(readr)
+require(taRifx)
+require(R.utils)
+require(ggthemes)
+require(emdist)
+require(rlist)
+require(MASS)
+```
+
+### fetch objects:
+```{r fetch}
+
+load("1.RData")
+
+```  
+
+```{r fn_knit_exit, echo=FALSE}
+fn_knit_exit <- function(ObjectName) {
+  if (any(ObjectName %in% ls())) {
+    print(paste("Already there:",ObjectName))
+    knitr::knit_exit() 
+  }
+  return(NULL)
+}
+```  
+
+## boxplots  
+
+boxplots of GLP% for subgroups BLCK, EDS, HISP, NON_EDS, WHTE
+all schools  
+one year at a time  
+one subject  
+grades 3->5  
+by subgroup  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_boxplots_track")
+```
+
+```{r fn_boxplots_track}
+
+fn_boxplots_track <- function( 
+  argEDTier="ALL", 
+  argLEAs="ALL", 
+  argCharterOnly=FALSE, 
+  argSave=TRUE ){
+#
+# argEDTier is ALL or in 1:3 and links to dfLEA
+# at most one of 1:3 and 3-
+# if 3- then exclude 600 and 920
+#
+# argLEAs is ALL or a vector of LEAs
+# any number of LEAs
+# will produce one set of plots per LEA
+#
+# if argSave TRUE then save graphics to disk
+#
+  # check for a list of LEAs:
+  if ( length(argLEAs) > 1 | !("ALL" %in% argLEAs) ) {
+    if ( !all(argLEAs %in% dfLEA$LEA) ) {
+      stop("ERROR: all of the LEAs must be in dfLEA$LEA.")
+    }
+  }
+  # select the EDTier:
+  if ( length(argEDTier) == 1 ) {
+    if ( argEDTier %in% c('ALL','1','2','3','3-') ) {}
+  } else {
+    stop("ERROR: EDTier must be ALL, 1, 2, 3 or 3-.")
+  }
+  #
+  if ( argEDTier == "ALL") {
+    df_ <- dfDisagEx20_Yr
+    EDTierTxt <- "ALL"
+  }
+  if ( argEDTier %in% c("1","2","3") ) {
+    df_ <- dfDisagEx20_Yr %>%
+      dplyr::inner_join(
+        dfLEA %>% 
+          dplyr::filter( 
+            EDTier==argEDTier 
+          ) %>%
+          dplyr::select( LEA ),
+        by="LEA"
+      )
+    EDTierTxt <- argEDTier
+  }
+  if ( argEDTier == "3-" ) {
+    df_ <- dfDisagEx20_Yr %>%
+      dplyr::inner_join(
+        dfLEA %>% 
+          dplyr::filter( 
+            EDTier==3 & 
+            !(LEA %in% c("600","900")) 
+          ) %>%
+          dplyr::select( LEA ),
+        by="LEA"
+      )
+    EDTierTxt <- "3 less 600 & 320"
+  }
+  # check argCharterOnly
+  if ( is.logical(argCharterOnly) == FALSE ) {
+    stop("ERROR: argCharterOnly must be TRUE or FALSE.")
+  }
+  #
+  if ( argCharterOnly ) {
+    df_ %<>% 
+      dplyr::filter(
+        charter_school == TRUE
+      )
+  }
+  # reorder subgroups for presentation on plot
+  df_$subgroup <- factor(
+    df_$subgroup, 
+    levels=c("NOT_EDS","EDS","ALL","BLCK","HISP","WHTE")
+  )
+  #
+  ret <- list()
+  iret_ <- 1
+  for ( LEA_ in argLEAs ) {
+    if ( LEA_ != "ALL" ) {
+      df2_ <- df_ %>% 
+        dplyr::filter(
+          LEA == LEA_
+        )
+    } else {
+      df2_ <- df_
+    }
+    for ( Y_ in c("2013-14","2014-15","2015-16") ) {
+      for (S_ in c("MA","RD") ) {
+        df3_ <- df2_ %>%
+          dplyr::filter(
+            acYear == Y_ & 
+            subject == S_ &
+            grade %in% paste0("0",3:5) &
+            subgroup != "AIG"
+        ) 
+        #
+        n_schools <- length(unique(df3_$school_code))
+        #
+        ret[[iret_]] <- df3_ %>%
+        ggplot( 
+          aes( 
+            x=grade,
+            y=pct_glp,
+            dodge=subgroup,
+            fill=subgroup
+          )
+        ) + 
+        geom_boxplot() +
+        ylim( 0, 100 ) +
+        labs( 
+          title=paste(lstSubjLong[[S_]],Y_,"GLP% by Group",ifelse(argCharterOnly," Charters Only","")),
+          subtitle=paste("EDTier",EDTierTxt,"   LEA",LEA_,"    ",n_schools,"Schools")
+          ) +
+        labs( x="Grade", y="GLP%" ) +
+        theme(   
+          legend.text=element_text(size=8),
+          plot.title=element_text(size=8, hjust=0.5),
+          plot.subtitle=element_text(size=8, hjust=0.5)
+          ) +
+        guides( fill=guide_legend(title=NULL) )
+        #
+        if (argSave) {
+          ggsave(
+            paste0(
+              graphicsPath,"boxplot_track_",S_,
+              "_",Y_,"_",LEA_,"_",argEDTier,
+              ifelse(argCharterOnly,"_Chrtr",""),".png"
+            )
+          )
+        }
+        iret_ <- iret_+1
+      }
+    }
+  }
+  return( ret )
+}  
+```  
+
+all schools  
+one grade   
+one subject  
+all years  
+by subgroup  
+```{r echo=FALSE}
+fn_knit_exit("fn_boxplots_comp")
+```  
+
+```{r fn_boxplots_comp}
+fn_boxplots_comp <- function( 
+  argEDTier="ALL", 
+  argLEAs="ALL", 
+  argCharterOnly=FALSE, 
+  argSave=TRUE ){
+#
+# EDTier is ALL or in 1:3 and '3-', and links to dfLEA
+#
+  # check for a list of LEAs:
+  if ( length(argLEAs) > 1 | !("ALL" %in% argLEAs) ) {
+    if ( !all(argLEAs %in% dfLEA$LEA) ) {
+      stop("ERROR: all of the LEAs must be in dfLEA$LEA.")
+    }
+  }
+  # check argCharterOnly
+  if ( is.logical(argCharterOnly) == FALSE ) {
+    stop("ERROR: argCharterOnly must be TRUE or FALSE.")
+  }
+  # select the EDTier:
+  if ( length(argEDTier) == 1 ) {
+    if ( argEDTier %in% c('ALL','1','2','3','3-') ) {}
+  } else {
+    stop("ERROR: EDTier must be ALL, 1, 2, 3 or 3-.")
+  }
+  #
+  if ( argEDTier == "ALL") {
+    df_ <- dfDisagEx20_Yr
+    EDTierTxt <- "ALL"
+  }
+  if ( argEDTier %in% c("1","2","3") ) {
+    df_ <- dfDisagEx20_Yr %>%
+      dplyr::inner_join(
+        dfLEA %>% 
+          dplyr::filter( 
+            EDTier==argEDTier 
+          ) %>%
+          dplyr::select( LEA ),
+        by="LEA"
+      )
+    EDTierTxt <- argEDTier
+  }
+  if ( argEDTier == "3-" ) {
+    df_ <- dfDisagEx20_Yr %>%
+      dplyr::inner_join(
+        dfLEA %>% 
+          dplyr::filter( 
+            EDTier==3 & 
+            !(LEA %in% c("600","900")) 
+          ) %>%
+          dplyr::select( LEA ),
+        by="LEA"
+      )
+    EDTierTxt <- "3 less 600 & 320"
+  }
+  #
+  if ( argCharterOnly ) {
+    df_ %<>% 
+      dplyr::filter(
+        charter_school == TRUE
+      )
+  }
+  # reorder subgroups for presentation on plot
+  df_$subgroup <- factor(
+    df_$subgroup, 
+    levels=c("NOT_EDS","EDS","ALL","BLCK","HISP","WHTE")
+  )
+  #
+  ret <- list()
+  iret_ <- 1
+  for ( LEA_ in argLEAs ) {
+    if ( LEA_ != "ALL" ) {
+      df2_ <- df_ %>% 
+        dplyr::filter(
+          LEA == LEA_
+        )
+    } else {
+      df2_ <- df_
+    }
+    #
+    for ( G_ in paste0("0",3:8) ) {
+      for (S_ in c("MA","RD") ) {
+        df3_ <- df2_ %>%
+          dplyr::filter(
+            subject == S_ &
+            grade == G_ &
+            subgroup != "AIG"
+        )
+        #
+        n_schools <- length(unique(df3_$school_code))
+        #
+        ret[[iret_]] <- df3_ %>%
+        ggplot( 
+          aes( 
+            x=acYear,
+            y=pct_glp,
+            dodge=subgroup,
+            fill=subgroup
+          )
+        ) + 
+        geom_boxplot() +
+        labs( 
+          title=paste(lstSubjLong[[S_]],"Grade",G_,"GLP% by Group",ifelse(argCharterOnly," Charters Only","")),
+          subtitle=paste("EDTier",EDTierTxt,"   LEA",LEA_,"   By Year    ",n_schools,"Schools")
+          ) +
+        labs( x="Year", y="GLP%" ) +
+        ylim( 0, 100 ) +
+        theme(   
+          legend.text=element_text(size=8),
+          plot.title=element_text(size=8, hjust=0.5),
+          plot.subtitle=element_text(size=8, hjust=0.5)
+          ) +
+        guides( fill=guide_legend(title=NULL) )
+        #
+        if (argSave) {
+          ggsave(          
+            paste0(
+              graphicsPath,"boxplot_comp_",S_,
+              "_",G_,"_",LEA_,"_",argEDTier,
+              ifelse(argCharterOnly,"_Chrtr",""),".png"
+            )
+          )
+        }
+        iret_ <- iret_+1
+      }
+    }
+  }
+  return( ret )
+}
+```  
+
+follow cohort from grade 3 2013-14 to grade 5 2015-16  
+September 7, 2017 2016-17 disag data added by DPI  
+Follow two cohorts: 2013-14 to 2015-16 and 2014-15 to 2016-17  
+```{r echo=FALSE}
+fn_knit_exit("fn_boxplots_cohort")
+```  
+
+```{r fn_boxplots_cohort}
+fn_boxplots_cohort<- function( 
+  argEDTier="ALL", 
+  argLEAs="ALL", 
+  argCharterOnly=FALSE, 
+  argSave=TRUE ){
+#
+# argEDTier is ALL or in 1:3 and links to dfLEA
+# at most one of 1:3 and 3-
+# if 3- then exclude 600 and 920
+#
+# argLEAs is ALL or a vector of LEAs
+# any number of LEAs
+# will produce one set of plots per LEA
+#
+  # check for a list of LEAs:
+  if ( length(argLEAs) > 1 | !("ALL" %in% argLEAs) ) {
+    if ( !all(argLEAs %in% dfLEA$LEA) ) {
+      stop("ERROR: all of the LEAs must be in dfLEA$LEA.")
+    }
+  }
+  # select the EDTier:
+  if ( length(argEDTier) == 1 ) {
+    if ( argEDTier %in% c('ALL','1','2','3','3-') ) {}
+  } else {
+    stop("ERROR: EDTier must be ALL, 1, 2, 3 or 3-.")
+  }
+  #
+  if ( argEDTier == "ALL") {
+    df_ <- dfDisagEx20_Yr
+    EDTierTxt <- "ALL"
+  }
+  if ( argEDTier %in% c("1","2","3") ) {
+    df_ <- dfDisagEx20_Yr %>%
+      dplyr::inner_join(
+        dfLEA %>% 
+          dplyr::filter( 
+            EDTier==argEDTier 
+          ) %>%
+          dplyr::select( LEA ),
+        by="LEA"
+      )
+    EDTierTxt <- argEDTier
+  }
+  if ( argEDTier == "3-" ) {
+    df_ <- dfDisagEx20_Yr %>%
+      dplyr::inner_join(
+        dfLEA %>% 
+          dplyr::filter( 
+            EDTier==3 & 
+            !(LEA %in% c("600","900")) 
+          ) %>%
+          dplyr::select( LEA ),
+        by="LEA"
+      )
+    EDTierTxt <- "3 less 600 & 320"
+  }
+  # check argCharterOnly
+  if ( is.logical(argCharterOnly) == FALSE ) {
+    stop("ERROR: argCharterOnly must be TRUE or FALSE.")
+  }
+  #
+  if ( argCharterOnly ) {
+    df_ %<>% 
+      dplyr::filter(
+        charter_school == TRUE
+      )
+  }
+  #
+  ret <- list()
+  iret_ <- 1
+  for ( LEA_ in argLEAs ) {
+    if ( LEA_ != "ALL" ) {
+      df2_ <- df_ %>% 
+        dplyr::filter(
+          LEA == LEA_
+        )
+    } else {
+      df2_ <- df_
+    }
+    # reorder subgroups for presentation on plot
+    df2_$subgroup <- factor(
+      df2_$subgroup, 
+      levels=c("NOT_EDS","EDS","ALL","BLCK","HISP","WHTE")
+    )
+    #
+    # follow two cohorts
+    #
+    for (cohort in c("A","B")) {
+      for (S_ in c("MA","RD") ) {
+        if (cohort=="A") {
+          yrs_ <- "2013-14 to 2014-15"
+          df3_ <- df2_ %>%
+          dplyr::filter(
+            ((f_acYear=="A" & grade=="03") |
+            (f_acYear=="B" & grade=="04") |
+            (f_acYear=="C" & grade=="05")) & 
+            subject == S_ &
+            subgroup != "AIG"
+          ) 
+        } else {
+          yrs_ <- "2014-15 to 2016-17"
+          df3_ <- df2_ %>%
+          dplyr::filter(
+            ((f_acYear=="B" & grade=="03") |
+            (f_acYear=="C" & grade=="04") |
+            (f_acYear=="D" & grade=="05")) & 
+            subject == S_ &
+            subgroup != "AIG"          
+          )
+        }
+        #
+        n_schools <- length(unique(df3_$school_code))
+        #
+        ret[[iret_]] <- df3_ %>%
+        ggplot( 
+          aes( 
+            x=grade,
+            y=pct_glp,
+            dodge=subgroup,
+            fill=subgroup
+          )
+        ) + 
+        geom_boxplot() +
+        ylim( 0, 100 ) +
+        labs( 
+          title=paste("Cohort",yrs_,"for",lstSubjLong[[S_]],"GLP% by Group",ifelse(argCharterOnly," Charters Only","")),
+          subtitle=paste("EDTier",EDTierTxt,"   LEA",LEA_,"    ",n_schools,"Schools")
+          ) +
+        labs( x="Grade", y="GLP%" ) +
+        theme(   
+          legend.text=element_text(size=8),
+          plot.title=element_text(size=8, hjust=0.5),
+          plot.subtitle=element_text(size=8, hjust=0.5)
+          ) +
+        guides( fill=guide_legend(title=NULL) )
+        #
+        if (argSave) {
+          ggsave(
+            paste0(
+              graphicsPath,"boxplot_cohort_",cohort,"_",S_,
+              "_",LEA_,"_",argEDTier,
+              ifelse(argCharterOnly,"_Chrtr",""),".png"
+            )
+          )
+        }
+        iret_ <- iret_+1
+      }
+    }
+  }
+  return( ret )
+}
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_boxplots_sbs_cohort")
+```  
+
+### NOT FINISHED:
+
+```{r fn_boxplots_sbs_cohort}
+fn_boxplots_sbs_cohort<- function( 
+  argEDTier="ALL", 
+  argLEAs="ALL", 
+  argCharterOnly=FALSE, 
+  argSave=TRUE ){
+#
+# NOT IN USE
+#
+# side by side plots
+#
+# cohort 2014-15 to 2016-17
+#
+# argEDTier is ALL or in 1:3 and links to dfLEA
+# at most one of 1:3 and 3-
+# if 3- then exclude 600 and 920
+#
+# argLEAs is ALL or a vector of LEAs
+# any number of LEAs
+# will produce one set of plots per LEA
+#
+  # check for a list of LEAs:
+  if ( length(argLEAs) > 1 | !("ALL" %in% argLEAs) ) {
+    if ( !all(argLEAs %in% dfLEA$LEA) ) {
+      stop("ERROR: all of the LEAs must be in dfLEA$LEA.")
+    }
+  }
+  # select the EDTier:
+  if ( length(argEDTier) == 1 ) {
+    if ( argEDTier %in% c('ALL','1','2','3','3-') ) {}
+  } else {
+    stop("ERROR: EDTier must be ALL, 1, 2, 3 or 3-.")
+  }
+  #
+  if ( argEDTier == "ALL") {
+    df_ <- dfDisagEx20_Yr
+    EDTierTxt <- "ALL"
+  }
+  if ( argEDTier %in% c("1","2","3") ) {
+    df_ <- dfDisagEx20_Yr %>%
+      dplyr::inner_join(
+        dfLEA %>% 
+          dplyr::filter( 
+            EDTier==argEDTier 
+          ) %>%
+          dplyr::select( LEA ),
+        by="LEA"
+      )
+    EDTierTxt <- argEDTier
+  }
+  if ( argEDTier == "3-" ) {
+    df_ <- dfDisagEx20_Yr %>%
+      dplyr::inner_join(
+        dfLEA %>% 
+          dplyr::filter( 
+            EDTier==3 & 
+            !(LEA %in% c("600","900")) 
+          ) %>%
+          dplyr::select( LEA ),
+        by="LEA"
+      )
+    EDTierTxt <- "3 less 600 & 320"
+  }
+  # check argCharterOnly
+  if ( is.logical(argCharterOnly) == FALSE ) {
+    stop("ERROR: argCharterOnly must be TRUE or FALSE.")
+  }
+  #
+  if ( argCharterOnly ) {
+    df_ %<>% 
+      dplyr::filter(
+        charter_school == TRUE
+      )
+  }
+  #
+  ret <- list()
+  iret_ <- 1
+  cols_ethnic <- c("ALL"="orange","BLCK"="red","HISP"="blue","WHTE"="green")
+  cols_EDS <- c("ALL"="orange","EDS"="maroon","NOT_EDS"="steelblue")
+  #
+  # side by side creates two boxplots for each user request
+  # one that contains entire population, BLCK, HISP and WHTE
+  # one that contains entire population, EDS, NOT_EDS
+  #
+  for ( LEA_ in argLEAs ) {
+    if ( LEA_ != "ALL" ) {
+      df2_ <- df_ %>% 
+        dplyr::filter(
+          LEA == LEA_ &
+          subgroup != "AIG"
+        )
+    } else {
+      df2_ <- df_ %>%
+        dplyr::filter(
+          subgroup != "AIG"
+        )
+    }
+    #
+    for (which_plot in c("ethnic","EDS") ) {
+      for (S_ in c("MA","RD") ) {
+        if (which_plot=="ethnic") {
+          cols_use <- cols_ethnic
+          df3_ <- df2_ %>%
+          dplyr::filter(
+            ((f_acYear=="B" & grade=="03") |
+            (f_acYear=="C" & grade=="04") |
+            (f_acYear=="D" & grade=="05")) & 
+            subject == S_ &
+            !(subgroup %in% c("EDS","NOT_EDS"))
+          )
+        } else {
+          cols_use <- cols_EDS
+          df3_ <- df2_ %>%
+          dplyr::filter(
+            ((f_acYear=="B" & grade=="03") |
+            (f_acYear=="C" & grade=="04") |
+            (f_acYear=="D" & grade=="05")) & 
+            subject == S_ &
+            !(subgroup %in% c("BLCK","HISP","WHTE"))
+          )
+        }
+        #
+        n_schools <- length(unique(df3_$school_code))
+        #
+        ret[[iret_]] <- df3_ %>%
+        ggplot( 
+          aes( 
+            x=grade,
+            y=pct_glp
+          ),
+          dodge=subgroup
+        ) + 
+        scale_fill_manual( values=cols_use ) +
+        geom_boxplot(aes(fill=subgroup)) +
+        ylim( 0, 100 ) +
+        labs( 
+          title=paste("Follow Cohort for",lstSubjLong[[S_]],"2014-15 to 2016-17 GLP% by Group",ifelse(argCharterOnly,  " Charters Only","")),
+          subtitle=paste("EDTier",EDTierTxt,"   LEA",LEA_,"    ",n_schools,"Schools")
+        ) +
+        labs( x="Grade", y="GLP%" ) +
+        theme(   
+          legend.text=element_text(size=8),
+          plot.title=element_text(size=8, hjust=0.5),
+          plot.subtitle=element_text(size=8, hjust=0.5)
+        ) +
+        guides( fill=guide_legend(title=NULL) )
+        #
+        if (argSave) {
+          ggsave(
+            paste0(
+              graphicsPath,"-boxplot_cohort_",which_plot,"_",S_,
+              "_",LEA_,"_",argEDTier,
+              ifelse(argCharterOnly,"_Chrtr",""),".png"
+            )
+          )
+        }
+        iret_ <- iret_+1
+      }
+    }
+  }
+  return( ret )
+}
+```  
+
+## scatterplots  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_dfDisagEx20_345_comp")
+fn_knit_exit("dfDisagEx20_345_comp")
+```  
+
+```{r fn_dfDisagEx20_345_comp}
+# #############################
+#
+# 2013-14 to 2014-15 vs 2014-15 to 2015-16 vs 2016-17
+# changes in GLP%
+#
+# create helper data frames 
+# could alternatively create on the fly by use of functions
+#
+# #############################
+#
+# "comp" means compare same grade across years
+# each row is a single grade  
+# keep all four years
+# use dfDisagEx20_345_Yr
+#
+fn_dfDisagEx20_345_comp <- function() 
+{
+  dfDisagEx20_345_comp <-
+  dplyr::inner_join(
+    dfDisagEx20_345_Yr %>%
+      dplyr::select(
+        LEA,
+        school_code,
+        subject,
+        grade,
+        subgroup,
+        num_tested,
+        pct_glp,
+        f_acYear
+      ) %>%
+      dplyr::filter(
+        f_acYear == "A"
+      ),
+    dfDisagEx20_345_Yr %>%
+      dplyr::select(
+        LEA,
+        school_code,
+        subject,
+        grade,
+        subgroup,
+        num_tested,
+        pct_glp,
+        f_acYear
+      ) %>%
+      dplyr::filter(
+        f_acYear == "B"
+      ),  
+    by=c(
+      "LEA",
+      "school_code",
+      "subject",
+      "grade",
+      "subgroup"
+    )
+  ) %>%
+  dplyr::inner_join(
+    dfDisagEx20_345_Yr %>%
+      dplyr::select(
+        LEA,
+        school_code,
+        subject,
+        grade,
+        subgroup,
+        num_tested,
+        pct_glp,
+        f_acYear
+      ) %>%
+      dplyr::filter(
+        f_acYear == "C"
+      ),  
+    by=c(
+      "LEA",
+      "school_code",
+      "subject",
+      "grade",
+      "subgroup"
+    )
+  ) %>%
+  dplyr::rename(
+    num_tested.A=num_tested.x,
+    num_tested.B=num_tested.y,
+    num_tested.C=num_tested,
+    pct_glp.A=pct_glp.x,
+    pct_glp.B=pct_glp.y,
+    pct_glp.C=pct_glp,
+    f_acYear.A=f_acYear.x,
+    f_acYear.B=f_acYear.y,
+    f_acYear.C=f_acYear
+  ) %>%
+  dplyr::inner_join(
+    dfDisagEx20_345_Yr %>%
+      dplyr::select(
+        LEA,
+        school_code,
+        subject,
+        grade,
+        subgroup,
+        num_tested,
+        pct_glp,
+        f_acYear
+      ) %>%
+      dplyr::filter(
+        f_acYear == "D"
+      ),  
+    by=c(
+      "LEA",
+      "school_code",
+      "subject",
+      "grade",
+      "subgroup"
+    )
+  ) %>%
+  dplyr::rename(
+    num_tested.D=num_tested,
+    pct_glp.D=pct_glp,
+    f_acYear.D=f_acYear
+  ) %>%
+  dplyr::mutate(
+    diff_AB=pct_glp.B-pct_glp.A,
+    diff_BC=pct_glp.C-pct_glp.B,
+    diff_CD=pct_glp.D-pct_glp.C,
+      X2080=ifelse(
+        pct_glp.A<20,TRUE,
+        ifelse(pct_glp.A>80,TRUE,FALSE)
+  	)
+  ) %>%
+  dplyr::inner_join(
+    dfLEA %>% 
+      dplyr::select( 
+        LEA,
+        EDTier
+        ),
+    by="LEA"
+  ) %>%
+  dplyr::inner_join(
+    dfCharterTitleIyr %>%
+      dplyr::select(
+        -acYear
+      ) %>%
+      dplyr::filter(
+        f_acYear=="D"
+      ),
+    by=c("LEA","school_code")
+  ) %>%
+  dplyr::select(
+    -f_acYear
+  )
+  return(dfDisagEx20_345_comp)
+}
+#
+str(fn_dfDisagEx20_345_comp())
+dfDisagEx20_345_comp <- fn_dfDisagEx20_345_comp()
+```   
+
+
+```{r echo=FALSE}
+fn_knit_exit("fn_dfDisagEx20_345_ABCD_track")
+fn_knit_exit("dfDisagEx20_345_ABCD_track")
+```  
+
+```{r fn_dfDisagEx20_345_ABCD_track}
+#
+# ###########################
+#
+# "track" means track grade 3->4 and 4->5 across years
+# each row contains grades 3, 4, and 5 for succesive years
+#
+fn_dfDisagEx20_345_ABCD_track <- function() {
+  dfDisagEx20_345_ABCD_track <-
+  dplyr::inner_join(
+    dfDisagEx20_345_Yr %>%
+      dplyr::select(
+        LEA,
+        school_code,
+        subject,
+        grade,
+        subgroup,
+        num_tested,
+        pct_glp,
+        f_acYear
+      ) %>%
+      dplyr::filter(
+        f_acYear == "A" &
+        grade == "03"
+      ),
+    dfDisagEx20_345_Yr %>%
+      dplyr::select(
+        LEA,
+        school_code,
+        subject,
+        grade,
+        subgroup,
+        num_tested,
+        pct_glp,
+        f_acYear
+      ) %>%
+      dplyr::filter(
+        f_acYear == "B" &
+        grade == "04"
+      ),  
+    by=c(
+      "LEA",
+      "school_code",
+      "subject",
+      "subgroup"
+    )
+  ) %>%
+  dplyr::inner_join(
+    dfDisagEx20_345_Yr %>%
+      dplyr::select(
+        LEA,
+        school_code,
+        subject,
+        grade,
+        subgroup,
+        num_tested,
+        pct_glp,
+        f_acYear
+      ) %>%
+      dplyr::filter(
+        f_acYear == "C" &
+        grade == "05"
+      ),  
+    by=c(
+      "LEA",
+      "school_code",
+      "subject",
+      "subgroup"
+    )
+  ) %>%
+  dplyr::rename(
+    grade.1=grade.x,
+    grade.2=grade.y,
+    grade.3=grade,
+    num_tested.1=num_tested.x,
+    num_tested.2=num_tested.y,
+    num_tested.3=num_tested,
+    pct_glp.1=pct_glp.x,
+    pct_glp.2=pct_glp.y,
+    pct_glp.3=pct_glp,
+    f_acYear.1=f_acYear.x,
+    f_acYear.2=f_acYear.y,
+    f_acYear.3=f_acYear
+  ) %>%
+  dplyr::mutate(
+    diff_12=pct_glp.2-pct_glp.1,
+    diff_23=pct_glp.3-pct_glp.2,
+    X2080=ifelse(
+      pct_glp.1<20,TRUE,
+      ifelse(pct_glp.1>80,TRUE,FALSE)
+    ),
+    Years="ABC"
+  ) %>%
+  dplyr::inner_join(
+    dfLEA %>% 
+      dplyr::select( 
+        LEA,
+        EDTier
+        ),
+    by="LEA"
+  ) %>%
+  dplyr::inner_join(
+    dfCharterTitleIyr %>%
+      dplyr::select(
+        -acYear
+      ) %>%
+      dplyr::filter(
+        f_acYear=="C"
+      ),
+    by=c("LEA","school_code")
+  ) %>%
+  dplyr::select(
+    -f_acYear
+  )
+  return(dfDisagEx20_345_ABCD_track)
+}
+#
+str(fn_dfDisagEx20_345_ABCD_track())
+dfDisagEx20_345_ABCD_track <- fn_dfDisagEx20_345_ABCD_track()
+```  
+
+
+```{r finish_dfDisagEx20_345_ABCD_track}
+dfTmp <-
+dplyr::inner_join(
+  dfDisagEx20_345_Yr %>%
+    dplyr::select(
+      LEA,
+      school_code,
+      subject,
+      grade,
+      subgroup,
+      num_tested,
+      pct_glp,
+      f_acYear
+    ) %>%
+    dplyr::filter(
+      f_acYear == "B" &
+      grade == "03"
+    ),
+  dfDisagEx20_345_Yr %>%
+    dplyr::select(
+      LEA,
+      school_code,
+      subject,
+      grade,
+      subgroup,
+      num_tested,
+      pct_glp,
+      f_acYear
+    ) %>%
+    dplyr::filter(
+      f_acYear == "C" &
+      grade == "04"
+    ),  
+  by=c(
+    "LEA",
+    "school_code",
+    "subject",
+    "subgroup"
+  )
+) %>%
+dplyr::inner_join(
+  dfDisagEx20_345_Yr %>%
+    dplyr::select(
+      LEA,
+      school_code,
+      subject,
+      grade,
+      subgroup,
+      num_tested,
+      pct_glp,
+      f_acYear
+    ) %>%
+    dplyr::filter(
+      f_acYear == "D" &
+      grade == "05"
+    ),  
+  by=c(
+    "LEA",
+    "school_code",
+    "subject",
+    "subgroup"
+  )
+) %>%
+dplyr::rename(
+  grade.1=grade.x,
+  grade.2=grade.y,
+  grade.3=grade,
+  num_tested.1=num_tested.x,
+  num_tested.2=num_tested.y,
+  num_tested.3=num_tested,
+  pct_glp.1=pct_glp.x,
+  pct_glp.2=pct_glp.y,
+  pct_glp.3=pct_glp,
+  f_acYear.1=f_acYear.x,
+  f_acYear.2=f_acYear.y,
+  f_acYear.3=f_acYear
+) %>%
+dplyr::mutate(
+  diff_12=pct_glp.2-pct_glp.1,
+  diff_23=pct_glp.3-pct_glp.2,
+  X2080=ifelse(
+    pct_glp.1<20,TRUE,
+    ifelse(pct_glp.1>80,TRUE,FALSE)
+  ),
+  Years="BCD"
+) %>%
+dplyr::inner_join(
+  dfLEA %>% 
+    dplyr::select( 
+      LEA,
+      EDTier
+      ),
+  by="LEA"
+) %>%
+dplyr::inner_join(
+  dfCharterTitleIyr %>%
+    dplyr::select(
+    -acYear
+  ) %>%
+  dplyr::filter(
+    f_acYear=="D"
+  ),
+  by=c("LEA","school_code")
+) %>%
+dplyr::select(
+  -f_acYear
+)
+#
+str(dfTmp)
+#
+dfDisagEx20_345_ABCD_track <-
+  rbind(
+    dfDisagEx20_345_ABCD_track,
+    dfTmp)
+str(dfDisagEx20_345_ABCD_track)
+rm(dfTmp)
+```  
+
+9/18/17 remove dfDisagEx20_345_track_all 
+
+### scatterplot functions  
+  
+ use dfDisagEx20_345_track and dfDisagEx20_345_comp   
+  
+ refs:  
+ https://groups.google.com/forum/#!topic/ggplot2/2qCkPdo0SnM  
+ https://stackoverflow.com/questions/22915337/if-else-condition-in-ggplot-to-add-an-extra-layer  
+  
+ compare grade 3 across years  
+ ditto grade 4 and grade 5  
+```{r echo=FALSE}
+fn_knit_exit("fn_scatterplots_comp")
+```  
+
+```{r fn_scatterplots_comp}
+fn_scatterplots_comp <- function(
+  argEDTier="ALL",
+  argLEAs="ALL",
+  argCharterOnly=FALSE,
+  argSave=TRUE
+  )
+{
+#
+# argEDTier is ALL or in 1:3 and links to dfLEA
+# at most one of 1:3
+#
+# argLEAs is ALL or a vector of LEAs
+# any number of LEAs
+# will produce one set of plots per LEA
+#
+# argCharterOnly if TRUE
+# then charters only
+# 
+#
+  # check for a list of LEAs:
+  if ( length(argLEAs) > 1 | !("ALL" %in% argLEAs) ) {
+    if ( !all(argLEAs %in% dfLEA$LEA) ) {
+      stop("ERROR: all of the LEAs must be in dfLEA$LEA.")
+    }
+  }
+  # select the EDTier:
+  if ( length(argEDTier) != 1) {
+    stop("ERROR: EDTier must be ALL, 1, 2, or 3.")
+  }
+  #
+  if ( argEDTier == "ALL") {
+    df_ <- dfDisagEx20_345_comp
+  } else {
+    df_ <- dfDisagEx20_345_comp %>% 
+        dplyr::filter( 
+          EDTier==argEDTier
+        )
+  }
+  # subset on subgroup ALL and
+  # create column for scale_fill_manual
+  df_ %<>%
+    dplyr::filter(
+      subgroup == "ALL"
+    ) %>%
+    dplyr::mutate(
+      fill_colour=factor(
+        ifelse(!X2080,1,
+          ifelse(TitleISchool,2,3)
+        )
+      )
+    )
+  # check argCharterOnly
+  if ( is.logical(argCharterOnly) == FALSE ) {
+    stop("ERROR: argCharterOnly must be TRUE or FALSE.")
+  }
+  #
+  if ( argCharterOnly ) {
+    df_ %<>% 
+      dplyr::filter(
+        charter_school == TRUE
+      )
+  }
+  #
+  # create a grob for use with all plots
+  grob <- grid::grobTree(
+    textGrob(
+      paste0("Filled circles are schools with GLP% under 20% or over 80%\n",
+		"Confidence ellipses for Title I and not-Title I schools."),
+      x=0.1,
+      y=0.98,
+      hjust=-0.45,
+      gp=gpar(fontsize=6)
+    )
+  )
+  # colors
+  fill_values <- c("1"="white","2"="red","3"="blue")
+  #
+  # width of scatterplot
+  plot_max <- 50
+  #
+  ret <- list()
+  iret_ <- 1
+  #
+  # for 2013-14>2014-15>2015-16 and 2014-15>2015-16>2016-17
+  xaxis_text <- c("2014-15 minus 2013-14","2015-16 minus 2014-15")
+  yaxis_text <- c("2015-16 minus 2014-15","2016-17 minus 2015-16")
+  names_ <- names(df_)
+  for ( Years_ in 1:2 ) {
+    names(df_) <- names_
+	  if (Years_==1) {
+      df_ %<>%
+        dplyr::rename(
+		  diff_12=diff_AB,
+		  diff_23=diff_BC
+	    )
+    } else {
+      df_ %<>% 
+        dplyr::rename(
+           diff_12=diff_BC,
+           diff_23=diff_CD
+        )
+    } 
+    #
+    for ( LEA_ in argLEAs ) {
+      if ( LEA_ != "ALL" ) {
+        df2_ <- df_ %>% 
+          dplyr::filter(
+            LEA == LEA_
+          )
+      } else {
+        df2_ <- df_
+      }
+      #
+      for (S_ in c("MA","RD")) {
+        for (G_ in c("03","04","05")) {
+          nschools_ <- length(df2_[df2_$subject==S_ & df2_$grade==G_,"school_code"])
+          nschools_T1 <- length(df2_[df2_$subject==S_ & df2_$grade==G_ & df2_$TitleISchool==TRUE, "school_code"])
+          #
+          plt_ <-
+          df2_ %>%
+            dplyr::filter(
+              subject == S_ &
+              grade == G_
+            ) %>%
+          ggplot( 
+            aes(
+              x=diff_12, 
+              y=diff_23 
+            ) 
+          ) +
+          geom_point(aes(
+              colour=TitleISchool,
+              shape=TitleISchool,
+              fill=fill_colour
+            ),
+            position="jitter",
+            stroke=0.9,
+            alpha=0.6
+          ) +
+          scale_colour_manual(
+            values=c("blue", "red"),
+            labels=c("No","Yes")
+          ) +
+          scale_shape_manual(
+            values=c(21,21),
+            guide=FALSE
+          ) +
+          scale_fill_manual(
+            values=fill_values,
+            guide=FALSE
+          ) +
+          xlim( -plot_max, plot_max ) +
+          ylim( -plot_max, plot_max ) +
+          labs(
+            title=paste(
+              S_,
+              "Comparison Grade",G_,
+              "GLP% Difference By Year"
+              ),
+            subtitle=paste(
+              "EDTier",argEDTier,
+              "    LEA",LEA_,
+              ifelse(argCharterOnly,"   Charters Only",""),
+              "   ",nschools_,"Schools"
+              ),
+            x=xaxis_text[Years_],
+            y=yaxis_text[Years_]
+          ) +
+          theme(   
+            legend.text=element_text(size=8),
+            legend.title=element_text(size=8),
+            plot.title=element_text(size=8, hjust=0.5),
+            plot.subtitle=element_text(size=8, hjust=0.5),
+            axis.title.x=element_text(size=8),
+            axis.title.y=element_text(size=8)
+          ) +
+          scale_linetype(
+            guide=FALSE
+          ) +
+          annotation_custom(grob) +
+          #
+          # require at least 8 schools to draw ellipse
+          #
+          {if (nschools_-nschools_T1>=8)
+            stat_ellipse(  
+              data=subset(df2_,subject==S_ & TitleISchool==FALSE),
+              aes( 
+                x=diff_12, 
+                y=diff_23
+              ),
+              colour="blue",
+              size=0.3,
+              alpha=0.5
+            )
+          } +
+          # 
+          {if (nschools_T1>=8)
+            stat_ellipse(  
+              data=subset(df2_,subject==S_ & TitleISchool==TRUE),
+              aes( 
+                x=diff_12, 
+                y=diff_23
+              ),
+              colour="red",
+              size=0.3,
+              alpha=0.5
+            )
+          }
+          #
+          # center of mass
+          cm <- apply(
+            df2_ %>% dplyr::select(
+              diff_12,
+              diff_23
+            ), 2, mean
+          )
+          plt_ <- plt_ +
+          geom_vline( aes(xintercept=cm[1]), linetype="dotted" ) +
+          geom_hline( aes(yintercept=cm[2]), linetype="dotted" )
+          #
+          if (argSave) {
+            ggsave(
+              paste0(
+                graphicsPath,
+                "scatterplot_comp_",
+				Years_,"_",
+                S_,"_",G_,"_",
+                LEA_,"_",argEDTier,
+                ifelse(argCharterOnly,"_Chrtr",""),
+                ".png"
+              )
+            )
+          }
+  		#
+          ret[[iret_]] <- plt_
+          iret_ <- iret_+1
+        }
+      }
+	}
+  }
+  return(ret)
+}
+```  
+
+### track cohort: grade 3 -> 4 -> 5 across years  
+```{r echo=FALSE}
+fn_knit_exit("fn_scatterplots_track")
+```  
+
+```{r fn_scatterplots_track}
+fn_scatterplots_track <- function(
+  argEDTier="ALL",
+  argLEAs="ALL",
+  argCharterOnly=FALSE,
+  argSave=TRUE
+  )
+{
+# uses dfDisagEx20_345_ABCD_track
+#
+# argEDTier is ALL or in 1:3 and links to dfLEA
+# at most one of 1:3
+#
+# argLEAs is ALL or a vector of LEAs
+# any number of LEAs
+# will produce one set of plots per LEA
+#
+#
+# argEDTier is ALL or in 1:3 and links to dfLEA
+# at most one of 1:3
+#
+# argLEAs is ALL or a vector of LEAs
+# any number of LEAs
+# will produce one set of plots per LEA
+#
+# argCharterOnly if TRUE
+# then charters only
+#
+  # check for a list of LEAs:
+  if ( length(argLEAs) > 1 | !("ALL" %in% argLEAs) ) {
+    if ( !all(argLEAs %in% dfLEA$LEA) ) {
+      stop("ERROR: all of the LEAs must be in dfLEA$LEA.")
+    }
+  }
+  # check argCharterOnly
+  if ( is.logical(argCharterOnly) == FALSE ) {
+    stop("ERROR: argCharterOnly must be TRUE or FALSE.")
+  }
+  # select the EDTier:
+  if ( length(argEDTier) != 1) {
+    stop("ERROR: EDTier must be ALL, 1, 2, or 3.")
+  }
+  #
+  ret <- list()
+  iret_ <- 1
+  xaxis_text <- c(
+    "2014-15 minus 2013-14 (Grade 4 minus Grade 3)",
+    "2015-16 minus 2014-15 (Grade 4 minus Grade 3)"
+  )
+  yaxis_text <- c(
+    "2015-16 minus 2014-15 (Grade 5 minus Grade 4)",
+    "2016-17 minus 2015-16 (Grade 5 minus Grade 4)"
+  )
+  theYears <- c("ABC","BCD")
+  for (Years_ in 1:2) {
+    #
+    if (argEDTier == "ALL") {
+      df_ <- dfDisagEx20_345_ABCD_track %>%
+        dplyr::filter(
+          Years==theYears[Years_]
+        )
+    } else {
+      df_ <- dfDisagEx20_345_ABCD_track %>% 
+        dplyr::filter( 
+          Years==theYears[Years_] &
+          EDTier==argEDTier
+        )
+    }
+    # subset on subgroup ALL and
+    # create column for scale_fill_manual
+    df_ %<>%
+      dplyr::filter(
+        subgroup == "ALL"
+      ) %>%
+      dplyr::mutate(
+        fill_colour=factor(
+          ifelse(!X2080,1,
+            ifelse(TitleISchool,2,3)
+          )
+        )
+      )
+    #
+    if ( argCharterOnly ) {
+      df_ %<>% 
+        dplyr::filter(
+          charter_school == TRUE
+        )
+    }
+    #
+    # create a grob for use with all plots
+    grob <- grid::grobTree(
+      textGrob(
+        paste0(
+            "Filled circles are schools with 3rd Grade GLP% under 20% or over 80%\n",
+            "Confidence ellipses for Title I and not-Title I schools."
+        ),
+        x=0.1,
+        y=0.98,
+        hjust=-0.3,
+        gp=gpar(fontsize=6)
+      )
+    )
+    # colors
+    fill_values <- c("1"="grey90","2"="red","3"="blue")
+    #
+    # plot width
+    plot_max <- 50
+    #
+    for ( LEA_ in argLEAs ) 
+	  {
+      if ( LEA_ != "ALL" ) {
+        df2_ <- df_ %>% 
+          dplyr::filter(
+            LEA == LEA_
+          )
+      } else {
+        df2_ <- df_
+      }
+      #
+      for (S_ in c("MA","RD")) 
+	    {
+        nschools_ <- length(df2_[df2_$subject==S_,"school_code"])
+        nschools_T1 <- length(df2_[df2_$subject==S_ & df2_$TitleISchool==TRUE, "school_code"])
+        #
+        plt_ <-
+        df2_ %>%
+          dplyr::filter(
+            subject == S_
+          ) %>%
+          ggplot( 
+            aes(
+              x=diff_12, 
+              y=diff_23
+            ) 
+          ) +
+          geom_point(aes(
+              colour=TitleISchool,
+              shape=TitleISchool,
+              fill=fill_colour
+            ),
+            position="jitter",
+            stroke=0.9,
+            alpha=0.6
+          ) +
+          scale_colour_manual(
+            values=c("blue", "red"),
+            labels=c("No","Yes")
+          ) +
+          scale_shape_manual(
+            values=c(21,21),
+            guide=FALSE
+          ) +
+          scale_fill_manual(
+            values=fill_values,
+            guide=FALSE
+          ) +
+          xlim( -plot_max, plot_max ) +
+          ylim( -plot_max, plot_max ) +
+          labs(
+            title=paste(
+              S_,
+              "Track Grades 3 to 5 Cohort GLP% Difference Across Years"
+              ),
+            subtitle=paste(
+              "EDTier",argEDTier,
+              "    LEA",LEA_,
+              ifelse(argCharterOnly,"   Charters Only",""),
+              "   ",nschools_,"Schools"
+              ),
+            x=xaxis_text[Years_],
+            y=yaxis_text[Years_]
+          ) +
+          theme(   
+            legend.text=element_text(size=8),
+            legend.title=element_text(size=8),
+            plot.title=element_text(size=8, hjust=0.5),
+            plot.subtitle=element_text(size=8, hjust=0.5),
+            axis.title.x=element_text(size=8),
+            axis.title.y=element_text(size=8)
+          ) +
+          scale_linetype(
+            guide=FALSE
+          ) +
+          annotation_custom(grob) +
+          #
+          # require at least 8 schools to draw ellipse
+          #
+          {if (nschools_-nschools_T1>=8)
+            stat_ellipse(  
+              data=subset(df2_,subject==S_ & TitleISchool==FALSE),
+              aes( 
+                x=diff_12, 
+                y=diff_23
+              ),
+              colour="blue",
+              size=0.3,
+              alpha=0.5
+            )
+          } +
+          {if (nschools_T1>=8)
+            stat_ellipse(  
+              data=subset(df2_,subject==S_ & TitleISchool==TRUE),
+              aes( 
+                x=diff_12, 
+                y=diff_23
+              ),
+              colour="red",
+              size=0.3,
+              alpha=0.5
+            )
+          }
+          #
+          # center of mass
+          cm <- apply(
+            df2_ %>% dplyr::select(
+              diff_12,
+              diff_23
+            ), 2, mean
+          )
+          plt_ <- plt_ +
+          geom_vline( aes(xintercept=cm[1]), linetype="dotted" ) +
+          geom_hline( aes(yintercept=cm[2]), linetype="dotted" )
+          #
+          if (argSave) {
+            ggsave(
+              paste0(
+                graphicsPath,
+                "scatterplot_track_",
+				        Years_,"_",
+                S_,"_",
+                "345_",
+                LEA_,"_",argEDTier,
+                ifelse(argCharterOnly,"_Chrtr",""),
+                ".png"
+              )
+            )
+          }
+        ret[[iret_]] <- plt_
+        iret_ <- iret_+1
+      }
+    }
+  }
+  return(ret)
+}
+```  
+
+### Plotly  
+
+compare grade 3 across years  
+ditto grade 4 and grade 5  
+```{r echo=FALSE}
+fn_knit_exit("fn_scatterplots_pl_comp")
+```  
+
+```{r fn_scatterplots_pl_comp}  
+fn_scatterplots_pl_comp <- function(
+  argEDTier="ALL",
+  argLEAs="ALL"
+  )
+{
+#
+# argEDTier is ALL or in 1:3 and links to dfLEA
+# at most one of 1:3
+#
+# argLEAs is ALL or a vector of LEAs
+# any number of LEAs
+# will produce one set of plots per LEA
+#
+  # check for a list of LEAs:
+  if ( length(argLEAs) > 1 | !("ALL" %in% argLEAs) ) {
+    if ( !all(argLEAs %in% dfLEA$LEA) ) {
+      stop("ERROR: all of the LEAs must be in dfLEA$LEA.")
+    }
+  }
+  # select the EDTier:
+  if ( length(argEDTier) != 1) {
+    stop("ERROR: EDTier must be ALL, 1, 2, or 3.")
+  }
+  #
+  if ( argEDTier == "ALL") {
+    df_ <- dfDisagEx20_345_comp
+  } else {
+    df_ <- dfDisagEx20_345_comp %>% 
+        dplyr::filter( 
+          EDTier==argEDTier
+        )
+  }
+  # subset on subgroup ALL and
+  # create columns for scale_fill_manual
+  # and for plotly
+  df_ %<>%
+    dplyr::filter(
+      subgroup == "ALL"
+    ) %>%
+    dplyr::mutate(
+      fill_colour=factor(
+        ifelse(!X2080,1,
+          ifelse(TitleISchool,2,3)
+        )
+      ),
+      pl_symbol_=ifelse(X2080,1,2),
+      pl_color_=ifelse(TitleISchool,1,2)
+    )
+  #
+  # create a grob for use with all plots
+  grob <- grid::grobTree(
+    textGrob(
+      "Filled circles are schools with GLP% under 20% or over 80%",
+      x=0.1,
+      y=0.98,
+      hjust=-0.45,
+      gp=gpar(fontsize=6)
+    )
+  )
+  #
+  # trim df_
+  df_ %<>% dplyr::select(
+    LEA,
+    school_code,
+    grade,
+    subject,
+    num_tested.A,
+    pct_glp.A,
+    diff_AB,
+    diff_BC,
+    diff_CD,
+    fill_colour,
+    pl_symbol_,
+    pl_color_,
+    EDTier,
+    X2080,
+    TitleISchool,
+    charter_school
+  )
+  #
+  # colors:
+  fill_values <- c("1"="white","2"="red","3"="blue")
+  plot_pal <- c("red","blue")
+  #
+  ret <- list()
+  iret_ <- 1
+  #
+  # for 2013-14>2014-15>2015-16 and 2014-15>2015-16>2016-17
+  title_year <- c("2013 to 2015","2014 to 2016")
+  xaxis_text <- c("2014-15 minus 2013-14","2015-16 minus 2014-15")
+  yaxis_text <- c("2015-16 minus 2014-15","2016-17 minus 2015-16")
+  names_ <- names(df_)
+  #
+  for (Years_ in 1:2) {
+    names(df_) <- names_
+	  if (Years_==1) {
+      df_ %<>%
+        dplyr::rename(
+		  diff_12=diff_AB,
+		  diff_23=diff_BC
+	    )
+    } else {
+      df_ %<>% 
+        dplyr::rename(
+           diff_12=diff_BC,
+           diff_23=diff_CD
+        )
+    } 
+    #
+    for ( LEA_ in argLEAs ) {
+      if ( LEA_ != "ALL" ) {
+        df2_ <- df_ %>% 
+          dplyr::filter(
+            LEA == LEA_
+          )
+      } else {
+        df2_ <- df_
+      }
+      #
+      for (S_ in c("MA","RD")) {
+        for (G_ in c("03","04","05")) {
+          nschools_ <- length(df2_[df2_$subject==S_ & df2_$grade==G_,"school_code"])
+          nschools_T1 <- length(df2_[df2_$subject==S_ & df2_$grade==G_ & df2_$TitleISchool==TRUE, "school_code"])
+          #
+          ret[[paste0(S_,G_,LEA_)]] <-
+          df2_ %>%
+            dplyr::filter(
+              subject == S_ &
+              grade == G_
+            ) %>% 
+            plot_ly(
+              type="scatter",
+              mode="markers",
+              hoverinfo="text",
+              #showscale=FALSE,
+              x=~diff_12,
+              y=~diff_23,
+              symbol=~pl_symbol_,
+              symbols=c("circle","circle-open"),
+              color=~pl_color_,
+              colors=plot_pal,
+              text=~paste0(school_code,"; ",num_tested.A,";\n",round(pct_glp.A,digits=2),"%")
+            ) %>%
+            hide_colorbar() %>%
+            plotly::layout(
+              title=paste(
+                title_year[Years_],
+                S_,
+                "GLP% Differences for Grade",
+                G_,
+                "for LEA",
+                LEA_,
+                ifelse(
+                  argEDTier=="ALL","",paste("and EDTier",argEDTier)
+                )
+              ),
+              xaxis=list(
+                range=c(-50,50),
+                title=paste(xaxis_text[Years_],"GLP%")
+                ),
+              yaxis=list(
+                range=c(-50,50),
+                title=paste(yaxis_text[Years_],"GLP%")
+                )
+            )
+        }
+      }
+    }
+  }
+  return(ret)
+}
+```  
+
+track cohort: grade 3 -> 4 -> 5 across years  
+```{r echo=FALSE}
+fn_knit_exit("fn_scatterplots_pl_track")
+```  
+
+use dfDisagEx20_345_ABC_track and dfDisagEx20_345_BCD_track
+
+```{r fn_scatterplots_pl_track}  
+fn_scatterplots_pl_track <- function(
+  argEDTier="ALL",
+  argLEAs="ALL",
+  argCharterOnly=FALSE
+  )
+{
+#
+# argEDTier is ALL or in 1:3 and links to dfLEA
+# at most one of 1:3
+#
+# argLEAs is ALL or a vector of LEAs
+# any number of LEAs
+# will produce one set of plots per LEA
+#
+#
+# argEDTier is ALL or in 1:3 and links to dfLEA
+# at most one of 1:3
+#
+# argLEAs is ALL or a vector of LEAs
+# any number of LEAs
+# will produce one set of plots per LEA
+#
+  # check for a list of LEAs:
+  if ( length(argLEAs) > 1 | !("ALL" %in% argLEAs) ) {
+    if ( !all(argLEAs %in% dfLEA$LEA) ) {
+      stop("ERROR: all of the LEAs must be in dfLEA$LEA.")
+    }
+  }
+  # select the EDTier:
+  if ( length(argEDTier) != 1) {
+    stop("ERROR: EDTier must be ALL, 1, 2, or 3.")
+  }
+  #
+  # check argCharterOnly
+  if ( is.logical(argCharterOnly) == FALSE ) {
+    stop("ERROR: argCharterOnly must be TRUE or FALSE.")
+  }
+  ret <- list()
+  iret_ <- 0
+  xaxis_text <- c(
+    "2014-15 minus 2013-14 (Grade 4 minus Grade 3)",
+    "2015-16 minus 2014-15 (Grade 4 minus Grade 3)"
+  )
+  yaxis_text <- c(
+    "2015-16 minus 2014-15 (Grade 5 minus Grade 4)",
+    "2016-17 minus 2015-16 (Grade 5 minus Grade 4)"
+  )
+  theYears <- c("ABC","BCD")
+  #
+  # go thru the years
+  #
+  for (Years_ in 1:2) {
+    #
+    if (argEDTier == "ALL") {
+      df_ <- dfDisagEx20_345_ABCD_track %>%
+        dplyr::filter(
+          Years==theYears[Years_]
+        )
+    } else {
+      df_ <- dfDisagEx20_345_ABCD_track %>% 
+        dplyr::filter( 
+          Years==theYears[Years_] &
+          EDTier==argEDTier
+        )
+    }
+    # subset on subgroup ALL and
+    # create columns for scale_fill_manual
+    # and for plotly
+    df_ %<>%
+      dplyr::filter(
+        subgroup == "ALL"
+      ) %>%
+      dplyr::mutate(
+        fill_colour=factor(
+          ifelse(!X2080,1,
+            ifelse(TitleISchool,2,3)
+          )
+        ),
+        pl_symbol_=ifelse(X2080,1,2),
+        pl_color_=ifelse(TitleISchool,1,2)
+      )
+    #
+    # create a grob for use with all plots
+    grob <- grid::grobTree(
+      textGrob(
+        "Filled circles are schools with GLP% under 20% or over 80%",
+        x=0.1,
+        y=0.98,
+        hjust=-0.45,
+        gp=gpar(fontsize=6)
+      )
+    )
+    # colors:
+    fill_values <- c("1"="white","2"="red","3"="blue")
+    plot_pal <- c("red","blue")
+    #
+    for ( LEA_ in argLEAs ) {
+      if ( LEA_ != "ALL" ) {
+        df2_ <- df_ %>% 
+          dplyr::filter(
+            LEA == LEA_
+          )
+      } else {
+        df2_ <- df_
+      }
+      #
+      for (S_ in c("MA","RD")) {
+        nschools_ <- length(df2_[df2_$subject==S_,"school_code"])
+        nschools_T1 <- length(df2_[df2_$subject==S_ & df2_$TitleISchool==TRUE, "school_code"])
+        #
+        iret_ <- iret_+1
+        ret[[iret_]] <-
+        df2_ %>%
+        dplyr::filter(
+          subject == S_
+        ) %>%
+        plot_ly(
+          type="scatter",
+          mode="markers",
+          hoverinfo="text",
+          x=~diff_12,
+          y=~diff_23,
+          symbol=~pl_symbol_,
+          symbols=c("circle","circle-open"),
+          color=~pl_color_,
+          colors=plot_pal,
+          text=~paste0(school_code,"; ",num_tested.1,";\n",round(pct_glp.1,digits=2),"%")
+        ) %>%
+        hide_colorbar() %>%
+        plotly::layout(
+          title=paste(
+            S_,
+            "Track Grades 3 to 5 Cohort GLP% Difference Across Years for LEA",
+            LEA_,
+            ifelse(
+              argEDTier=="ALL","",paste("and EDTier",argEDTier)
+            )
+          ),
+          xaxis=list(
+            range=c(-50,50),
+            title=xaxis_text[Years_]
+            ),
+          yaxis=
+            list(
+              range=c(-50,50),
+              title=yaxis_text[Years_]
+            )
+        )
+      }
+    }
+  } # theYear
+  return(ret)
+}
+```  
+
+### Score-Frequency Graphics  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_dfScoreFreqNCDPIraw")
+fn_knit_exit("dfScoreFreqNCDPIraw")
+```  
+
+```{r dfScoreFreqNCDPIraw}
+fn_dfScoreFreqNCDPIraw <- function()
+{
+  dfScoreFreqNCDPIraw <- 
+    read.csv( 
+      paste0(dataPath,"scores345_all.txt"),
+      skip=20,
+      stringsAsFactors = FALSE 
+    ) %>%
+    dplyr::select( -X,-Y,-Z ) %>%
+    dplyr::mutate( 
+      Grade=as.character(Grade), 
+      Level=as.character(Level)
+    ) %>%
+    rowwise() %>%
+    dplyr::mutate(
+      f_acYear=acYearToLETTER[[acYear]]
+    ) %>%
+    data.frame()
+  return(dfScoreFreqNCDPIraw)
+}
+#
+str(fn_dfScoreFreqNCDPIraw())
+dfScoreFreqNCDPIraw <- fn_dfScoreFreqNCDPIraw()
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_dfScoreFreqNCDPIpct")
+fn_knit_exit("dfScoreFreqNCDPIpct")
+```  
+
+```{r fn_dfScoreFreqNCDPIpct}
+fn_dfScoreFreqNCDPIpct <- function()
+{
+  dfScoreFreqNCDPIpct <- 
+    dfScoreFreqNCDPIraw %>% 
+    reshape2::dcast(
+      acYear+Subject+Grade~Level, 
+      value.var = "Freq",
+      fun.aggregate = sum
+    ) %>%
+    plyr::rename( 
+      c("1"="Level1", "2"="Level2", "3"="Level3", "4"="Level4", "5"="Level5") 
+    ) %>%
+    rowwise() %>%
+    dplyr::mutate(  
+      tot=Level1+Level2+Level3+Level4+Level5,
+      Level1pct=Level1*100/tot,
+      Level2pct=Level2*100/tot,
+      Level3pct=Level3*100/tot,
+      Level4pct=Level4*100/tot,
+      Level5pct=Level5*100/tot,
+      underGLPpct=Level1pct+Level2pct,
+      strictGLPpct=Level3pct,
+      CCRpct=Level4pct+Level5pct
+    ) %>%
+    data.frame()
+  return(dfScoreFreqNCDPIpct)
+}
+#
+str(fn_dfScoreFreqNCDPIpct())
+dfScoreFreqNCDPIpct <- fn_dfScoreFreqNCDPIpct()
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_dfScoreFreqNCDPI")
+fn_knit_exit("dfScoreFreqNCDPI")
+```  
+
+```{r fn_dfScoreFreqNCDPI}
+# add weight (probability)
+#
+fn_dfScoreFreqNCDPI <- function()
+{
+  dfScoreFreqNCDPI <- 
+    dplyr::inner_join(
+      dfScoreFreqNCDPIraw,
+      dplyr::select( dfScoreFreqNCDPIpct, acYear, Subject, Grade, tot),
+      by=c("acYear","Subject","Grade")
+    ) %>%
+    dplyr::mutate( 
+      weight=Freq/tot
+    ) %>%
+    dplyr::select( -tot )
+  return(dfScoreFreqNCDPI)
+}
+#
+str(fn_dfScoreFreqNCDPI())
+dfScoreFreqNCDPI <- fn_dfScoreFreqNCDPI()
+rm(dfScoreFreqNCDPIraw)
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_scoreFreqNCDPIBreaks")
+```  
+
+```{r fn_scoreFreqNCDPIBreaks}
+# produce list of vectors of break Score for each Level
+fn_scoreFreqNCDPIBreaks <- function() {
+  ret <- list()
+  lst_y <- unique(dfScoreFreqNCDPI$f_acYear)
+  df_ <- dfScoreFreqNCDPI %>% 
+    dplyr::select( -Freq, -weight ) %>%
+    dplyr::group_by( f_acYear, Grade, Subject, Level ) %>%
+    dplyr::summarize( max(Score)+0.5 ) %>%
+    plyr::rename( replace=c("max(Score) + 0.5"="boundary" ))
+  for (y_ in lst_y) {
+    for (G_ in 3:5) {
+      for (S_ in c("ELA","MA")) {
+        ret[[paste0(y_,G_,S_)]] <- 
+          as.list(subset(df_,f_acYear==y_ & Grade==G_ & Subject==S_))[[5]]
+      }
+    }
+  }
+  return(ret)
+}
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("lstScoreFreqNCDPIBreaks")
+```  
+
+```{r lstScoreFreqNCDPIBreaks}
+str(fn_scoreFreqNCDPIBreaks())
+lstScoreFreqNCDPIBreaks <- fn_scoreFreqNCDPIBreaks()
+```  
+
+display of score-frequency data
+from DPI Green Book for
+2013-14 and 2015-16
+
+direct display of Freq for Score
+```{r echo=FALSE}
+fn_knit_exit("fn_pltScoreFreqNCDPI")
+```  
+
+```{r fn_pltScoreFreqNCDPI}
+fn_pltScoreFreqNCDPI <- function(argSave=TRUE) {
+  ret <- list()
+  for (Y_ in unique(dfScoreFreqNCDPI$acYear)) {
+    f_ <- acYearToLETTER[[Y_]]
+    for (S_ in c("ELA","MA")) {
+      for (G_ in 3:5) {
+        plt_ <-
+        dfScoreFreqNCDPI %>% 
+        dplyr::filter( 
+          acYear==Y_ & 
+          Grade==G_ & 
+          Subject==S_ 
+        ) %>% 
+        ggplot( aes(x=Score,y=Freq, color=Level) ) + 
+        geom_point() +
+        geom_vline( 
+          xintercept=lstScoreFreqNCDPIBreaks[[paste0(f_,G_,S_)]], 
+          linetype='dotted' 
+        ) +
+        theme_bw() +
+        theme( panel.grid.major.x = element_blank()) +
+        theme( panel.grid.minor.x = element_blank()) +
+        ylab("Frequency") +
+        ggtitle(paste(Y_,"Levels for All Schools","Grade",G_,"Subject",S_)) +
+        theme(
+          plot.title=element_text(size=10, hjust=0.5 ),
+          axis.title.x=element_text(size=10),
+          axis.title.y=element_text(size=10),
+          legend.title=element_text(size=8)
+        )
+        if (argSave) {
+          ggsave(
+            paste0(
+              graphicsPath,
+              "ScoreFreqNCDPI_",G_,"_",S_,Y_,".png"
+            )
+          )
+        }
+        ret[[paste0(f_,G_,S_)]] <- plt_
+      }
+    }
+  }
+  return( ret )
+}
+``` 
+
+### Histograms of GLP% by ethnicity and EDS  
+Use dfDisagEx20_345_Yr  
+```{r echo=FALSE}
+fn_knit_exit("fn_plt_hist_GLPf")
+```  
+
+```{r fn_plt_hist_GLPf}
+fn_plt_hist_GLPf <- function(
+  argYear,
+  argGrade,
+  argLEA="ALL",
+  argSave=TRUE
+  ) {
+  # do for BLCK, HISP, WHTE, EDS, and NOT_EDS
+  # do for MA and RD
+  #
+  if (length(argYear)!=1 | nchar(argYear)!=1) {
+    stop("argYear must be one of A, B, etc.")
+  }
+  if (length(argGrade)!=1 | nchar(argGrade)!=1) {
+    stop("argGrade must be one of 3, 4, 5.")
+  }
+  if (!(argGrade %in% c(3,4,5))) {
+    stop("argGrade must be one of 3, 4, 5.")
+  }
+  argGrade <- paste0("0",argGrade)
+  #
+  if (argLEA!="ALL") {
+      if (length(argLEA)!=1) {
+        stop("argLEA must be omitted or a single LEA.")
+      }
+      if ( !(argLEA %in% dfLEA$LEA) ) {
+        stop("argLEA must be omitted or a single LEA.")
+      }
+  }
+  #
+  ret <- list()
+  df1_ <-  
+  dfDisagEx20_345_Yr %>%
+  dplyr::select(
+    LEA,
+    subject,
+    grade,
+    subgroup,
+    pct_glp,
+    charter_school,
+    TitleISchool,
+    f_acYear
+  ) %>%
+  dplyr::filter(
+    subgroup %in% c("BLCK","HISP","WHTE","EDS","NOT_EDS")
+  )
+  #
+  for (S_ in c("MA","RD")) {
+      #
+      df2_ <-
+      df1_ %>%
+      dplyr::filter(
+        f_acYear==argYear,
+        grade==argGrade,
+        subject==S_
+      )
+      #
+      if (argLEA!="ALL") {
+        df2_ %<>%
+        dplyr::filter(
+          LEA==argLEA
+        )
+      }
+      #
+      ret[[paste0(argYear,argGrade,S_,"_",argLEA)]] <-
+      df2_ %>%
+      ggplot( aes(x=pct_glp) ) +
+      geom_histogram(
+        binwidth=2,
+        fill="blue",
+        colour="black"
+      ) +
+      labs(
+        title=paste(
+          names(acYearToLETTER[which(LETTERS==argYear)]),
+          "Grade",
+          argGrade,
+          S_,
+          "GLP% by Group"),
+        x="GLP%") +
+      theme(plot.title=element_text(size=10,face="plain")) +
+      facet_wrap( 
+        ~subgroup,
+        ncol=2
+      )
+      #
+      if (argSave) {
+        ggsave(
+          paste0(
+            graphicsPath,
+            "fGLPhist_",
+            argYear,
+            argGrade,
+            S_,
+            "_",
+            argLEA
+          )
+        )
+      }
+  }
+  return(ret)
+}
+```  
+
+### SAVE THESE IN plot_helpers.RData:  
+
+```{r save_image}
+print(ls())
+save.image(
+  file="2.RData" 
+ )
+```  

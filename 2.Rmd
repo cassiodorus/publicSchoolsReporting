@@ -7,7 +7,7 @@ output:
 ---
 
 ## Requires
-```{r, warnings=FALSE}
+```{r, warning=FALSE}
 require(rprojroot)
 require(reshape2)
 require(magrittr)
@@ -29,16 +29,6 @@ require(MASS)
 
 load("1.RData")
 
-```  
-
-```{r fn_knit_exit, echo=FALSE}
-fn_knit_exit <- function(ObjectName) {
-  if (any(ObjectName %in% ls())) {
-    print(paste("Already there:",ObjectName))
-    knitr::knit_exit() 
-  }
-  return(NULL)
-}
 ```  
 
 ## boxplots  
@@ -947,133 +937,125 @@ fn_dfDisagEx20_345_ABCD_track <- function() {
   dplyr::select(
     -f_acYear
   )
+  #
+  dfTmp <-
+  dplyr::inner_join(
+    dfDisagEx20_345_Yr %>%
+      dplyr::select(
+        LEA,
+        school_code,
+        subject,
+        grade,
+        subgroup,
+        num_tested,
+        pct_glp,
+        f_acYear
+      ) %>%
+      dplyr::filter(
+        f_acYear == "B" &
+        grade == "03"
+      ),
+    dfDisagEx20_345_Yr %>%
+      dplyr::select(
+        LEA,
+        school_code,
+        subject,
+        grade,
+        subgroup,
+        num_tested,
+        pct_glp,
+        f_acYear
+      ) %>%
+      dplyr::filter(
+        f_acYear == "C" &
+        grade == "04"
+      ),  
+    by=c(
+      "LEA",
+      "school_code",
+      "subject",
+      "subgroup"
+    )
+  ) %>%
+  dplyr::inner_join(
+    dfDisagEx20_345_Yr %>%
+      dplyr::select(
+        LEA,
+        school_code,
+        subject,
+        grade,
+        subgroup,
+        num_tested,
+        pct_glp,
+        f_acYear
+      ) %>%
+      dplyr::filter(
+        f_acYear == "D" &
+        grade == "05"
+      ),  
+    by=c(
+      "LEA",
+      "school_code",
+      "subject",
+      "subgroup"
+    )
+  ) %>%
+  dplyr::rename(
+    grade.1=grade.x,
+    grade.2=grade.y,
+    grade.3=grade,
+    num_tested.1=num_tested.x,
+    num_tested.2=num_tested.y,
+    num_tested.3=num_tested,
+    pct_glp.1=pct_glp.x,
+    pct_glp.2=pct_glp.y,
+    pct_glp.3=pct_glp,
+    f_acYear.1=f_acYear.x,
+    f_acYear.2=f_acYear.y,
+    f_acYear.3=f_acYear
+  ) %>%
+  dplyr::mutate(
+    diff_12=pct_glp.2-pct_glp.1,
+    diff_23=pct_glp.3-pct_glp.2,
+    X2080=ifelse(
+      pct_glp.1<20,TRUE,
+      ifelse(pct_glp.1>80,TRUE,FALSE)
+    ),
+    Years="BCD"
+  ) %>%
+  dplyr::inner_join(
+    dfLEA %>% 
+      dplyr::select( 
+        LEA,
+        EDTier
+        ),
+    by="LEA"
+  ) %>%
+  dplyr::inner_join(
+    dfCharterTitleIyr %>%
+      dplyr::select(
+      -acYear
+    ) %>%
+    dplyr::filter(
+      f_acYear=="D"
+    ),
+    by=c("LEA","school_code")
+  ) %>%
+  dplyr::select(
+    -f_acYear
+  )
+  #
+  dfDisagEx20_345_ABCD_track <-
+    rbind(
+      dfDisagEx20_345_ABCD_track,
+      dfTmp
+    )
+  #
   return(dfDisagEx20_345_ABCD_track)
 }
-#
 str(fn_dfDisagEx20_345_ABCD_track())
 dfDisagEx20_345_ABCD_track <- fn_dfDisagEx20_345_ABCD_track()
 ```  
-
-
-```{r finish_dfDisagEx20_345_ABCD_track}
-dfTmp <-
-dplyr::inner_join(
-  dfDisagEx20_345_Yr %>%
-    dplyr::select(
-      LEA,
-      school_code,
-      subject,
-      grade,
-      subgroup,
-      num_tested,
-      pct_glp,
-      f_acYear
-    ) %>%
-    dplyr::filter(
-      f_acYear == "B" &
-      grade == "03"
-    ),
-  dfDisagEx20_345_Yr %>%
-    dplyr::select(
-      LEA,
-      school_code,
-      subject,
-      grade,
-      subgroup,
-      num_tested,
-      pct_glp,
-      f_acYear
-    ) %>%
-    dplyr::filter(
-      f_acYear == "C" &
-      grade == "04"
-    ),  
-  by=c(
-    "LEA",
-    "school_code",
-    "subject",
-    "subgroup"
-  )
-) %>%
-dplyr::inner_join(
-  dfDisagEx20_345_Yr %>%
-    dplyr::select(
-      LEA,
-      school_code,
-      subject,
-      grade,
-      subgroup,
-      num_tested,
-      pct_glp,
-      f_acYear
-    ) %>%
-    dplyr::filter(
-      f_acYear == "D" &
-      grade == "05"
-    ),  
-  by=c(
-    "LEA",
-    "school_code",
-    "subject",
-    "subgroup"
-  )
-) %>%
-dplyr::rename(
-  grade.1=grade.x,
-  grade.2=grade.y,
-  grade.3=grade,
-  num_tested.1=num_tested.x,
-  num_tested.2=num_tested.y,
-  num_tested.3=num_tested,
-  pct_glp.1=pct_glp.x,
-  pct_glp.2=pct_glp.y,
-  pct_glp.3=pct_glp,
-  f_acYear.1=f_acYear.x,
-  f_acYear.2=f_acYear.y,
-  f_acYear.3=f_acYear
-) %>%
-dplyr::mutate(
-  diff_12=pct_glp.2-pct_glp.1,
-  diff_23=pct_glp.3-pct_glp.2,
-  X2080=ifelse(
-    pct_glp.1<20,TRUE,
-    ifelse(pct_glp.1>80,TRUE,FALSE)
-  ),
-  Years="BCD"
-) %>%
-dplyr::inner_join(
-  dfLEA %>% 
-    dplyr::select( 
-      LEA,
-      EDTier
-      ),
-  by="LEA"
-) %>%
-dplyr::inner_join(
-  dfCharterTitleIyr %>%
-    dplyr::select(
-    -acYear
-  ) %>%
-  dplyr::filter(
-    f_acYear=="D"
-  ),
-  by=c("LEA","school_code")
-) %>%
-dplyr::select(
-  -f_acYear
-)
-#
-str(dfTmp)
-#
-dfDisagEx20_345_ABCD_track <-
-  rbind(
-    dfDisagEx20_345_ABCD_track,
-    dfTmp)
-str(dfDisagEx20_345_ABCD_track)
-rm(dfTmp)
-```  
-
-9/18/17 remove dfDisagEx20_345_track_all 
 
 ### scatterplot functions  
   
@@ -1094,8 +1076,7 @@ fn_scatterplots_comp <- function(
   argEDTier="ALL",
   argLEAs="ALL",
   argCharterOnly=FALSE,
-  argSave=TRUE
-  )
+  argSave=TRUE )
 {
 #
 # argEDTier is ALL or in 1:3 and links to dfLEA
@@ -1155,9 +1136,7 @@ fn_scatterplots_comp <- function(
   #
   # create a grob for use with all plots
   grob <- grid::grobTree(
-    textGrob(
-      paste0("Filled circles are schools with GLP% under 20% or over 80%\n",
-		"Confidence ellipses for Title I and not-Title I schools."),
+      textGrob("Filled circles are schools with GLP% under 20% or over 80%.",
       x=0.1,
       y=0.98,
       hjust=-0.45,
@@ -1269,35 +1248,7 @@ fn_scatterplots_comp <- function(
           scale_linetype(
             guide=FALSE
           ) +
-          annotation_custom(grob) +
-          #
-          # require at least 8 schools to draw ellipse
-          #
-          {if (nschools_-nschools_T1>=8)
-            stat_ellipse(  
-              data=subset(df2_,subject==S_ & TitleISchool==FALSE),
-              aes( 
-                x=diff_12, 
-                y=diff_23
-              ),
-              colour="blue",
-              size=0.3,
-              alpha=0.5
-            )
-          } +
-          # 
-          {if (nschools_T1>=8)
-            stat_ellipse(  
-              data=subset(df2_,subject==S_ & TitleISchool==TRUE),
-              aes( 
-                x=diff_12, 
-                y=diff_23
-              ),
-              colour="red",
-              size=0.3,
-              alpha=0.5
-            )
-          }
+          annotation_custom(grob)
           #
           # center of mass
           cm <- apply(
@@ -1315,7 +1266,7 @@ fn_scatterplots_comp <- function(
               paste0(
                 graphicsPath,
                 "scatterplot_comp_",
-				Years_,"_",
+				        Years_,"_",
                 S_,"_",G_,"_",
                 LEA_,"_",argEDTier,
                 ifelse(argCharterOnly,"_Chrtr",""),
@@ -1323,7 +1274,7 @@ fn_scatterplots_comp <- function(
               )
             )
           }
-  		#
+  		    #
           ret[[iret_]] <- plt_
           iret_ <- iret_+1
         }
@@ -1344,9 +1295,7 @@ fn_scatterplots_track <- function(
   argEDTier="ALL",
   argLEAs="ALL",
   argCharterOnly=FALSE,
-  argSave=TRUE
-  )
-{
+  argSave=TRUE ) {
 # uses dfDisagEx20_345_ABCD_track
 #
 # argEDTier is ALL or in 1:3 and links to dfLEA
@@ -1431,10 +1380,7 @@ fn_scatterplots_track <- function(
     # create a grob for use with all plots
     grob <- grid::grobTree(
       textGrob(
-        paste0(
-            "Filled circles are schools with 3rd Grade GLP% under 20% or over 80%\n",
-            "Confidence ellipses for Title I and not-Title I schools."
-        ),
+        "Filled circles are schools with 3rd Grade GLP% under 20% or over 80%.",
         x=0.1,
         y=0.98,
         hjust=-0.3,
@@ -1522,34 +1468,7 @@ fn_scatterplots_track <- function(
           scale_linetype(
             guide=FALSE
           ) +
-          annotation_custom(grob) +
-          #
-          # require at least 8 schools to draw ellipse
-          #
-          {if (nschools_-nschools_T1>=8)
-            stat_ellipse(  
-              data=subset(df2_,subject==S_ & TitleISchool==FALSE),
-              aes( 
-                x=diff_12, 
-                y=diff_23
-              ),
-              colour="blue",
-              size=0.3,
-              alpha=0.5
-            )
-          } +
-          {if (nschools_T1>=8)
-            stat_ellipse(  
-              data=subset(df2_,subject==S_ & TitleISchool==TRUE),
-              aes( 
-                x=diff_12, 
-                y=diff_23
-              ),
-              colour="red",
-              size=0.3,
-              alpha=0.5
-            )
-          }
+          annotation_custom(grob)
           #
           # center of mass
           cm <- apply(
@@ -1590,15 +1509,13 @@ fn_scatterplots_track <- function(
 compare grade 3 across years  
 ditto grade 4 and grade 5  
 ```{r echo=FALSE}
-fn_knit_exit("fn_scatterplots_pl_comp")
+fn_knit_exit("fn_scatterplots_plotly_comp")
 ```  
 
-```{r fn_scatterplots_pl_comp}  
-fn_scatterplots_pl_comp <- function(
+```{r fn_scatterplots_plotly_comp}  
+fn_scatterplots_plotly_comp <- function(
   argEDTier="ALL",
-  argLEAs="ALL"
-  )
-{
+  argLEAs="ALL" ) {
 #
 # argEDTier is ALL or in 1:3 and links to dfLEA
 # at most one of 1:3
@@ -1769,18 +1686,16 @@ fn_scatterplots_pl_comp <- function(
 
 track cohort: grade 3 -> 4 -> 5 across years  
 ```{r echo=FALSE}
-fn_knit_exit("fn_scatterplots_pl_track")
+fn_knit_exit("fn_scatterplots_plotly_track")
 ```  
 
 use dfDisagEx20_345_ABC_track and dfDisagEx20_345_BCD_track
 
-```{r fn_scatterplots_pl_track}  
-fn_scatterplots_pl_track <- function(
+```{r fn_scatterplots_plotly_track}  
+fn_scatterplots_plotly_track <- function(
   argEDTier="ALL",
-  argLEAs="ALL",
-  argCharterOnly=FALSE
-  )
-{
+  argLEAs="ALL", 
+  argCharterOnly=FALSE ) {
 #
 # argEDTier is ALL or in 1:3 and links to dfLEA
 # at most one of 1:3
@@ -1932,15 +1847,16 @@ fn_scatterplots_pl_track <- function(
 
 ### Score-Frequency Graphics  
 
+
 ```{r echo=FALSE}
-fn_knit_exit("fn_dfScoreFreqNCDPIraw")
-fn_knit_exit("dfScoreFreqNCDPIraw")
+fn_knit_exit("fn_dfScoreFreqNCDPI")
+fn_knit_exit("dfScoreFreqNCDPI")
 ```  
 
-```{r dfScoreFreqNCDPIraw}
-fn_dfScoreFreqNCDPIraw <- function()
-{
-  dfScoreFreqNCDPIraw <- 
+```{r fn_dfScoreFreqNCDPI}
+fn_dfScoreFreqNCDPI <- function() {
+  # read raw data
+  dfScoreFreqNCDPI <- 
     read.csv( 
       paste0(dataPath,"scores345_all.txt"),
       skip=20,
@@ -1955,12 +1871,12 @@ fn_dfScoreFreqNCDPIraw <- function()
     dplyr::mutate(
       f_acYear=acYearToLETTER[[acYear]]
     ) %>%
-    data.frame()
-  return(dfScoreFreqNCDPIraw)
+    data.frame() 
+  return(dfScoreFreqNCDPI)
 }
 #
-str(fn_dfScoreFreqNCDPIraw())
-dfScoreFreqNCDPIraw <- fn_dfScoreFreqNCDPIraw()
+str(fn_dfScoreFreqNCDPI())
+dfScoreFreqNCDPI <- fn_dfScoreFreqNCDPI()
 ```  
 
 ```{r echo=FALSE}
@@ -1972,7 +1888,7 @@ fn_knit_exit("dfScoreFreqNCDPIpct")
 fn_dfScoreFreqNCDPIpct <- function()
 {
   dfScoreFreqNCDPIpct <- 
-    dfScoreFreqNCDPIraw %>% 
+    dfScoreFreqNCDPI %>% 
     reshape2::dcast(
       acYear+Subject+Grade~Level, 
       value.var = "Freq",
@@ -2002,34 +1918,6 @@ dfScoreFreqNCDPIpct <- fn_dfScoreFreqNCDPIpct()
 ```  
 
 ```{r echo=FALSE}
-fn_knit_exit("fn_dfScoreFreqNCDPI")
-fn_knit_exit("dfScoreFreqNCDPI")
-```  
-
-```{r fn_dfScoreFreqNCDPI}
-# add weight (probability)
-#
-fn_dfScoreFreqNCDPI <- function()
-{
-  dfScoreFreqNCDPI <- 
-    dplyr::inner_join(
-      dfScoreFreqNCDPIraw,
-      dplyr::select( dfScoreFreqNCDPIpct, acYear, Subject, Grade, tot),
-      by=c("acYear","Subject","Grade")
-    ) %>%
-    dplyr::mutate( 
-      weight=Freq/tot
-    ) %>%
-    dplyr::select( -tot )
-  return(dfScoreFreqNCDPI)
-}
-#
-str(fn_dfScoreFreqNCDPI())
-dfScoreFreqNCDPI <- fn_dfScoreFreqNCDPI()
-rm(dfScoreFreqNCDPIraw)
-```  
-
-```{r echo=FALSE}
 fn_knit_exit("fn_scoreFreqNCDPIBreaks")
 ```  
 
@@ -2039,7 +1927,7 @@ fn_scoreFreqNCDPIBreaks <- function() {
   ret <- list()
   lst_y <- unique(dfScoreFreqNCDPI$f_acYear)
   df_ <- dfScoreFreqNCDPI %>% 
-    dplyr::select( -Freq, -weight ) %>%
+    dplyr::select( -Freq ) %>%
     dplyr::group_by( f_acYear, Grade, Subject, Level ) %>%
     dplyr::summarize( max(Score)+0.5 ) %>%
     plyr::rename( replace=c("max(Score) + 0.5"="boundary" ))
@@ -2055,13 +1943,63 @@ fn_scoreFreqNCDPIBreaks <- function() {
 }
 ```  
 
+
 ```{r echo=FALSE}
-fn_knit_exit("lstScoreFreqNCDPIBreaks")
+fn_knit_exit("fn_dfScoreFreqNCDPIBreaks")
 ```  
 
-```{r lstScoreFreqNCDPIBreaks}
-str(fn_scoreFreqNCDPIBreaks())
-lstScoreFreqNCDPIBreaks <- fn_scoreFreqNCDPIBreaks()
+```{r fn_dfScoreFreqNCDPIBreaks}
+fn_dfScoreFreqNCDPIBreaks <- function() {
+# convert list of breaks to a dataframe
+  df_ <- data.frame(t(sapply(fn_scoreFreqNCDPIBreaks(),c)))
+  df_ %<>%
+    dplyr::mutate(
+      Level2=round(X1),
+      Level3=round(X2),
+      Level4=round(X3),
+      Level5=round(X4),
+      Max=round(X5),
+      f_acYear=substr(row.names(df_),1,1),
+      Grade=substr(row.names(df_),2,2),
+      Subject=substr(row.names(df_),3,nchar(row.names(df_)))
+     ) %>%
+    dplyr::select(
+      Level2,Level3,Level4,Level5,
+      Max,f_acYear,Grade,Subject
+    ) %>%
+    dplyr::inner_join(
+      dfScoreFreqNCDPI %>%
+        dplyr::select(
+           Grade,
+           Subject,
+           f_acYear,
+           Score
+        ) %>%
+        dplyr::group_by(
+           Grade,
+           Subject,
+           f_acYear) %>%
+        dplyr::summarize(
+          Min=min(Score)
+        ) %>%
+        dplyr::ungroup(),
+      by=c("f_acYear","Grade","Subject")
+    ) %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(
+      acYear=names(acYearToLETTER[which(LETTERS==f_acYear)])
+    ) %>%
+    data.frame() %>%
+    dplyr::select(
+      f_acYear,acYear,Grade,Subject,
+      Min,Level2,Level3,Level4,Level5,Max
+    )
+    #
+  return(df_)
+}
+#
+str(fn_dfScoreFreqNCDPIBreaks())
+dfScoreFreqNCDPIBreaks <- fn_dfScoreFreqNCDPIBreaks()
 ```  
 
 display of score-frequency data
@@ -2074,12 +2012,20 @@ fn_knit_exit("fn_pltScoreFreqNCDPI")
 ```  
 
 ```{r fn_pltScoreFreqNCDPI}
-fn_pltScoreFreqNCDPI <- function(argSave=TRUE) {
+fn_pltScoreFreqNCDPI <- function(
+  argCOW=FALSE,
+  argSave=TRUE ) {
+  # argCOW prepares plots for use with cowplot 
+  # by repressing color legend
+  #
+  if (length(unique(dfScoreFreqNCDPI$acYear))!=3) stop("REVISE fn_pltScoreFreqNCDPI")
+  #
   ret <- list()
   for (Y_ in unique(dfScoreFreqNCDPI$acYear)) {
     f_ <- acYearToLETTER[[Y_]]
     for (S_ in c("ELA","MA")) {
       for (G_ in 3:5) {
+        #
         plt_ <-
         dfScoreFreqNCDPI %>% 
         dplyr::filter( 
@@ -2090,14 +2036,15 @@ fn_pltScoreFreqNCDPI <- function(argSave=TRUE) {
         ggplot( aes(x=Score,y=Freq, color=Level) ) + 
         geom_point() +
         geom_vline( 
-          xintercept=lstScoreFreqNCDPIBreaks[[paste0(f_,G_,S_)]], 
+          xintercept=fn_scoreFreqNCDPIBreaks()[[paste0(f_,G_,S_)]], 
           linetype='dotted' 
         ) +
         theme_bw() +
         theme( panel.grid.major.x = element_blank()) +
         theme( panel.grid.minor.x = element_blank()) +
+        { if (argCOW) guides(color=FALSE) } +
         ylab("Frequency") +
-        ggtitle(paste(Y_,"Levels for All Schools","Grade",G_,"Subject",S_)) +
+        ggtitle(paste(Y_,"Grade",G_,"Subject",S_)) +
         theme(
           plot.title=element_text(size=10, hjust=0.5 ),
           axis.title.x=element_text(size=10),
@@ -2131,8 +2078,7 @@ fn_plt_hist_GLPf <- function(
   argYear,
   argGrade,
   argLEA="ALL",
-  argSave=TRUE
-  ) {
+  argSave=TRUE ) {
   # do for BLCK, HISP, WHTE, EDS, and NOT_EDS
   # do for MA and RD
   #
@@ -2238,3 +2184,56 @@ save.image(
   file="2.RData" 
  )
 ```  
+
+### Inventory of functions:
+
+fn_boxplots_track <- function(  
+  argEDTier="ALL",  
+  argLEAs="ALL",  
+  argCharterOnly=FALSE,  
+  argSave=TRUE )  
+
+fn_boxplots_comp <- function(  
+  argEDTier="ALL",  
+  argLEAs="ALL",  
+  argCharterOnly=FALSE,  
+  argSave=TRUE )  
+
+fn_boxplots_cohort<- function(  
+  argEDTier="ALL",  
+  argLEAs="ALL",  
+  argCharterOnly=FALSE,  
+  argSave=TRUE )  
+
+fn_scatterplots_comp <- function(  
+  argEDTier="ALL",  
+  argLEAs="ALL",  
+  argCharterOnly=FALSE,  
+  argSave=TRUE )  
+
+fn_scatterplots_track <- function(  
+  argEDTier="ALL",  
+  argLEAs="ALL",  
+  argCharterOnly=FALSE,  
+  argSave=TRUE )  
+
+fn_scatterplots_plotly_comp <- function(  
+  argEDTier="ALL",  
+  argLEAs="ALL" )  
+
+fn_scatterplots_plotly_track <- function(  
+  argEDTier="ALL",  
+  argLEAs="ALL",  
+  argCharterOnly=FALSE )  
+
+fn_pltScoreFreqNCDPI <- function(  
+  argCOW=FALSE,  
+  argSave=TRUE )  
+
+fn_plt_hist_GLPffn_plt_hist_GLPf <- function(  
+  argYear,  
+  argGrade,  
+  argLEA="ALL",  
+  argSave=TRUE )  
+
+## FINIS  

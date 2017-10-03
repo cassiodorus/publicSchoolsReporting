@@ -6,11 +6,16 @@ output:
   html_document: default
 ---
 
-```{r omment,eval=FALSE,echo=FALSE}
-# force exit
-if (any(thisname,ls())) {
-	print(paste("Already there:",thisname))
-	knitr::knit_exit() 
+
+```{r fn_knit_exit, echo=FALSE}
+fn_knit_exit <- function(ObjectName) {
+  # check for object already existing
+  #
+	if (any(ObjectName %in% ls())) {
+		print(paste("Already there:",ObjectName))
+		knitr::knit_exit() 
+	}
+	return(NULL)
 }
 ```  
 
@@ -18,8 +23,6 @@ if (any(thisname,ls())) {
 Creates functions  
 Reads data files  
 Saves image  
-
-SEDA data added 8/24/17
 
 ## Requires
 ```{r, warnings=FALSE}
@@ -36,7 +39,6 @@ require(ggthemes)
 require(emdist)
 require(rlist)
 require(MASS)
-require(testthat)
 ```  
 
 ## Initialization Steps  
@@ -56,7 +58,7 @@ dataPath <- "data/"
 SEDApath <- "../SEDAdata/"
 #
 # this is where the zipped disag files reside:
-zipPath <- "disagZips/"
+zipPath <- "../NCPSdisagZips/"
 #
 # ##########################################
 # these are write-only folders:
@@ -1205,7 +1207,6 @@ dfLEA <- fn_dfLEAnums()
 str(dfLEA)
 # ###################################
 ```  
-  
 
 ## Save R objects
 ```{r save_image}

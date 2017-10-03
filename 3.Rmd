@@ -1,0 +1,1334 @@
+---
+title: "publicSchoolsGLPCCR Project - Compute: Compare Black and White GLP%"
+author: "D. Hopp"
+date: "September 2017"
+output:
+  html_document: default
+params:
+  show: FALSE
+---
+
+
+```{r, echo=FALSE, message=FALSE}
+require(rprojroot)
+require(reshape2)
+require(magrittr)
+require(plyr)
+require(tidyverse)
+require(cowplot)
+require(grid)
+require(readr)
+require(taRifx)
+require(R.utils)
+require(ggthemes)
+require(emdist)
+require(rlist)
+require(MASS)
+```  
+
+```{r load}
+load("2.RData")
+```
+
+## density plots
+
+EDS, NOT_EDS, BLCK, HISP, WHTE  
+for MA and RD grouped by year  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_plt_glp_density_year")
+```
+
+```{r fn_plt_glp_density_year}
+fn_plt_glp_density_year <- function() {
+  df1_ <- dfDisagEx20_345_Yr %>%
+  dplyr::select(
+    subject,
+    grade,
+    subgroup,
+    num_tested,
+    num_glp,
+    pct_glp,
+    acYear,
+    charter_school,
+    TitleISchool
+  ) %>%
+  dplyr::filter(
+    subgroup %in% c("EDS","NOT_EDS","BLCK","HISP","WHTE")
+  ) %>%
+  na.omit() %>%
+  dplyr::group_by(
+    subject,
+    grade,
+    subgroup,
+    acYear
+  )
+  #
+  ret <- list()
+  iret_ <- 0
+  for (S_ in c("MA","RD")) {
+    for (G_ in c("03","04","05")) {
+      for (SG_ in c("EDS","NOT_EDS","BLCK","HISP","WHTE")) {
+        #
+        plt_ <-
+        df1_ %>%
+          dplyr::filter(
+            subject==S_ &
+            grade==G_ &
+            subgroup==SG_
+          ) %>%
+        ggplot(
+          aes( 
+            x=pct_glp,
+            fill=acYear
+          )
+        ) +
+        geom_density(
+          alpha=0.3
+        ) +
+        labs(
+          title=paste(S_,"for Grade",G_,"  Group",SG_)
+        )
+      iret_ <- iret_+1
+      ret[[iret_]] <- plt_
+      }
+    }
+  }  
+  return(ret)
+}
+```  
+
+## Consider GLP% as related to race and the racial composition of schools  
+
+Look at 2016-17 only for this preliminary analysis.  
+Use dfDisagEx20_Yr and dfDisagSubgroupsC (<- for 2016-17 only)  
+
+### What is the distribution of GLP% scores for black children?  
+
+Generate helper dataframes that hold schools with more Whites than Blacks:  
+```{r echo=FALSE}
+fn_knit_exit("dfDisagALLmoreWHTE_D")
+```
+
+```{r dfDisagALLmoreWHTE_D}
+dfDisagALLmoreWHTE_D  <- 
+	dfDisagEx20_Yr %>%
+	dplyr::filter(
+		f_acYear=="D" & 
+		subgroup %in% c("WHTE","BLCK") 
+	) %>%
+	dplyr::select(
+		LEA,
+		school_code,
+		subgroup,
+		num_tested
+	) %>%
+	dplyr::group_by(
+		LEA,
+		school_code,
+		subgroup
+	) %>%
+	dplyr::summarize(
+		num_total=sum(num_tested)
+	) %>%
+	dplyr::ungroup() %>%
+	tidyr::spread(
+		subgroup,
+		num_total
+	) %>%
+	dplyr::filter(
+		!is.na(BLCK) & 
+		!is.na(WHTE) &
+		WHTE > BLCK
+	) %>%
+	dplyr::select(
+		LEA,
+		school_code
+	)
+#
+str(dfDisagALLmoreWHTE_D)
+```
+
+```{r echo=FALSE}
+fn_knit_exit("dfDisag345moreWHTE_D")
+```  
+
+```{r dfDisag345moreWHTE_D}
+dfDisag345moreWHTE_D  <- 
+	dfDisagEx20_345_Yr %>%
+	dplyr::filter(
+		f_acYear=="D" & 
+		subgroup %in% c("WHTE","BLCK") 
+	) %>%
+	dplyr::select(
+		LEA,
+		school_code,
+		subgroup,
+		num_tested
+	) %>%
+	dplyr::group_by(
+		LEA,
+		school_code,
+		subgroup
+	) %>%
+	dplyr::summarize(
+		num_total=sum(num_tested)
+	) %>%
+	dplyr::ungroup() %>%
+	tidyr::spread(
+		subgroup,
+		num_total
+	) %>%
+	dplyr::filter(
+		!is.na(BLCK) & 
+		!is.na(WHTE) &
+		WHTE > BLCK
+	) %>%
+	dplyr::select(
+		LEA,
+		school_code
+	)
+#
+str(dfDisag345moreWHTE_D)
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("dfDisag345BLCK_D")
+```  
+
+```{r dfDisag345BLCK_D}
+dfDisag345BLCK_D <- 
+	dfDisagEx20_345_Yr %>%
+	dplyr::filter(
+		f_acYear=="D" & 
+		subgroup=="BLCK"
+	) %>%
+	dplyr::select(
+		LEA,
+		school_code,
+		subject,
+		grade,
+		num_tested,
+		pct_glp,
+		charter_school,
+		TitleISchool
+	) 
+#
+str(dfDisag345BLCK_D)
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("dfDisag345WHTE_D")
+```  
+
+```{r dfDisag345WHTE_D}
+dfDisag345WHTE_D <- 
+	dfDisagEx20_345_Yr %>%
+	dplyr::filter(
+		f_acYear=="D" & 
+		subgroup=="WHTE"
+	) %>%
+	dplyr::select(
+		LEA,
+		school_code,
+		subject,
+		grade,
+		num_tested,
+		pct_glp,
+		charter_school,
+		TitleISchool
+	) 
+#
+str(dfDisag345WHTE_D)
+```  
+
+These are some useful functions for use in producing reports:  
+```{r echo=FALSE}
+fn_knit_exit("fn_q345BLCK")
+fn_knit_exit("fn_q345WHTE")
+```  
+
+```{r functions_1}
+# 
+# Functions to generate quintiles:
+#
+fn_q345BLCK <- function(x,y) {
+	quantile(
+		dfDisag345BLCK_D %>%
+		dplyr::filter(
+			subject==y &
+			grade==x
+		) %>%
+		dplyr::select(
+			pct_glp
+		) %>%
+		unlist(
+			use.names=FALSE
+		),
+		probs=seq(0,1,0.2)
+		)
+}
+#
+# Do same for WHTE
+#
+fn_q345WHTE <- function(x,y) {
+	quantile(
+		dfDisag345WHTE_D %>%
+		dplyr::filter(
+			subject==y &
+			grade==x
+		) %>%
+		dplyr::select(
+			pct_glp
+		) %>%
+		unlist(
+			use.names=FALSE
+		),
+		probs=seq(0,1,0.2)
+		)
+}
+```  
+
+### "Best schools" ad hoc definition  
+
+Suppose we select 75% WHTE GLP% for ALL three grades and BOTH subjects as the lower bound for "best" schools
+and also require a higher % of White than Black students.  
+Which schools are they?  
+```{r echo=FALSE}
+fn_knit_exit("dfDisagBest345WHTE_D")
+```  
+
+```{r dfDisagBest345WHTE_D}
+dfDisagBest345WHTE_D <- 
+	dfDisagEx20_345_Yr %>%
+	dplyr::filter(
+		f_acYear=="D" & 
+		subgroup=="WHTE" &
+		pct_glp >= 75
+	) %>%
+	dplyr::select(
+		LEA,
+		school_code,
+		subject,
+		grade,
+		num_tested,
+		pct_glp,
+		charter_school,
+		TitleISchool
+	) %>%
+	dplyr::group_by(
+		LEA,
+		school_code
+	) %>%
+	dplyr::filter(
+		n()==6
+	) %>%
+	dplyr::ungroup() %>%
+	dplyr::select(
+		LEA,
+		school_code
+	) %>%
+	dplyr::distinct() %>%
+	dplyr::inner_join(
+		dfDisag345moreWHTE_D,
+		by=c("LEA","school_code")
+	)
+#
+str(dfDisagBest345WHTE_D)
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn__dfDisagBLCK_best345_WHTE_GLP_D")
+fn_knit_exit("dfDisagBLCK_best345_WHTE_GLP_D")
+```  
+
+```{r fn_dfDisagBLCK_best345_WHTE_GLP_D}
+fn_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
+  # this is just an intermediate dataframe:
+  # MA and RD will be the same for dfTmp1
+  dfTmp1 <- dfDisagBest345WHTE_D %>%
+  	dplyr::inner_join(
+  		dfDisagEx20_345_Yr %>%
+  		dplyr::filter(
+  			f_acYear=="D" &
+  			subject=="MA" &
+  			subgroup %in% c("ALL","BLCK","WHTE")
+  		),
+  		by=c("LEA","school_code")
+  	) %>%
+  	dplyr::select(
+  		LEA,
+  		school_code,
+  		subgroup,
+  		num_tested,
+  		charter_school,
+  		TitleISchool
+  	) %>%
+  	reshape2::dcast(
+  		LEA+school_code+charter_school+TitleISchool~subgroup,
+  		sum,
+  		value.var="num_tested"
+  	) %>%
+  	dplyr::filter(
+  		BLCK>0
+  	) %>%
+  	dplyr::mutate(
+  		pct_num_BLCK=round(BLCK*100/ALL,digits=1),
+  		pct_num_WHTE=round(WHTE*100/ALL,digits=1)
+  	) %>%
+  	dplyr::rename(
+  		num_BLCK=BLCK,
+  		num_WHTE=WHTE
+  	)
+  #
+  # another intermediate dataframe:
+  dfTmp2 <- dfDisagBest345WHTE_D %>%
+  	dplyr::inner_join(
+  		dfDisagEx20_345_Yr %>%
+  		dplyr::filter(
+  			f_acYear=="D" &
+  			subgroup %in% c("ALL","BLCK","WHTE")
+  		),
+  		by=c("LEA","school_code")
+  	) %>%
+  	dplyr::select(
+  		school_code,
+  		subject,
+  		subgroup,
+  		num_glp,
+  	) %>%
+  	reshape2::dcast(
+  		school_code+subject~subgroup,
+  		sum,
+  		value.var="num_glp"
+  	) %>%
+  	dplyr::rename(
+  		glp_ALL=ALL,
+  		glp_WHTE=WHTE,
+  		glp_BLCK=BLCK
+  	)
+  #
+  dfDisagBLCK_best345_WHTE_GLP_D <- dplyr::inner_join(
+  	dfTmp1,
+  	dfTmp2,
+  	by="school_code"
+  	) %>%
+  	dplyr::mutate(
+  		pct_glp_WHTE=round(glp_WHTE*100/num_WHTE,digits=1),
+  		pct_glp_BLCK=round(glp_BLCK*100/num_BLCK,digits=1)
+  	)
+  #
+  return(dfDisagBLCK_best345_WHTE_GLP_D)
+}
+#
+str(fn_dfDisagBLCK_best345_WHTE_GLP_D())
+dfDisagBLCK_best345_WHTE_GLP_D <- fn_dfDisagBLCK_best345_WHTE_GLP_D()
+  ```  
+  
+```{r echo=FALSE}
+fn_knit_exit("fn_dfDisagBLCK_345_WHTE_GLP_D")
+fn_knit_exit("dfDisagBLCK_345_WHTE_GLP_D")
+```  
+
+```{r fn_dfDisagBLCK_345_WHTE_GLP_D}
+fn_dfDisagBLCK_345_WHTE_GLP_D <- function() {
+  # this is just an intermediate dataframe:
+  # MA and RD will be the same for dfTmp1
+  dfTmp1 <- 
+  	dfDisagEx20_345_Yr %>%
+  	dplyr::filter(
+  		f_acYear=="D" &
+  		subject=="MA" &
+  		subgroup %in% c("ALL","BLCK","WHTE")
+  	) %>%
+  	dplyr::select(
+  		LEA,
+  		school_code,
+  		subgroup,
+  		num_tested,
+  		charter_school,
+  		TitleISchool
+  	) %>%
+  	reshape2::dcast(
+  		LEA+school_code+charter_school+TitleISchool~subgroup,
+  		sum,
+  		value.var="num_tested"
+  	) %>%
+  	dplyr::filter(
+  		BLCK>0
+  	) %>%
+  	dplyr::mutate(
+  		pct_num_BLCK=round(BLCK*100/ALL,digits=1),
+  		pct_num_WHTE=round(WHTE*100/ALL,digits=1)
+  	) %>%
+  	dplyr::rename(
+  		num_BLCK=BLCK,
+  		num_WHTE=WHTE
+  	)
+  #
+  # another intermediate dataframe:
+  dfTmp2 <- 
+  	dfDisagEx20_345_Yr %>%
+  	dplyr::filter(
+  		f_acYear=="D" &
+  		subgroup %in% c("ALL","BLCK","WHTE")
+  	) %>%
+  	dplyr::select(
+  		school_code,
+  		subject,
+  		subgroup,
+  		num_glp,
+  	) %>%
+  	reshape2::dcast(
+  		school_code+subject~subgroup,
+  		sum,
+  		value.var="num_glp"
+  	) %>%
+  	dplyr::rename(
+  		glp_ALL=ALL,
+  		glp_WHTE=WHTE,
+  		glp_BLCK=BLCK
+  	)
+  #
+  dfDisagBLCK_345_WHTE_GLP_D <- 
+  	dplyr::inner_join(
+  		dfTmp1,
+  		dfTmp2,
+  		by="school_code"
+  		) %>%
+  		dplyr::mutate(
+  			pct_glp_WHTE=round(glp_WHTE*100/num_WHTE,digits=1),
+  			pct_glp_BLCK=round(glp_BLCK*100/num_BLCK,digits=1)
+  	)
+  #
+  return(dfDisagBLCK_345_WHTE_GLP_D)
+}
+#
+str(fn_dfDisagBLCK_345_WHTE_GLP_D())
+dfDisagBLCK_345_WHTE_GLP_D <- fn_dfDisagBLCK_345_WHTE_GLP_D()
+```  
+
+
+### Now look at all grades  
+
+WHTE and BLCK proportion at school, all grades (not just 3,4,5).  
+Exclude if not BLCK and WHTE at school.  
+
+First, what is the distribution of GLP% across all grades for WHTE?  
+(selecting only 2015-16 gives almost the same result)  
+
+Using 75% as cutoff and having more Whites than Blacks,  
+Select the "best" schools in 2016-17.  
+```{r echo=FALSE}
+fn_knit_exit("dfDisagBestWHTE_D")
+```  
+
+```{r dfDisagBestWHTE_D}
+dfDisagBestWHTE_D <- 
+	dfDisagEx20_Yr %>%
+	dplyr::filter(
+		f_acYear=="D" & 
+		subgroup=="WHTE" &
+		subject=="ALL" &
+		grade=="ALL" &
+		pct_glp >= 75
+	) %>%
+	dplyr::select(
+		LEA,
+		school_code,
+		subject,
+		grade,
+		num_tested,
+		pct_glp,
+		charter_school,
+		TitleISchool
+	) %>%
+	dplyr::inner_join(
+		dfDisagALLmoreWHTE_D,
+		by=c("LEA","school_code")
+	)
+#
+str(dfDisagBestWHTE_D)
+```  
+
+Using that list of schools, compare BLCK and WHTE GLP%.  
+First, get populations and require higher pct White than Black.
+```{r echo=FALSE}
+fn_knit_exit("fn_dfDisagBLCK_best_WHTE_GLP_D")
+fn_knit_exit("dfDisagBLCK_best_WHTE_GLP_D")
+```  
+
+```{r fn_dfDisagBLCK_best_WHTE_GLP_D}
+fn_dfDisagBLCK_best_WHTE_GLP_D <- function() {
+  # this is just an intermediate dataframe:
+  dfDisagBLCK_best_WHTE_D <-
+  	dfDisagEx20_Yr %>%
+  	dplyr::filter(
+  		f_acYear=="D" &
+  		grade=="ALL" &
+  		subject=="ALL" &
+  		subgroup %in% c("ALL","BLCK","WHTE")
+  	) %>%
+  	dplyr::select(
+  		school_code,
+  		subgroup,
+  		num_tested
+  	) %>%
+  	dplyr::inner_join(
+  		dfDisagBestWHTE_D %>% 
+  			dplyr::select(LEA,school_code),
+  		by="school_code"
+  	) %>%
+  	tidyr::spread(
+  		subgroup,
+  		num_tested
+  	) %>%
+  	dplyr::mutate(
+  		pct_num_BLCK=round(BLCK*100/ALL,digits=1),
+  		pct_num_WHTE=round(WHTE*100/ALL,digits=1)
+  	) %>%
+  	dplyr::select(
+  		-BLCK,
+  		-WHTE
+  	)
+  #
+  # now paste back together to get GLP% for 2016-17
+  #
+  dfDisagBLCK_best_WHTE_GLP_D <-
+  	dplyr::inner_join(
+  		dfDisagBLCK_best_WHTE_D %>%
+  			dplyr::select(
+  				school_code,
+  				ALL,
+  				pct_num_BLCK,
+  				pct_num_WHTE
+  			),
+  		dfDisagEx20_Yr %>% 
+  			dplyr::filter(
+  				f_acYear=="D" &
+  				grade=="ALL" &
+  				subject=="ALL" &
+  				subgroup %in% c("BLCK","WHTE")
+  			),
+  		by="school_code"
+  	) %>%
+  	dplyr::select(
+  		LEA,
+  		school_code,
+  		ALL,
+  		pct_num_BLCK,
+  		pct_num_WHTE,
+  		subgroup,
+  		pct_glp
+  	) %>%
+  	tidyr::spread(
+  		subgroup,
+  		pct_glp
+  	) %>%
+  	dplyr::rename(
+  		num_tested=ALL,
+  		pct_glp_BLCK=BLCK,
+  		pct_glp_WHTE=WHTE
+  	)
+  #
+  return(dfDisagBLCK_best_WHTE_GLP_D)
+}
+#
+str(fn_dfDisagBLCK_best_WHTE_GLP_D())
+dfDisagBLCK_best_WHTE_GLP_D <- fn_dfDisagBLCK_best_WHTE_GLP_D()
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_plotly_dfDisagBLCK_345_WHTE_GLP_D")
+```  
+
+```{r fn_plotly_dfDisagBLCK_345_WHTE_GLP_D}
+fn_plotly_dfDisagBLCK_345_WHTE_GLP_D <- function() {
+  dfTmp_ <- 
+	dfDisagBLCK_345_WHTE_GLP_D %>%
+	dplyr::select(
+		school_code,
+		pct_glp_BLCK,
+		pct_glp_WHTE,
+		TitleISchool,
+		charter_school,
+		subject
+	) %>% 
+	dplyr::filter(
+		subject=="RD"
+	) %>%
+	dplyr::mutate(
+		pl_symbol=ifelse(charter_school,2,1),
+		pl_color=ifelse(TitleISchool,2,1)
+	) %>%
+	na.omit()
+  #
+  n_schools <- length(unique(dfTmp_$school_code))
+	#
+	# colors:
+	pl_plot_pal <- c("red","blue")
+	#
+  plt_ <- 
+  dfTmp_ %>%
+	plot_ly(
+		type="scatter",
+		mode="markers",
+		hoverinfo="text",
+		x=~pct_glp_WHTE,
+		y=~pct_glp_BLCK,
+		symbol=~pl_symbol,
+		color=~pl_color,
+		colors=pl_plot_pal,
+		text=~school_code
+	) %>%
+	hide_colorbar() %>%
+	plotly::layout(
+		title="2016-17 Grades 3-5 RD Cumulative GLP% for Black and White Students",
+		xaxis=list(range=c(0,100),title="GLP% for White Students"),
+		yaxis=list(range=c(0,100),title="GLP% for Black Students"),
+		shapes=list(
+			type="line",
+			x0=0,
+			x1=100,
+			y0=0,
+			y1=100,
+			line=list(width=1),
+			dash="dot"
+		)
+	) %>%
+	plotly::add_annotations(
+		x=20,
+		y=95,
+		text=paste0(
+      n_schools," Schools\n",
+      "Blue: Title I Schools\n",
+      "Triangles: Charters"
+    ),
+		showarrow=FALSE
+	)
+  #
+  return(plt_)
+}
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D")
+```  
+
+```{r fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D}
+fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
+  dfTmp_ <- 
+	dfDisagBLCK_best345_WHTE_GLP_D %>%
+	dplyr::select(
+		school_code,
+		pct_glp_BLCK,
+		pct_glp_WHTE,
+		TitleISchool,
+		charter_school,
+		subject
+	) %>% 
+	dplyr::filter(
+		subject=="RD"
+	) %>%
+	dplyr::mutate(
+		pl_symbol=ifelse(charter_school,2,1),
+		pl_color=ifelse(TitleISchool,2,1)
+	) %>%
+	na.omit()
+	#
+  n_schools <- length(unique(dfTmp_$school_code))
+	# colors:
+	pl_plot_pal <- c("red","blue")
+	#
+  plt_ <- dfTmp_ %>%
+	plot_ly(
+		type="scatter",
+		mode="markers",
+		hoverinfo="text",
+		x=~pct_glp_WHTE,
+		y=~pct_glp_BLCK,
+		symbol=~pl_symbol,
+		color=~pl_color,
+		colors=pl_plot_pal,
+		text=~school_code
+	) %>%
+	hide_colorbar() %>%
+	plotly::layout(
+		title=paste0(
+			"2016-17 Grades 3-5 RD Cumulative GLP% for Black and White Students\n",
+			" - GLP% for White Students 75% and Higher -"
+		),
+		xaxis=list(range=c(0,100),title="GLP% for White Students"),
+		yaxis=list(range=c(0,100),title="GLP% for Black Students"),
+		shapes=list(
+			type="line",
+			x0=0,
+			x1=100,
+			y0=0,
+			y1=100,
+			line=list(width=1),
+			dash="dot"
+		)
+	) %>%
+	plotly::add_annotations(
+		x=20,
+		y=90,
+		text=paste0(
+      n_schools," Schools\n",
+      "Blue: Title I Schools\n",
+      "Triangles: Charters"
+    ),
+		showarrow=FALSE
+	)
+  #
+  return(plt_)
+}
+```  
+
+
+#### Functions to get mean and confidence interval.  
+
+```{r echo=FALSE}
+fn_knit_exit("fn.boot.mean")
+```  
+
+```{r fn.boot.mean}
+fn.boot.mean = function(x,B,binwidth=NULL) {
+# Bret Larget
+# http://www.stat.wisc.edu/~larget/stat302/chap3.pdf
+# A quick bootstrap function for a confidence interval for the mean
+# x is a single quantitative sample
+# B is the desired number of bootstrap samples to take
+# binwidth is passed on to geom_histogram()
+	n = length(x)
+	boot.samples = matrix( sample(x,size=n*B,replace=TRUE), B, n)
+	boot.statistics = apply(boot.samples,1,mean)
+	se = sd(boot.statistics)
+	#
+	if ( is.null(binwidth) )
+	binwidth = diff(range(boot.statistics))/30
+	p = ggplot(data.frame(x=boot.statistics),aes(x=x)) +
+	geom_histogram(aes(y=..density..),binwidth=binwidth) + 
+	geom_density(color="red")
+	plot(p)
+	interval = mean(x) + c(-1,1)*2*se
+	print( interval )
+  #
+	return( 
+	  list(
+		  boot.statistics = boot.statistics, 
+		  interval=interval, 
+		  se=se, 
+		  plot=p
+      ) 
+	)
+}
+#
+fn_q345bestWHTE <- function(x,y) {
+	quantile(
+		dfDisagBestWHTE_D %>%
+		dplyr::filter(
+			subject==y &
+			grade==x
+		) %>%
+		dplyr::select(
+			pct_glp
+		) %>%
+		unlist(
+			use.names=FALSE
+		),
+		probs=seq(0,1,0.2)
+		)
+}
+#
+fn_q345BLCK_best_WHTE <- function(x,y) {
+	quantile(
+		dfDisagBLCK_best_WHTE_D %>%
+		dplyr::filter(
+			subject==y &
+			grade==x
+		) %>%
+		dplyr::select(
+			pct_glp
+		) %>%
+		unlist(
+			use.names=FALSE
+		),
+		probs=seq(0,1,0.2)
+		)
+}
+```  
+
+```{r fn_pltDisagBLCK_345_WHTE_GLP_D}
+fn_pltDisagBLCK_345_WHTE_GLP_D <- function() {
+  plt_ <- dfDisagBLCK_345_WHTE_GLP_D %>%
+  	dplyr::select(
+  		school_code,
+  		pct_glp_BLCK,
+  		pct_glp_WHTE,
+  		TitleISchool,
+  		charter_school,
+  		subject
+  	) %>% 
+  	na.omit() %>%
+  	dplyr::filter(
+  		subject=="RD"
+  	) %>%
+  	ggplot(
+  		aes(
+  			x=pct_glp_WHTE,
+  			y=pct_glp_BLCK
+  		)
+  	) +
+  	geom_point(
+  		aes(
+  			colour=TitleISchool,
+  			fill=TitleISchool,
+  			shape=charter_school
+  		),
+  		size=3,
+  		position="jitter",
+  		alpha=0.6
+  	) +
+  	guides(
+  		fill=FALSE
+  	) +
+  	scale_colour_discrete(
+  		name="Title I",
+  		labels=c("No","Yes")
+  	) +
+  	scale_shape_discrete(
+  		name="Charter",
+  		labels=c("No","Yes")
+  	) +
+  	theme(
+  		plot.title=element_text(
+  			hjust=0.5, 
+  			face="plain"
+  		)
+  	) +
+  	theme(
+  		plot.subtitle=element_text(
+  			hjust=0.5, 
+  			face="plain"
+  		)
+  	) +
+  	labs(
+  		title="2016-17 Grades 3-5 RD Cumulative GLP% for Black and White Students",
+  		subtitle="- all schools -",
+  		x="GLP% for White Students",
+  		y="GLP% for Black Students"
+  	) +
+  	xlim(0,100) +
+  	ylim(0,100) +
+  	geom_abline(
+  		intercept=0,
+  		slope=1
+  	)
+  #
+  return(plt_)
+}
+```  
+
+```{r fn_pltDisagBLCK_best345_WHTE_GLP_D
+fn_pltDisagBLCK_best345_WHTE_GLP_D <- function() {
+  plt_ <- dfDisagBLCK_best345_WHTE_GLP_D %>%
+  	dplyr::select(
+  		school_code,
+  		pct_glp_BLCK,
+  		pct_glp_WHTE,
+  		TitleISchool,
+  		charter_school,
+  		subject
+  	) %>% 
+  	na.omit() %>%
+  	dplyr::filter(
+  		subject=="RD"
+  	) %>%
+  	ggplot(
+  		aes(
+  			x=pct_glp_WHTE,
+  			y=pct_glp_BLCK
+  		)
+  	) +
+  	geom_point(
+  		aes(
+  			colour=TitleISchool,
+  			fill=TitleISchool,
+  			shape=charter_school
+  		),
+  		size=3,
+  		position="jitter",
+  		alpha=0.6
+  	) +
+  	guides(
+  		fill=FALSE
+  	) +
+  	scale_colour_discrete(
+  		name="Title I",
+  		labels=c("No","Yes")
+  	) +
+  	scale_shape_discrete(
+  		name="Charter",
+  		labels=c("No","Yes")
+  	) +
+  	theme(
+  		plot.title=element_text(
+  			hjust=0.5, 
+  			face="plain"
+  		)
+  	) +
+  	theme(
+  		plot.subtitle=element_text(
+  			hjust=0.5, 
+  			face="plain"
+  		)
+  	) +
+  	labs(
+  		title="2016-17 Grades 3-5 RD Cumulative GLP% for High Performing Schools",
+  		subtitle="- schools having more White than Black students -",
+  		x="GLP% for White Students",
+  		y="GLP% for Black Students"
+  	) +
+  	xlim(0,100) +
+  	ylim(0,100) +
+  	geom_abline(
+  		intercept=0,
+  		slope=1
+  	)
+  #
+  return(plt_)
+}
+```  
+
+```{r fn_plotly_scatterplot_all}
+fn_plotly_scatterplot_all <- function() {
+  pl_dfTmp <- 
+  	dfDisagBLCK_best345_WHTE_GLP_D %>%
+  	dplyr::select(
+  		school_code,
+  		pct_glp_BLCK,
+  		pct_glp_WHTE,
+  		TitleISchool,
+  		charter_school,
+  		subject
+  	) %>% 
+  	dplyr::filter(
+  		subject=="RD"
+  	) %>%
+  	dplyr::mutate(
+  		pl_symbol=ifelse(charter_school,2,1),
+  		pl_color=ifelse(TitleISchool,2,1)
+  	) %>%
+  	na.omit()
+  	#
+  	# colors:
+  	pl_plot_pal <- c("red","blue")
+  	#
+  pl_dfTmp %>%
+  	plot_ly(
+  		type="scatter",
+  		mode="markers",
+  		hoverinfo="text",
+  		x=~pct_glp_WHTE,
+  		y=~pct_glp_BLCK,
+  		symbol=~pl_symbol,
+  		color=~pl_color,
+  		colors=pl_plot_pal,
+  		text=~school_code
+  	) %>%
+  	hide_colorbar() %>%
+  	plotly::layout(
+  		title=paste0(
+  			"2016-17 Grades 3-5 RD Cumulative GLP% for Black and White Students\n",
+  			" - GLP% for White Students 75% and Higher -"
+  		),
+  		xaxis=list(range=c(0,100),title="GLP% for White Students"),
+  		yaxis=list(range=c(0,100),title="GLP% for Black Students"),
+  		shapes=list(
+  			type="line",
+  			x0=0,
+  			x1=100,
+  			y0=0,
+  			y1=100,
+  			line=list(width=1),
+  			dash="dot"
+  		)
+  	) %>%
+  	plotly::add_annotations(
+  		x=20,
+  		y=95,
+  		text="Blue: Title I Schools\nTriangles: Charters",
+  		showarrow=FALSE
+  	)
+  #
+  return(plt_)
+}
+```  
+
+```{r fn_plotly_scatterplot_75}
+fn_plotly_scatterplot_75 <- function() {
+  pl_dfTmp <- 
+  	dfDisagBLCK_345_WHTE_GLP_D %>%
+  	dplyr::select(
+  		school_code,
+  		pct_glp_BLCK,
+  		pct_glp_WHTE,
+  		TitleISchool,
+  		charter_school,
+  		subject
+  	) %>% 
+  	dplyr::filter(
+  		subject=="RD"
+  	) %>%
+  	dplyr::mutate(
+  		pl_symbol=ifelse(charter_school,2,1),
+  		pl_color=ifelse(TitleISchool,2,1)
+  	) %>%
+  	na.omit()
+  	#
+  	# colors:
+  	pl_plot_pal <- c("red","blue")
+  	#
+  plt_ <- pl_dfTmp %>%
+  	plot_ly(
+  		type="scatter",
+  		mode="markers",
+  		hoverinfo="text",
+  		x=~pct_glp_WHTE,
+  		y=~pct_glp_BLCK,
+  		symbol=~pl_symbol,
+  		color=~pl_color,
+  		colors=pl_plot_pal,
+  		text=~school_code
+  	) %>%
+  	hide_colorbar() %>%
+  	plotly::layout(
+  		title="2016-17 Grades 3-5 RD Cumulative GLP% for Black and White Students",
+  		xaxis=list(range=c(0,100),title="GLP% for White Students"),
+  		yaxis=list(range=c(0,100),title="GLP% for Black Students"),
+  		shapes=list(
+  			type="line",
+  			x0=0,
+  			x1=100,
+  			y0=0,
+  			y1=100,
+  			line=list(width=1),
+  			dash="dot"
+  		)
+  	) %>%
+  	plotly::add_annotations(
+  		x=20,
+  		y=95,
+  		text="Blue: Title I Schools\nTriangles: Charters",
+  		showarrow=FALSE
+  	)
+  #
+  return(plt_)
+}
+```  
+
+```{r save}
+save.image("3.RData")
+```  
+
+## OBSERVATIONS  
+### For Grades 3, 4, and 5  
+A. 2016-17 Math GLP% histogram for grade 3 White students over all schools.  
+The tall bar at 97% is an artifact of FERPA-required data censoring.  
+```{r plots_1, echo=params$show}
+dfDisag345WHTE_D %>%
+	dplyr::filter(
+		subject=="MA" &
+		grade=="03"
+	) %>%
+	ggplot( aes(x=pct_glp) ) +
+	geom_histogram(binwidth=2) +
+  xlim(0,100)
+```  
+
+B. 2016-17 Math GLP% histogram for grade 3 Black students over all schools.  
+```{r plots_2, echo=params$show}
+dfDisag345BLCK_D %>%
+	dplyr::filter(
+		subject=="MA" &
+		grade=="03"
+	) %>%
+	ggplot( aes(x=pct_glp) ) +
+	geom_histogram(binwidth=2) +
+  xlim(0,100)
+```  
+
+Quintiles 2016-17 for White students for Reading and Math:
+```{r quintiles_WHTE, echo=params$show}
+t(mapply(fn_q345WHTE,c("03","04","05"),"RD"))
+t(mapply(fn_q345WHTE,c("03","04","05"),"MA"))
+```  
+
+Quintiles 2016-17 for Black students for Reading and Math:
+```{r quintiles_BLCK, echo=params$show}
+t(mapply(fn_q345BLCK,c("03","04","05"),"RD"))
+t(mapply(fn_q345BLCK,c("03","04","05"),"MA"))
+```  
+
+### Black and White Students in the "best White schools" grades 3,4,5 in 2016-17.  
+These are where 1) there are more White than Black students and 2) the GLP% for Whites is over 80%.  
+
+A. White students in the "best White schools":
+```{r quintiles_BEST_WHTE}
+quantile(
+	dplyr::inner_join(
+		dfDisag345WHTE_D,
+		dfDisagBest345WHTE_D,
+		by=c("LEA","school_code")
+	) %>%
+	dplyr::select(
+		pct_glp
+	) %>%
+	unlist(
+		use.names=FALSE
+	),
+	probs=seq(0,1,0.2)
+)
+```  
+
+B. Black students in the "best White schools":
+```{r quintiles_BEST_BLCK}
+quantile(
+	dplyr::inner_join(
+		dfDisag345BLCK_D,
+		dfDisagBest345WHTE_D,
+		by=c("LEA","school_code")
+	) %>%
+	dplyr::select(
+		pct_glp
+	) %>%
+	unlist(
+		use.names=FALSE
+	),
+	probs=seq(0,1,0.2)
+)
+```  
+
+Means  
+
+```{r means}
+# mean for Whites
+mean(dfDisagBLCK_best_WHTE_GLP_D$pct_glp_WHTE)
+#
+# mean for Blacks
+mean(dfDisagBLCK_best_WHTE_GLP_D$pct_glp_BLCK)
+#
+# over ALL schools for 2016-17
+boot.mean.BLCK_D <- 
+	fn.boot.mean(
+		dfDisagEx20_Yr %>% 
+		dplyr::filter(
+			subject=="ALL" &
+			grade=="ALL" &
+			f_acYear=="D" & 
+			subgroup=="BLCK") %>%
+			dplyr::select(pct_glp) %>%
+			unlist(),
+		1000
+	)
+# 
+# for grades 3,4,5
+# for dfDisag345BLCK_D$pct_glp
+boot.mean.345BLCK_D <- 
+	fn.boot.mean(
+		dfDisag345BLCK_D$pct_glp,
+		1000
+	)	
+#
+```  
+
+desiderata
+```{r desiderata}
+quantile(
+	dfDisagEx20_Yr %>%
+	dplyr::filter(
+		subgroup=="WHTE" &
+		subject=="ALL" &
+		grade=="ALL"
+	) %>%
+	dplyr::select(
+		pct_glp
+	) %>%
+	unlist(
+		use.names=FALSE
+	),
+	probs=seq(0,1,0.2)
+)
+
+```  
+
+## Inventory  
+
+
+fn_boxplots_track <- function(  
+  argEDTier="ALL",  
+  argLEAs="ALL",  
+  argCharterOnly=FALSE,  
+  argSave=TRUE )  
+
+fn_boxplots_comp <- function(  
+  argEDTier="ALL",  
+  argLEAs="ALL",  
+  argCharterOnly=FALSE,  
+  argSave=TRUE )  
+
+fn_boxplots_cohort<- function(  
+  argEDTier="ALL",  
+  argLEAs="ALL",  
+  argCharterOnly=FALSE,  
+  argSave=TRUE )  
+
+fn_scatterplots_comp <- function(  
+  argEDTier="ALL",  
+  argLEAs="ALL",  
+  argCharterOnly=FALSE,  
+  argSave=TRUE )  
+
+fn_scatterplots_track <- function(  
+  argEDTier="ALL",  
+  argLEAs="ALL",  
+  argCharterOnly=FALSE,  
+  argSave=TRUE )  
+
+fn_scatterplots_plotly_comp <- function(  
+  argEDTier="ALL",  
+  argLEAs="ALL" )  
+
+fn_scatterplots_plotly_track <- function(  
+  argEDTier="ALL",  
+  argLEAs="ALL",  
+  argCharterOnly=FALSE )  
+
+fn_pltScoreFreqNCDPI <- function(  
+  argCOW=FALSE,  
+  argSave=TRUE )  
+
+fn_plt_hist_GLPffn_plt_hist_GLPf <- function(  
+  argYear,  
+  argGrade,  
+  argLEA="ALL",  
+  argSave=TRUE )  
+  
+fn_q345BLCK  
+
+fn_q345WHTE  
+
+fn_q345bestWHTE  
+
+fn_q345BLCK_best_WHTE  
+
+fn_pltDisagBLCK_345_WHTE_GLP_D  
+
+fn_pltDisagBLCK_best345_WHTE_GLP_D  
+
+fn_plotly_scatterplot_all  
+
+fn_plotly_scatterplot_75  
+
+## FINIS  

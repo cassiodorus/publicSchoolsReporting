@@ -105,7 +105,7 @@ It is most direct to quote the NC Department of Commerce website here: "The N.C.
 
 <div style="text-align:center">
 ```{r box_4, echo=FALSE}
-plts1 <- fn_boxplots_track(argSave = FALSE, argTier=3)
+plts1 <- fn_boxplots_track(argSave = FALSE, argEDTier=3)
 plts1[[6]]
 ```  
 

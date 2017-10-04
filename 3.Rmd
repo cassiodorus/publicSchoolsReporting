@@ -41,7 +41,7 @@ fn_knit_exit("fn_plt_glp_density_year")
 
 ```{r fn_plt_glp_density_year}
 fn_plt_glp_density_year <- function() {
-  df1_ <- dfDisagEx20_345_Yr %>%
+  df1_ <- dfDisagX20_345_Yr %>%
   dplyr::select(
     subject,
     grade,
@@ -101,7 +101,7 @@ fn_plt_glp_density_year <- function() {
 ## Consider GLP% as related to race and the racial composition of schools  
 
 Look at 2016-17 only for this preliminary analysis.  
-Use dfDisagEx20_Yr and dfDisagSubgroupsC (<- for 2016-17 only)  
+Use dfDisagX20_Yr and dfDisagSubgroupsC (<- for 2016-17 only)  
 
 ### What is the distribution of GLP% scores for black children?  
 
@@ -112,7 +112,7 @@ fn_knit_exit("dfDisagALLmoreWHTE_D")
 
 ```{r dfDisagALLmoreWHTE_D}
 dfDisagALLmoreWHTE_D  <- 
-	dfDisagEx20_Yr %>%
+	dfDisagX20_Yr %>%
 	dplyr::filter(
 		f_acYear=="D" & 
 		subgroup %in% c("WHTE","BLCK") 
@@ -155,7 +155,7 @@ fn_knit_exit("dfDisag345moreWHTE_D")
 
 ```{r dfDisag345moreWHTE_D}
 dfDisag345moreWHTE_D  <- 
-	dfDisagEx20_345_Yr %>%
+	dfDisagX20_345_Yr %>%
 	dplyr::filter(
 		f_acYear=="D" & 
 		subgroup %in% c("WHTE","BLCK") 
@@ -198,7 +198,7 @@ fn_knit_exit("dfDisag345BLCK_D")
 
 ```{r dfDisag345BLCK_D}
 dfDisag345BLCK_D <- 
-	dfDisagEx20_345_Yr %>%
+	dfDisagX20_345_Yr %>%
 	dplyr::filter(
 		f_acYear=="D" & 
 		subgroup=="BLCK"
@@ -223,7 +223,7 @@ fn_knit_exit("dfDisag345WHTE_D")
 
 ```{r dfDisag345WHTE_D}
 dfDisag345WHTE_D <- 
-	dfDisagEx20_345_Yr %>%
+	dfDisagX20_345_Yr %>%
 	dplyr::filter(
 		f_acYear=="D" & 
 		subgroup=="WHTE"
@@ -300,7 +300,7 @@ fn_knit_exit("dfDisagBest345WHTE_D")
 
 ```{r dfDisagBest345WHTE_D}
 dfDisagBest345WHTE_D <- 
-	dfDisagEx20_345_Yr %>%
+	dfDisagX20_345_Yr %>%
 	dplyr::filter(
 		f_acYear=="D" & 
 		subgroup=="WHTE" &
@@ -348,7 +348,7 @@ fn_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
   # MA and RD will be the same for dfTmp1
   dfTmp1 <- dfDisagBest345WHTE_D %>%
   	dplyr::inner_join(
-  		dfDisagEx20_345_Yr %>%
+  		dfDisagX20_345_Yr %>%
   		dplyr::filter(
   			f_acYear=="D" &
   			subject=="MA" &
@@ -384,7 +384,7 @@ fn_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
   # another intermediate dataframe:
   dfTmp2 <- dfDisagBest345WHTE_D %>%
   	dplyr::inner_join(
-  		dfDisagEx20_345_Yr %>%
+  		dfDisagX20_345_Yr %>%
   		dplyr::filter(
   			f_acYear=="D" &
   			subgroup %in% c("ALL","BLCK","WHTE")
@@ -435,7 +435,7 @@ fn_dfDisagBLCK_345_WHTE_GLP_D <- function() {
   # this is just an intermediate dataframe:
   # MA and RD will be the same for dfTmp1
   dfTmp1 <- 
-  	dfDisagEx20_345_Yr %>%
+  	dfDisagX20_345_Yr %>%
   	dplyr::filter(
   		f_acYear=="D" &
   		subject=="MA" &
@@ -468,7 +468,7 @@ fn_dfDisagBLCK_345_WHTE_GLP_D <- function() {
   #
   # another intermediate dataframe:
   dfTmp2 <- 
-  	dfDisagEx20_345_Yr %>%
+  	dfDisagX20_345_Yr %>%
   	dplyr::filter(
   		f_acYear=="D" &
   		subgroup %in% c("ALL","BLCK","WHTE")
@@ -525,7 +525,7 @@ fn_knit_exit("dfDisagBestWHTE_D")
 
 ```{r dfDisagBestWHTE_D}
 dfDisagBestWHTE_D <- 
-	dfDisagEx20_Yr %>%
+	dfDisagX20_Yr %>%
 	dplyr::filter(
 		f_acYear=="D" & 
 		subgroup=="WHTE" &
@@ -562,7 +562,7 @@ fn_knit_exit("dfDisagBLCK_best_WHTE_GLP_D")
 fn_dfDisagBLCK_best_WHTE_GLP_D <- function() {
   # this is just an intermediate dataframe:
   dfDisagBLCK_best_WHTE_D <-
-  	dfDisagEx20_Yr %>%
+  	dfDisagX20_Yr %>%
   	dplyr::filter(
   		f_acYear=="D" &
   		grade=="ALL" &
@@ -603,7 +603,7 @@ fn_dfDisagBLCK_best_WHTE_GLP_D <- function() {
   				pct_num_BLCK,
   				pct_num_WHTE
   			),
-  		dfDisagEx20_Yr %>% 
+  		dfDisagX20_Yr %>% 
   			dplyr::filter(
   				f_acYear=="D" &
   				grade=="ALL" &
@@ -1222,7 +1222,7 @@ mean(dfDisagBLCK_best_WHTE_GLP_D$pct_glp_BLCK)
 # over ALL schools for 2016-17
 boot.mean.BLCK_D <- 
 	fn.boot.mean(
-		dfDisagEx20_Yr %>% 
+		dfDisagX20_Yr %>% 
 		dplyr::filter(
 			subject=="ALL" &
 			grade=="ALL" &
@@ -1246,7 +1246,7 @@ boot.mean.345BLCK_D <-
 desiderata
 ```{r desiderata}
 quantile(
-	dfDisagEx20_Yr %>%
+	dfDisagX20_Yr %>%
 	dplyr::filter(
 		subgroup=="WHTE" &
 		subject=="ALL" &

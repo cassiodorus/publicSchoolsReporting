@@ -1,0 +1,116 @@
+---
+title: "Public Schools Project - Score-Frequency Graphics"
+author: "D. Hopp"
+date: "September 2017"
+output:
+  html_document: 
+    css: "my_css.css"
+---
+
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width=100)
+```  
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+require(rprojroot)
+require(reshape2)
+require(magrittr)
+require(plyr)
+require(tidyverse)
+require(cowplot)
+require(grid)
+require(readr)
+require(taRifx)
+require(R.utils)
+require(ggthemes)
+require(emdist)
+require(rlist)
+require(MASS)
+require(testthat)
+library(printr)
+```  
+
+[comment]: # (use fn_pltScoreFreqNCDPI)
+
+```{r fetch, echo=FALSE, message=FALSE}
+load("2.RData")
+```  
+
+```{r grab_grobs, echo=FALSE}
+plts_ <- fn_pltScoreFreqNCDPI(argCOW=TRUE,argSave=FALSE)
+```  
+
+#### Each plot shows the five achievement levels, reading from left (Level 1) to right (Level 5). Scoring in Level 3, 4, or 5 is Grade Level Proficient.
+
+The changes seen in score frequencies are due either to differences in test difficulties, or differences in the abilities of students, or some combination of both. Random effects play a role, since the same students, taking the same tests, on some other day would be expected to exhibit some differences in their scores.  
+
+```{r plot_this_1, echo=FALSE, fig.width=10}
+cowplot::plot_grid( plts_[[1]], plts_[[7]], plts_[[13]], ncol=3)
+```  
+
+ ```{r plot_this_2, echo=FALSE, fig.width=10}
+cowplot::plot_grid( plts_[[2]], plts_[[8]], plts_[[14]], ncol=3)
+```  
+
+ ```{r plot_this_3, echo=FALSE, fig.width=10}
+cowplot::plot_grid( plts_[[3]], plts_[[9]], plts_[[15]], ncol=3)
+```  
+
+```{r plot_this_4, echo=FALSE, fig.width=10}
+cowplot::plot_grid( plts_[[4]], plts_[[10]], plts_[[16]], ncol=3)
+```  
+
+ ```{r plot_this_5, echo=FALSE, fig.width=10}
+cowplot::plot_grid( plts_[[5]], plts_[[11]], plts_[[17]], ncol=3)
+```  
+
+ ```{r plot_this_6, echo=FALSE, fig.width=10}
+cowplot::plot_grid( plts_[[6]], plts_[[12]], plts_[[18]], ncol=3)
+```  
+
+### Cut Points  
+The cut points are consistent across the three years. 
+
+#### For ELA  
+```{r cut_points_1, echo=FALSE}
+dfScoreFreqNCDPIBreaks %>% 
+  dplyr::filter(Subject=="ELA" & Grade=="3") %>%
+  dplyr::arrange(f_acYear) %>%
+  dplyr::select(-f_acYear)
+```  
+
+```{r cut_points_2, echo=FALSE}
+dfScoreFreqNCDPIBreaks %>% 
+  dplyr::filter(Subject=="ELA" & Grade=="4") %>%
+  dplyr::arrange(f_acYear) %>%
+  dplyr::select(-f_acYear)
+```  
+
+```{r cut_points_3, echo=FALSE}
+dfScoreFreqNCDPIBreaks %>% 
+  dplyr::filter(Subject=="ELA" & Grade=="5") %>%
+  dplyr::arrange(f_acYear) %>%
+  dplyr::select(-f_acYear)
+```  
+
+#### For MA  
+```{r cut_points_4, echo=FALSE}
+dfScoreFreqNCDPIBreaks %>% 
+  dplyr::filter(Subject=="MA" & Grade=="3") %>%
+  dplyr::arrange(f_acYear) %>%
+  dplyr::select(-f_acYear)
+```  
+
+```{r cut_points_5, echo=FALSE}
+dfScoreFreqNCDPIBreaks %>% 
+  dplyr::filter(Subject=="MA" & Grade=="4") %>%
+  dplyr::arrange(f_acYear) %>%
+  dplyr::select(-f_acYear)
+```  
+
+```{r cut_points_6, echo=FALSE}
+dfScoreFreqNCDPIBreaks %>% 
+  dplyr::filter(Subject=="MA" & Grade=="5") %>%
+  dplyr::arrange(f_acYear) %>%
+  dplyr::select(-f_acYear)
+```  

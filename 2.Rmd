@@ -76,11 +76,11 @@ fn_boxplots_track <- function(
   }
   #
   if ( argEDTier == "ALL") {
-    df_ <- dfDisagEx20_Yr
+    df_ <- dfDisagX20_Yr
     EDTierTxt <- "ALL"
   }
   if ( argEDTier %in% c("1","2","3") ) {
-    df_ <- dfDisagEx20_Yr %>%
+    df_ <- dfDisagX20_Yr %>%
       dplyr::inner_join(
         dfLEA %>% 
           dplyr::filter( 
@@ -92,7 +92,7 @@ fn_boxplots_track <- function(
     EDTierTxt <- argEDTier
   }
   if ( argEDTier == "3-" ) {
-    df_ <- dfDisagEx20_Yr %>%
+    df_ <- dfDisagX20_Yr %>%
       dplyr::inner_join(
         dfLEA %>% 
           dplyr::filter( 
@@ -139,7 +139,7 @@ fn_boxplots_track <- function(
             acYear == Y_ & 
             subject == S_ &
             grade %in% paste0("0",3:5) &
-            subgroup != "AIG"
+            subgroup %in% c("NOT_EDS","EDS","ALL","BLCK","HISP","WHTE")
         ) 
         #
         n_schools <- length(unique(df3_$school_code))
@@ -220,11 +220,11 @@ fn_boxplots_comp <- function(
   }
   #
   if ( argEDTier == "ALL") {
-    df_ <- dfDisagEx20_Yr
+    df_ <- dfDisagX20_Yr
     EDTierTxt <- "ALL"
   }
   if ( argEDTier %in% c("1","2","3") ) {
-    df_ <- dfDisagEx20_Yr %>%
+    df_ <- dfDisagX20_Yr %>%
       dplyr::inner_join(
         dfLEA %>% 
           dplyr::filter( 
@@ -236,7 +236,7 @@ fn_boxplots_comp <- function(
     EDTierTxt <- argEDTier
   }
   if ( argEDTier == "3-" ) {
-    df_ <- dfDisagEx20_Yr %>%
+    df_ <- dfDisagX20_Yr %>%
       dplyr::inner_join(
         dfLEA %>% 
           dplyr::filter( 
@@ -279,7 +279,7 @@ fn_boxplots_comp <- function(
           dplyr::filter(
             subject == S_ &
             grade == G_ &
-            subgroup != "AIG"
+            subgroup %in% c("NOT_EDS","EDS","ALL","BLCK","HISP","WHTE")
         )
         #
         n_schools <- length(unique(df3_$school_code))
@@ -360,11 +360,11 @@ fn_boxplots_cohort<- function(
   }
   #
   if ( argEDTier == "ALL") {
-    df_ <- dfDisagEx20_Yr
+    df_ <- dfDisagX20_Yr
     EDTierTxt <- "ALL"
   }
   if ( argEDTier %in% c("1","2","3") ) {
-    df_ <- dfDisagEx20_Yr %>%
+    df_ <- dfDisagX20_Yr %>%
       dplyr::inner_join(
         dfLEA %>% 
           dplyr::filter( 
@@ -376,7 +376,7 @@ fn_boxplots_cohort<- function(
     EDTierTxt <- argEDTier
   }
   if ( argEDTier == "3-" ) {
-    df_ <- dfDisagEx20_Yr %>%
+    df_ <- dfDisagX20_Yr %>%
       dplyr::inner_join(
         dfLEA %>% 
           dplyr::filter( 
@@ -429,7 +429,7 @@ fn_boxplots_cohort<- function(
             (f_acYear=="B" & grade=="04") |
             (f_acYear=="C" & grade=="05")) & 
             subject == S_ &
-            subgroup != "AIG"
+            subgroup %in% c("NOT_EDS","EDS","ALL","BLCK","HISP","WHTE")
           ) 
         } else {
           yrs_ <- "2014-15 to 2016-17"
@@ -439,7 +439,7 @@ fn_boxplots_cohort<- function(
             (f_acYear=="C" & grade=="04") |
             (f_acYear=="D" & grade=="05")) & 
             subject == S_ &
-            subgroup != "AIG"          
+            subgroup %in% c("NOT_EDS","EDS","ALL","BLCK","HISP","WHTE")          
           )
         }
         #
@@ -526,11 +526,11 @@ fn_boxplots_sbs_cohort<- function(
   }
   #
   if ( argEDTier == "ALL") {
-    df_ <- dfDisagEx20_Yr
+    df_ <- dfDisagX20_Yr
     EDTierTxt <- "ALL"
   }
   if ( argEDTier %in% c("1","2","3") ) {
-    df_ <- dfDisagEx20_Yr %>%
+    df_ <- dfDisagX20_Yr %>%
       dplyr::inner_join(
         dfLEA %>% 
           dplyr::filter( 
@@ -542,7 +542,7 @@ fn_boxplots_sbs_cohort<- function(
     EDTierTxt <- argEDTier
   }
   if ( argEDTier == "3-" ) {
-    df_ <- dfDisagEx20_Yr %>%
+    df_ <- dfDisagX20_Yr %>%
       dplyr::inner_join(
         dfLEA %>% 
           dplyr::filter( 
@@ -580,12 +580,12 @@ fn_boxplots_sbs_cohort<- function(
       df2_ <- df_ %>% 
         dplyr::filter(
           LEA == LEA_ &
-          subgroup != "AIG"
+          subgroup %in% c("NOT_EDS","EDS","ALL","BLCK","HISP","WHTE")
         )
     } else {
       df2_ <- df_ %>%
         dplyr::filter(
-          subgroup != "AIG"
+          subgroup %in% c("NOT_EDS","EDS","ALL","BLCK","HISP","WHTE")
         )
     }
     #
@@ -658,11 +658,11 @@ fn_boxplots_sbs_cohort<- function(
 ## scatterplots  
 
 ```{r echo=FALSE}
-fn_knit_exit("fn_dfDisagEx20_345_comp")
-fn_knit_exit("dfDisagEx20_345_comp")
+fn_knit_exit("fn_dfDisagX20_345_comp")
+fn_knit_exit("dfDisagX20_345_comp")
 ```  
 
-```{r fn_dfDisagEx20_345_comp}
+```{r fn_dfDisagX20_345_comp}
 # #############################
 #
 # 2013-14 to 2014-15 vs 2014-15 to 2015-16 vs 2016-17
@@ -676,13 +676,13 @@ fn_knit_exit("dfDisagEx20_345_comp")
 # "comp" means compare same grade across years
 # each row is a single grade  
 # keep all four years
-# use dfDisagEx20_345_Yr
+# use dfDisagX20_345_Yr
 #
-fn_dfDisagEx20_345_comp <- function() 
+fn_dfDisagX20_345_comp <- function() 
 {
-  dfDisagEx20_345_comp <-
+  dfDisagX20_345_comp <-
   dplyr::inner_join(
-    dfDisagEx20_345_Yr %>%
+    dfDisagX20_345_Yr %>%
       dplyr::select(
         LEA,
         school_code,
@@ -696,7 +696,7 @@ fn_dfDisagEx20_345_comp <- function()
       dplyr::filter(
         f_acYear == "A"
       ),
-    dfDisagEx20_345_Yr %>%
+    dfDisagX20_345_Yr %>%
       dplyr::select(
         LEA,
         school_code,
@@ -719,7 +719,7 @@ fn_dfDisagEx20_345_comp <- function()
     )
   ) %>%
   dplyr::inner_join(
-    dfDisagEx20_345_Yr %>%
+    dfDisagX20_345_Yr %>%
       dplyr::select(
         LEA,
         school_code,
@@ -753,7 +753,7 @@ fn_dfDisagEx20_345_comp <- function()
     f_acYear.C=f_acYear
   ) %>%
   dplyr::inner_join(
-    dfDisagEx20_345_Yr %>%
+    dfDisagX20_345_Yr %>%
       dplyr::select(
         LEA,
         school_code,
@@ -810,30 +810,30 @@ fn_dfDisagEx20_345_comp <- function()
   dplyr::select(
     -f_acYear
   )
-  return(dfDisagEx20_345_comp)
+  return(dfDisagX20_345_comp)
 }
 #
-str(fn_dfDisagEx20_345_comp())
-dfDisagEx20_345_comp <- fn_dfDisagEx20_345_comp()
+str(fn_dfDisagX20_345_comp())
+dfDisagX20_345_comp <- fn_dfDisagX20_345_comp()
 ```   
 
 
 ```{r echo=FALSE}
-fn_knit_exit("fn_dfDisagEx20_345_ABCD_track")
-fn_knit_exit("dfDisagEx20_345_ABCD_track")
+fn_knit_exit("fn_dfDisagX20_345_ABCD_track")
+fn_knit_exit("dfDisagX20_345_ABCD_track")
 ```  
 
-```{r fn_dfDisagEx20_345_ABCD_track}
+```{r fn_dfDisagX20_345_ABCD_track}
 #
 # ###########################
 #
 # "track" means track grade 3->4 and 4->5 across years
 # each row contains grades 3, 4, and 5 for succesive years
 #
-fn_dfDisagEx20_345_ABCD_track <- function() {
-  dfDisagEx20_345_ABCD_track <-
+fn_dfDisagX20_345_ABCD_track <- function() {
+  dfDisagX20_345_ABCD_track <-
   dplyr::inner_join(
-    dfDisagEx20_345_Yr %>%
+    dfDisagX20_345_Yr %>%
       dplyr::select(
         LEA,
         school_code,
@@ -848,7 +848,7 @@ fn_dfDisagEx20_345_ABCD_track <- function() {
         f_acYear == "A" &
         grade == "03"
       ),
-    dfDisagEx20_345_Yr %>%
+    dfDisagX20_345_Yr %>%
       dplyr::select(
         LEA,
         school_code,
@@ -871,7 +871,7 @@ fn_dfDisagEx20_345_ABCD_track <- function() {
     )
   ) %>%
   dplyr::inner_join(
-    dfDisagEx20_345_Yr %>%
+    dfDisagX20_345_Yr %>%
       dplyr::select(
         LEA,
         school_code,
@@ -940,7 +940,7 @@ fn_dfDisagEx20_345_ABCD_track <- function() {
   #
   dfTmp <-
   dplyr::inner_join(
-    dfDisagEx20_345_Yr %>%
+    dfDisagX20_345_Yr %>%
       dplyr::select(
         LEA,
         school_code,
@@ -955,7 +955,7 @@ fn_dfDisagEx20_345_ABCD_track <- function() {
         f_acYear == "B" &
         grade == "03"
       ),
-    dfDisagEx20_345_Yr %>%
+    dfDisagX20_345_Yr %>%
       dplyr::select(
         LEA,
         school_code,
@@ -978,7 +978,7 @@ fn_dfDisagEx20_345_ABCD_track <- function() {
     )
   ) %>%
   dplyr::inner_join(
-    dfDisagEx20_345_Yr %>%
+    dfDisagX20_345_Yr %>%
       dplyr::select(
         LEA,
         school_code,
@@ -1045,21 +1045,21 @@ fn_dfDisagEx20_345_ABCD_track <- function() {
     -f_acYear
   )
   #
-  dfDisagEx20_345_ABCD_track <-
+  dfDisagX20_345_ABCD_track <-
     rbind(
-      dfDisagEx20_345_ABCD_track,
+      dfDisagX20_345_ABCD_track,
       dfTmp
     )
   #
-  return(dfDisagEx20_345_ABCD_track)
+  return(dfDisagX20_345_ABCD_track)
 }
-str(fn_dfDisagEx20_345_ABCD_track())
-dfDisagEx20_345_ABCD_track <- fn_dfDisagEx20_345_ABCD_track()
+str(fn_dfDisagX20_345_ABCD_track())
+dfDisagX20_345_ABCD_track <- fn_dfDisagX20_345_ABCD_track()
 ```  
 
 ### scatterplot functions  
   
- use dfDisagEx20_345_track and dfDisagEx20_345_comp   
+ use dfDisagX20_345_track and dfDisagX20_345_comp   
   
  refs:  
  https://groups.google.com/forum/#!topic/ggplot2/2qCkPdo0SnM  
@@ -1102,9 +1102,9 @@ fn_scatterplots_comp <- function(
   }
   #
   if ( argEDTier == "ALL") {
-    df_ <- dfDisagEx20_345_comp
+    df_ <- dfDisagX20_345_comp
   } else {
-    df_ <- dfDisagEx20_345_comp %>% 
+    df_ <- dfDisagX20_345_comp %>% 
         dplyr::filter( 
           EDTier==argEDTier
         )
@@ -1296,7 +1296,7 @@ fn_scatterplots_track <- function(
   argLEAs="ALL",
   argCharterOnly=FALSE,
   argSave=TRUE ) {
-# uses dfDisagEx20_345_ABCD_track
+# uses dfDisagX20_345_ABCD_track
 #
 # argEDTier is ALL or in 1:3 and links to dfLEA
 # at most one of 1:3
@@ -1345,12 +1345,12 @@ fn_scatterplots_track <- function(
   for (Years_ in 1:2) {
     #
     if (argEDTier == "ALL") {
-      df_ <- dfDisagEx20_345_ABCD_track %>%
+      df_ <- dfDisagX20_345_ABCD_track %>%
         dplyr::filter(
           Years==theYears[Years_]
         )
     } else {
-      df_ <- dfDisagEx20_345_ABCD_track %>% 
+      df_ <- dfDisagX20_345_ABCD_track %>% 
         dplyr::filter( 
           Years==theYears[Years_] &
           EDTier==argEDTier
@@ -1536,9 +1536,9 @@ fn_scatterplots_plotly_comp <- function(
   }
   #
   if ( argEDTier == "ALL") {
-    df_ <- dfDisagEx20_345_comp
+    df_ <- dfDisagX20_345_comp
   } else {
-    df_ <- dfDisagEx20_345_comp %>% 
+    df_ <- dfDisagX20_345_comp %>% 
         dplyr::filter( 
           EDTier==argEDTier
         )
@@ -1689,7 +1689,7 @@ track cohort: grade 3 -> 4 -> 5 across years
 fn_knit_exit("fn_scatterplots_plotly_track")
 ```  
 
-use dfDisagEx20_345_ABC_track and dfDisagEx20_345_BCD_track
+use dfDisagX20_345_ABC_track and dfDisagX20_345_BCD_track
 
 ```{r fn_scatterplots_plotly_track}  
 fn_scatterplots_plotly_track <- function(
@@ -1744,12 +1744,12 @@ fn_scatterplots_plotly_track <- function(
   for (Years_ in 1:2) {
     #
     if (argEDTier == "ALL") {
-      df_ <- dfDisagEx20_345_ABCD_track %>%
+      df_ <- dfDisagX20_345_ABCD_track %>%
         dplyr::filter(
           Years==theYears[Years_]
         )
     } else {
-      df_ <- dfDisagEx20_345_ABCD_track %>% 
+      df_ <- dfDisagX20_345_ABCD_track %>% 
         dplyr::filter( 
           Years==theYears[Years_] &
           EDTier==argEDTier
@@ -2068,7 +2068,7 @@ fn_pltScoreFreqNCDPI <- function(
 ``` 
 
 ### Histograms of GLP% by ethnicity and EDS  
-Use dfDisagEx20_345_Yr  
+Use dfDisagX20_345_Yr  
 ```{r echo=FALSE}
 fn_knit_exit("fn_plt_hist_GLPf")
 ```  
@@ -2104,7 +2104,7 @@ fn_plt_hist_GLPf <- function(
   #
   ret <- list()
   df1_ <-  
-  dfDisagEx20_345_Yr %>%
+  dfDisagX20_345_Yr %>%
   dplyr::select(
     LEA,
     subject,

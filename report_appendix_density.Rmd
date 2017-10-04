@@ -1,0 +1,85 @@
+---
+title: "Public Schools Project - GLP% Density Graphics"
+author: "D. Hopp"
+date: "September 2017"
+output:
+  html_document: 
+    css: "my_css.css"
+---
+
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width=100)
+```  
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+require(rprojroot)
+require(reshape2)
+require(magrittr)
+require(plyr)
+require(tidyverse)
+require(cowplot)
+require(grid)
+require(readr)
+require(taRifx)
+require(R.utils)
+require(ggthemes)
+require(emdist)
+require(rlist)
+require(MASS)
+require(testthat)
+library(printr)
+```  
+
+[comment]: # (use fn_plt_glp_density_year)
+
+```{r fetch, echo=FALSE, message=FALSE}
+load("3.RData")
+```  
+
+```{r grab_grobs, echo=FALSE}
+plts_ <- fn_plt_glp_density_year()
+```  
+
+#### These density plots show GLP% for subject, grade, and group across years.
+
+These plots compare the smoothed histograms (density plots) of GLP% for EDS, not-EDS, Black, Hispanic, and White students across the four available academic years 2013-14 through 2016-17. Each set of five plots is for one subject (mathematics or reading) and one grade (3, 4 or 5). The primary purposes here are to make it easy to see whether a distribution is normal, symmetrical, or skewed in some way. Distribution shapes directly influence the selection of methods to determine and quantify year-to-year change. Put another way, determining improvement depends on selecting a metric, and that depends on the nature of the data.   
+
+<div style="text-align:center">
+```{r plot_this_1, echo=FALSE, fig.width=10, fig.height=8}
+cowplot::plot_grid( plts_[[1]], plts_[[2]], plts_[[3]], plts_[[4]], plts_[[5]], ncol=2)
+```  
+</div>
+
+<div style="text-align:center">
+```{r plot_this_2, echo=FALSE, fig.width=10, fig.height=8}
+cowplot::plot_grid( plts_[[6]], plts_[[7]], plts_[[8]], plts_[[9]], plts_[[10]], ncol=2)
+```  
+</div>
+
+<div style="text-align:center">
+```{r plot_this_3, echo=FALSE, fig.width=10, fig.height=8}
+cowplot::plot_grid( plts_[[6]], plts_[[7]], plts_[[8]], plts_[[9]], plts_[[10]], ncol=2)
+```  
+
+<div style="text-align:center">
+```{r plot_this_4, echo=FALSE, fig.width=10, fig.height=8}
+cowplot::plot_grid( plts_[[11]], plts_[[12]], plts_[[13]], plts_[[14]], plts_[[15]], ncol=2)
+```  
+</div>
+
+<div style="text-align:center">
+```{r plot_this_5, echo=FALSE, fig.width=10, fig.height=8}
+cowplot::plot_grid( plts_[[16]], plts_[[17]], plts_[[18]], plts_[[19]], plts_[[20]], ncol=2)
+```  
+</div>
+
+<div style="text-align:center">
+```{r plot_this_6, echo=FALSE, fig.width=10, fig.height=8}
+cowplot::plot_grid( plts_[[21]], plts_[[22]], plts_[[23]], plts_[[24]], plts_[[25]], ncol=2)
+```  
+</div>
+
+```{r plot_this_7, echo=FALSE, fig.width=10, fig.height=8}
+cowplot::plot_grid( plts_[[26]], plts_[[27]], plts_[[28]], plts_[[29]], plts_[[30]], ncol=2)
+```  
+</div>

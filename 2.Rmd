@@ -22,6 +22,7 @@ require(ggthemes)
 require(emdist)
 require(rlist)
 require(MASS)
+require(Hmisc)
 ```
 
 ### fetch objects:
@@ -2002,6 +2003,55 @@ str(fn_dfScoreFreqNCDPIBreaks())
 dfScoreFreqNCDPIBreaks <- fn_dfScoreFreqNCDPIBreaks()
 ```  
 
+```{r echo=FALSE}
+fn_knit_exit("fn_dfScoreFreqNCDPIquartiles")
+fn_knit_exit("dfScoreFreqNCDPIquartiles")
+```  
+
+Score-Freq Quartiles  
+
+```{r fn_dfScoreFreqQuartiles}
+fn_dfScoreFreqNCDPIquartiles <- function(){
+# quartiles of the score-freq data
+  dfScoreFreqNCDPIquartiles <-
+  dfScoreFreqNCDPI %>% 
+  dplyr::select(
+    acYear,
+    Grade,
+    Subject,
+    Score,
+    Freq
+  ) %>%
+  dplyr::group_by(
+    acYear,
+    Grade,
+    Subject
+  ) %>%
+  dplyr::summarise(
+    p=list(Hmisc::wtd.quantile(
+      unlist(Score),
+      weights=unlist(Freq)
+    ))
+  ) %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(
+    p0=p[1],
+    p25=p[2],
+    p50=p[3],
+    p75=p[4],
+    p100=p[5]
+  ) %>%
+  as.data.frame() %>%
+  dplyr::select(
+    -p
+  )
+  #
+  return(dfScoreFreqNCDPIquartiles)
+}
+str(fn_dfScoreFreqNCDPIquartiles())
+dfScoreFreqNCDPIquartiles <- fn_dfScoreFreqNCDPIquartiles()
+```  
+
 display of score-frequency data
 from DPI Green Book for
 2013-14 and 2015-16
@@ -2011,6 +2061,7 @@ direct display of Freq for Score
 fn_knit_exit("fn_pltScoreFreqNCDPI")
 ```  
 
+modified 10/6/17
 ```{r fn_pltScoreFreqNCDPI}
 fn_pltScoreFreqNCDPI <- function(
   argCOW=FALSE,
@@ -2018,6 +2069,21 @@ fn_pltScoreFreqNCDPI <- function(
   # argCOW prepares plots for use with cowplot 
   # by repressing color legend
   #
+  fn_p50 <- function(Y_,G_,S_){
+    return(
+      unlist(
+        dfScoreFreqNCDPIquartiles %>%
+        dplyr::filter(
+          acYear==Y_ &
+          Grade==G_ &
+          Subject==S_
+        ) %>%
+        dplyr::select(
+          p50
+        )
+      )
+    )
+  }
   if (length(unique(dfScoreFreqNCDPI$acYear))!=3) stop("REVISE fn_pltScoreFreqNCDPI")
   #
   ret <- list()
@@ -2050,7 +2116,17 @@ fn_pltScoreFreqNCDPI <- function(
           axis.title.x=element_text(size=10),
           axis.title.y=element_text(size=10),
           legend.title=element_text(size=8)
+        ) +
+        annotate(
+          "text",
+          x=-Inf,
+          y=Inf,
+          label=paste("Weighted Median",fn_p50(Y_,G_,S_)),
+          hjust=-0.2,
+          vjust=2.0,
+          size=2.5
         )
+        #
         if (argSave) {
           ggsave(
             paste0(
@@ -2059,6 +2135,7 @@ fn_pltScoreFreqNCDPI <- function(
             )
           )
         }
+        #
         ret[[paste0(f_,G_,S_)]] <- plt_
       }
     }

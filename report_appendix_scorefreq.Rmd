@@ -69,25 +69,65 @@ cowplot::plot_grid( plts_[[6]], plts_[[12]], plts_[[18]], ncol=3)
 ```  
 
 ### Cut Points  
-The cut points are consistent across the three years. 
+The cut points are consistent across the three years.  
+p50 is the weighted median. It is very stable, and is located in Level 3, that is, where students classify as Grade Level Proficient, but not Career and College Ready.  
 
 #### For ELA  
 ```{r cut_points_1, echo=FALSE}
-dfScoreFreqNCDPIBreaks %>% 
+dplyr::inner_join(
+  dfScoreFreqNCDPIBreaks,
+  dfScoreFreqNCDPIquartiles %>%
+    dplyr::select(
+      acYear,
+      Grade,
+      Subject,
+      p50
+    ),
+  by=c(
+    "acYear",
+    "Grade",
+    "Subject")
+) %>%
   dplyr::filter(Subject=="ELA" & Grade=="3") %>%
   dplyr::arrange(f_acYear) %>%
   dplyr::select(-f_acYear)
 ```  
 
 ```{r cut_points_2, echo=FALSE}
-dfScoreFreqNCDPIBreaks %>% 
+dplyr::inner_join(
+  dfScoreFreqNCDPIBreaks,
+  dfScoreFreqNCDPIquartiles %>%
+    dplyr::select(
+      acYear,
+      Grade,
+      Subject,
+      p50
+    ),
+  by=c(
+    "acYear",
+    "Grade",
+    "Subject")
+) %>%
   dplyr::filter(Subject=="ELA" & Grade=="4") %>%
   dplyr::arrange(f_acYear) %>%
   dplyr::select(-f_acYear)
 ```  
 
 ```{r cut_points_3, echo=FALSE}
-dfScoreFreqNCDPIBreaks %>% 
+dplyr::inner_join(
+  dfScoreFreqNCDPIBreaks,
+  dfScoreFreqNCDPIquartiles %>%
+    dplyr::select(
+      acYear,
+      Grade,
+      Subject,
+      p50
+    ),
+  by=c(
+    "acYear",
+    "Grade",
+    "Subject")
+) %>%
   dplyr::filter(Subject=="ELA" & Grade=="5") %>%
   dplyr::arrange(f_acYear) %>%
   dplyr::select(-f_acYear)
@@ -95,21 +135,60 @@ dfScoreFreqNCDPIBreaks %>%
 
 #### For MA  
 ```{r cut_points_4, echo=FALSE}
-dfScoreFreqNCDPIBreaks %>% 
+dplyr::inner_join(
+  dfScoreFreqNCDPIBreaks,
+  dfScoreFreqNCDPIquartiles %>%
+    dplyr::select(
+      acYear,
+      Grade,
+      Subject,
+      p50
+    ),
+  by=c(
+    "acYear",
+    "Grade",
+    "Subject")
+) %>%
   dplyr::filter(Subject=="MA" & Grade=="3") %>%
   dplyr::arrange(f_acYear) %>%
   dplyr::select(-f_acYear)
 ```  
 
 ```{r cut_points_5, echo=FALSE}
-dfScoreFreqNCDPIBreaks %>% 
+dplyr::inner_join(
+  dfScoreFreqNCDPIBreaks,
+  dfScoreFreqNCDPIquartiles %>%
+    dplyr::select(
+      acYear,
+      Grade,
+      Subject,
+      p50
+    ),
+  by=c(
+    "acYear",
+    "Grade",
+    "Subject")
+) %>%
   dplyr::filter(Subject=="MA" & Grade=="4") %>%
   dplyr::arrange(f_acYear) %>%
   dplyr::select(-f_acYear)
 ```  
 
 ```{r cut_points_6, echo=FALSE}
-dfScoreFreqNCDPIBreaks %>% 
+dplyr::inner_join(
+  dfScoreFreqNCDPIBreaks,
+  dfScoreFreqNCDPIquartiles %>%
+    dplyr::select(
+      acYear,
+      Grade,
+      Subject,
+      p50
+    ),
+  by=c(
+    "acYear",
+    "Grade",
+    "Subject")
+) %>%
   dplyr::filter(Subject=="MA" & Grade=="5") %>%
   dplyr::arrange(f_acYear) %>%
   dplyr::select(-f_acYear)

@@ -1236,7 +1236,8 @@ fn_scatterplots_comp <- function(
               "   ",nschools_,"Schools"
               ),
             x=xaxis_text[Years_],
-            y=yaxis_text[Years_]
+            y=yaxis_text[Years_],
+            colour="Title I"
           ) +
           theme(   
             legend.text=element_text(size=8),
@@ -1456,7 +1457,8 @@ fn_scatterplots_track <- function(
               "   ",nschools_,"Schools"
               ),
             x=xaxis_text[Years_],
-            y=yaxis_text[Years_]
+            y=yaxis_text[Years_],
+            colour="Title I"
           ) +
           theme(   
             legend.text=element_text(size=8),
@@ -1516,7 +1518,8 @@ fn_knit_exit("fn_scatterplots_plotly_comp")
 ```{r fn_scatterplots_plotly_comp}  
 fn_scatterplots_plotly_comp <- function(
   argEDTier="ALL",
-  argLEAs="ALL" ) {
+  argLEAs="ALL",
+  argCharterOnly=FALSE  ) {
 #
 # argEDTier is ALL or in 1:3 and links to dfLEA
 # at most one of 1:3
@@ -1543,6 +1546,12 @@ fn_scatterplots_plotly_comp <- function(
         dplyr::filter( 
           EDTier==argEDTier
         )
+  }
+  if (argCharterOnly) {
+    df_ %<>%
+      dplyr::filter(
+        charter_school==TRUE
+      )
   }
   # subset on subgroup ALL and
   # create columns for scale_fill_manual
@@ -1597,7 +1606,7 @@ fn_scatterplots_plotly_comp <- function(
   plot_pal <- c("red","blue")
   #
   ret <- list()
-  iret_ <- 1
+  iret_ <- 0
   #
   # for 2013-14>2014-15>2015-16 and 2014-15>2015-16>2016-17
   title_year <- c("2013 to 2015","2014 to 2016")
@@ -1633,15 +1642,42 @@ fn_scatterplots_plotly_comp <- function(
       #
       for (S_ in c("MA","RD")) {
         for (G_ in c("03","04","05")) {
-          nschools_ <- length(df2_[df2_$subject==S_ & df2_$grade==G_,"school_code"])
-          nschools_T1 <- length(df2_[df2_$subject==S_ & df2_$grade==G_ & df2_$TitleISchool==TRUE, "school_code"])
+          nschools_ <- length(
+            df2_[
+              df2_$subject==S_ & 
+              df2_$grade==G_,
+              "school_code"
+            ]
+          )
+          nschools_T1 <- length(
+            df2_[
+              df2_$subject==S_ & 
+              df2_$grade==G_ & 
+              df2_$TitleISchool==TRUE, 
+              "school_code"
+            ]
+          )
           #
-          ret[[paste0(S_,G_,LEA_)]] <-
-          df2_ %>%
+          iret_ <- iret_+1
+          df3_ <- df2_ %>%
             dplyr::filter(
               subject == S_ &
               grade == G_
-            ) %>% 
+            )
+          #
+          # center of mass
+          cm <- apply(
+            df3_ %>% dplyr::select(
+              diff_12,
+              diff_23
+            ), 2, mean
+          )
+          # horizontal x0,y0,x1,y1
+          cmx <- c(cm[1]-5,cm[2],cm[1]+5,cm[2])
+          # vertical
+          cmy <- c(cm[1],cm[2]-5,cm[1],cm[2]+5)
+          #
+          ret[[iret_]] <- df3_ %>% 
             plot_ly(
               type="scatter",
               mode="markers",
@@ -1653,7 +1689,14 @@ fn_scatterplots_plotly_comp <- function(
               symbols=c("circle","circle-open"),
               color=~pl_color_,
               colors=plot_pal,
-              text=~paste0(school_code,"; ",num_tested.A,";\n",round(pct_glp.A,digits=2),"%")
+              text=~paste0(
+                school_code,
+                "; ",
+                num_tested.A,
+                ";\n",
+                round(pct_glp.A,digits=2),
+                "%"
+              )
             ) %>%
             hide_colorbar() %>%
             plotly::layout(
@@ -1666,16 +1709,52 @@ fn_scatterplots_plotly_comp <- function(
                 LEA_,
                 ifelse(
                   argEDTier=="ALL","",paste("and EDTier",argEDTier)
-                )
+                ),
+                "\n",
+                ifelse(
+                  argCharterOnly==TRUE,"Charters Only",""
+                ),
+                nschools_,
+                "Schools -",
+                "Cross-hairs at Center of Mass:",
+                round(cm[1]),
+                "/",
+                round(cm[2])
               ),
               xaxis=list(
                 range=c(-50,50),
-                title=paste(xaxis_text[Years_],"GLP%")
+                title=paste(xaxis_text[Years_],"GLP%"),
+                zeroline=FALSE
                 ),
               yaxis=list(
                 range=c(-50,50),
-                title=paste(yaxis_text[Years_],"GLP%")
+                title=paste(yaxis_text[Years_],"GLP%"),
+                zeroline=FALSE
+                ),
+              shapes=list(
+                list(
+                  type='line',
+                  x0=cmx[1],
+                  y0=cmx[2],
+                  x1=cmx[3],
+                  y1=cmx[4],
+                  line=list(
+                    dash='dash',
+                    width=2
+                  )
+                ),
+                list(
+                  type='line',
+                  x0=cmy[1],
+                  y0=cmy[2],
+                  x1=cmy[3],
+                  y1=cmy[4],
+                  line=list(
+                    dash='dash',
+                    width=2
+                  )
                 )
+              )
             )
         }
       }
@@ -1756,6 +1835,12 @@ fn_scatterplots_plotly_track <- function(
           EDTier==argEDTier
         )
     }
+    if (argCharterOnly) {
+      df_ %<>% 
+        dplyr::filter(
+          charter_school==TRUE
+        )
+    }
     # subset on subgroup ALL and
     # create columns for scale_fill_manual
     # and for plotly
@@ -1802,11 +1887,25 @@ fn_scatterplots_plotly_track <- function(
         nschools_T1 <- length(df2_[df2_$subject==S_ & df2_$TitleISchool==TRUE, "school_code"])
         #
         iret_ <- iret_+1
-        ret[[iret_]] <-
-        df2_ %>%
+        #
+        df3_ <- df2_ %>%
         dplyr::filter(
           subject == S_
-        ) %>%
+        )
+        #
+        # center of mass
+        cm <- apply(
+          df3_ %>% dplyr::select(
+            diff_12,
+            diff_23
+          ), 2, mean
+        )
+        # horizontal x0,y0,x1,y1
+        cmx <- c(cm[1]-5,cm[2],cm[1]+5,cm[2])
+        # vertical
+        cmy <- c(cm[1],cm[2]-5,cm[1],cm[2]+5)
+        #
+        ret[[iret_]] <- df3_ %>%
         plot_ly(
           type="scatter",
           mode="markers",
@@ -1827,18 +1926,54 @@ fn_scatterplots_plotly_track <- function(
             LEA_,
             ifelse(
               argEDTier=="ALL","",paste("and EDTier",argEDTier)
-            )
+            ),
+            "\n",
+            ifelse(
+              argCharterOnly==TRUE,"Charters Only",""
+            ),
+            nschools_,
+            "Schools -",
+            "Cross-hairs at Center of Mass:",
+            round(cm[1]),
+            "/",
+            round(cm[2])
           ),
           xaxis=list(
             range=c(-50,50),
-            title=xaxis_text[Years_]
+            title=xaxis_text[Years_],
+            zeroline=FALSE
             ),
           yaxis=
             list(
               range=c(-50,50),
-              title=yaxis_text[Years_]
+              title=yaxis_text[Years_],
+              zeroline=FALSE
+            ),
+          shapes=list(
+            list(
+              type='line',
+              x0=cmx[1],
+              y0=cmx[2],
+              x1=cmx[3],
+              y1=cmx[4],
+              line=list(
+                dash='dash',
+                width=2
+              )
+            ),
+            list(
+              type='line',
+              x0=cmy[1],
+              y0=cmy[2],
+              x1=cmy[3],
+              y1=cmy[4],
+              line=list(
+                dash='dash',
+                width=2
+              )
             )
-        )
+          )            
+        )            
       }
     }
   } # theYear

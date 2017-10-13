@@ -1,0 +1,141 @@
+---
+title: "publicSchoolsGLPCCR Project - Charters Appendix"
+author: "D. Hopp"
+date: "October 2017"
+output:
+  html_document: default
+---
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+require(rprojroot)
+require(reshape2)
+require(magrittr)
+require(plyr)
+require(tidyverse)
+require(cowplot)
+require(grid)
+require(readr)
+require(taRifx)
+require(R.utils)
+require(ggthemes)
+require(emdist)
+require(rlist)
+require(MASS)
+require(printr)
+
+load("3.RData")
+
+# https://cran.r-project.org/web/packages/knitr/vignettes/knit_print.html 
+knit_print.data.frame = function(x, ...) {
+    res = paste(c("", "", knitr::kable(x)), collapse = "\n")
+    knitr::asis_output(res)
+}
+
+```  
+
+## Charters Only  
+
+```{r charters_1, echo=FALSE}
+plt_comp <- fn_scatterplots_plotly_comp(argCharterOnly=TRUE)
+plt_track <- fn_scatterplots_plotly_track(argCharterOnly=TRUE)
+```  
+
+### Mathematics Cohorts Grade 3 -> 4 -> 5  
+
+<div style="text-align:center">
+```{r track_charter_1, echo=FALSE}
+plt_track[[1]]
+``` 
+
+<br>
+```{r track_charter_3, echo=FALSE}
+plt_track[[3]]
+``` 
+
+<br>
+</div>
+
+### Reading Cohorts Grade 3 -> 4 -> 5  
+
+```{r track_charter_2, echo=FALSE}
+plt_track[[2]]
+```  
+
+<br>
+```{r track_charter_4, echo=FALSE}
+plt_track[[4]]
+```  
+
+<br>
+</div>
+
+### Mathematics by Grade across Years:  
+<div style="text-align:center">
+```{r comp_charter_1, echo=FALSE}
+plt_comp[[1]]
+```  
+
+<br>
+```{r comp_charter_2, echo=FALSE}
+plt_comp[[2]]
+```  
+
+<br>
+```{r comp_charter_3, echo=FALSE}
+plt_comp[[3]]
+```  
+
+<br>
+
+```{r comp_charter_7, echo=FALSE}
+plt_comp[[7]]
+```  
+
+<br>
+```{r comp_charter_8, echo=FALSE}
+plt_comp[[8]]
+```  
+
+<br>
+```{r comp_charter_9, echo=FALSE}
+plt_comp[[9]]
+```  
+
+<br>
+</div>
+
+### Reading by Grade across Years:  
+
+<div style="text-align:center">
+```{r comp_charter_4, echo=FALSE}
+plt_comp[[4]]
+```  
+
+<br>
+```{r comp_charter_5, echo=FALSE}
+plt_comp[[5]]
+```  
+
+<br>
+```{r comp_charter_6, echo=FALSE}
+plt_comp[[6]]
+```  
+
+<br>
+```{r comp_charter_10, echo=FALSE}
+plt_comp[[10]]
+```  
+
+<br>
+```{r comp_charter_11, echo=FALSE}
+plt_comp[[11]]
+```  
+
+<br>
+```{r comp_charter_12, echo=FALSE}
+plt_comp[[12]]
+```  
+
+<br>
+</div>
+

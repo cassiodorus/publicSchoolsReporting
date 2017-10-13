@@ -1126,11 +1126,7 @@ fn_plotly_scatterplot_75 <- function() {
   #
   return(plt_)
 }
-```  
-
-```{r save}
-save.image("3.RData")
-```  
+```    
 
 ## OBSERVATIONS  
 ### For Grades 3, 4, and 5  
@@ -1243,6 +1239,366 @@ boot.mean.345BLCK_D <-
 #
 ```  
 
+Identifying "best" schools for EDS student achievement results  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_dfDisagX20_345_EDS_best")
+```  
+
+```{r fn_dfDisagX20_345_EDS_best}
+fn_dfDisagX20_345_EDS_best <- function(){
+  df_ <- 
+  dplyr::inner_join(
+    dfDisagX20_345_Yr %>% 
+    dplyr::filter(
+      subgroup=="EDS" & 
+      pct_glp>75
+    ) %>% 
+    dplyr::select(
+      acYear,
+      LEA,
+      school_code,
+      subject,
+      grade,
+      num_tested,
+      num_glp,
+      pct_glp,
+      charter_school,
+      TitleISchool
+    ),
+    dfDisagX20_345_Yr %>% 
+    dplyr::filter(
+      subgroup=="NOT_EDS"
+    ) %>%
+    dplyr::select(
+      acYear,
+      school_code,
+      subject,
+      grade,
+      num_tested,
+      num_glp,
+      pct_glp
+    ),
+    by=c(
+      "acYear",
+      "school_code",
+      "subject",
+      "grade"
+    )
+  ) %>%
+  dplyr::rename(
+    num_tested_EDS=num_tested.x,
+    num_tested_NOT_EDS=num_tested.y,
+    num_glp_EDS=num_glp.x,
+    num_glp_NOT_EDS=num_glp.y,
+    pct_glp_EDS=pct_glp.x,
+    pct_glp_NOT_EDS=pct_glp.y
+  ) %>%
+  dplyr::select(
+    acYear,
+    LEA,
+    school_code,
+    subject,
+    grade,
+    num_tested_EDS,
+    num_glp_EDS,
+    pct_glp_EDS,
+    num_tested_NOT_EDS,
+    num_glp_NOT_EDS,
+    pct_glp_NOT_EDS,    
+    charter_school,
+    TitleISchool
+  ) %>%
+  dplyr::mutate(
+    pct_EDS=round(num_tested_EDS*100/(num_tested_EDS+num_tested_NOT_EDS),digits=1)
+  ) %>%
+  dplyr::select(
+    acYear,
+    LEA,
+    school_code,
+    subject,
+    grade,
+    num_tested_EDS,
+    pct_EDS,
+    num_glp_EDS,
+    pct_glp_EDS,
+    num_tested_NOT_EDS,
+    num_glp_NOT_EDS,
+    pct_glp_NOT_EDS,    
+    charter_school,
+    TitleISchool
+  )
+  #
+  return(df_)
+}
+#
+str(fn_dfDisagX20_345_EDS_best())
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_dfAnalyze_DisagX20_EDS_345")
+```  
+
+```{r fn_dfAnalyze_DisagX20_EDS_345}
+fn_dfAnalyze_DisagX20_EDS_345 <- function(perYear){
+  # at least perYear instances by year
+  #
+  df_ <- 
+  fn_dfDisagX20_345_EDS_best() %>% 
+  dplyr::select(
+    acYear,
+    LEA,
+    school_code,
+    subject,
+    grade
+  ) %>% 
+  dplyr::group_by(
+    acYear,
+    LEA,
+    school_code
+  ) %>% 
+  dplyr::summarise(
+    n=n()
+  ) %>% 
+  dplyr::filter(
+    n >= perYear
+  ) %>%
+  dplyr::ungroup()
+  #
+  return(df_)
+}
+#
+str(fn_dfAnalyze_DisagX20_EDS_345(2))
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_dfAnalyze.2_DisagX20_EDS_345")
+```  
+
+```{r fn_dfAnalyze.2_DisagX20_EDS_345}
+#
+# ################################
+#
+# simple capture
+# shows schools with => perYear grade-subject tuples in a year
+# then identifies those that appear in more than one year
+#
+fn_dfAnalyze.2_DisagX20_EDS_345 <- function(perYear){
+  df_ <- 
+  fn_dfAnalyze_DisagX20_EDS_345(perYear) %>% 
+  dplyr::arrange(
+    acYear,
+    desc(n),
+    LEA,
+    school_code
+  ) %>% 
+  dplyr::group_by(
+    LEA,
+    school_code
+  ) %>% 
+  dplyr::select(
+    -n
+  ) %>% 
+  dplyr::summarise(
+    nyears=n()
+  ) %>%
+  dplyr::filter(
+    nyears > 1
+  ) %>%
+  dplyr::ungroup()
+  #
+  return(df_)
+}
+#
+str(fn_dfAnalyze.2_DisagX20_EDS_345(2))
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_dfDisagX20_345_NOT_EDS_best")
+```  
+
+```{r fn_dfDisagX20_345_NOT_EDS_best}
+#
+# ################################################
+# 
+# consider NOT_EDS
+#
+fn_dfDisagX20_345_NOT_EDS_best <- function(){
+  df_ <- 
+    dfDisagX20_345_Yr %>% 
+    dplyr::filter(
+      subgroup=="NOT_EDS" & 
+      pct_glp>75
+    ) %>% 
+    dplyr::select(
+      acYear,
+      LEA,
+      school_code,
+      subject,
+      grade,
+      num_tested,
+      num_glp,
+      pct_glp,
+      charter_school,
+      TitleISchool
+    )
+  #
+  return(df_)
+}
+#
+str(fn_dfDisagX20_345_NOT_EDS_best())
+#
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_dfAnalyze_DisagX20_NOT_EDS_345")
+```  
+
+```{r fn_dfAnalyze_DisagX20_NOT_EDS_345}
+fn_dfAnalyze_DisagX20_NOT_EDS_345 <- function(perYear){
+  # at least perYear instances by year
+  #
+  df_ <- 
+  fn_dfDisagX20_345_NOT_EDS_best() %>% 
+  dplyr::select(
+    acYear,
+    LEA,
+    school_code,
+    subject,
+    grade
+  ) %>% 
+  dplyr::group_by(
+    acYear,
+    LEA,
+    school_code
+  ) %>% 
+  dplyr::summarise(
+    n=n()
+  ) %>% 
+  dplyr::filter(
+    n >= perYear
+  ) %>%
+  dplyr::ungroup()
+  #
+  return(df_)
+}
+#
+str(fn_dfAnalyze_DisagX20_NOT_EDS_345(2))
+#
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_dfAnalyze.2_DisagX20_NOT_EDS_345")
+```  
+
+```{r fn_dfAnalyze.2_DisagX20_NOT_EDS_345}
+# simple capture
+# shows schools with => perYear grade-subject tuples in a year
+# then identifies those that appear in more than one year
+#
+fn_dfAnalyze.2_DisagX20_NOT_EDS_345 <- function(perYear){
+  df_ <- 
+  fn_dfAnalyze_DisagX20_NOT_EDS_345(perYear) %>% 
+  dplyr::arrange(
+    acYear,
+    desc(n),
+    LEA,
+    school_code
+  ) %>% 
+  dplyr::group_by(
+    LEA,
+    school_code
+  ) %>% 
+  dplyr::select(
+    -n
+  ) %>% 
+  dplyr::summarise(
+    nyears=n()
+  ) %>%
+  dplyr::filter(
+    nyears > 1
+  ) %>%
+  dplyr::ungroup()
+  #
+  return(df_)
+}
+#
+str(fn_dfAnalyze.2_DisagX20_NOT_EDS_345(2))
+#
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_dfAnalyze_DisagX20_345_report")
+```  
+
+```{r fn_dfAnalyze_DisagX20_345_report}
+# #########################################
+#
+# 
+fn_dfAnalyze_DisagX20_345_report <- function(perYear) {
+  # use fn_dfAnalyze.2_DisagX20_EDS_345 
+  # returns schools with >= perYear instances >= 75%
+  # occuring over nyears years
+  #
+  df_ <- 
+    fn_dfAnalyze.2_DisagX20_EDS_345(perYear) %>%
+    dplyr::inner_join(
+      dfLEA %>%
+      dplyr::select(
+        LEA,
+        District
+      ),
+      by="LEA"
+    ) %>%
+    dplyr::inner_join(
+      df01TitleIYrD %>%
+      dplyr::select(
+        School.Code,
+        School.Name,
+        Charter.School,
+        Total.Enrollment,
+        Percent.Low.Income.Students,
+        School.Served
+      ),
+      by=c("school_code"="School.Code")
+    ) %>%
+    dplyr::rename(
+      school_name=School.Name,
+      district=District,
+      charter=Charter.School,
+      total=Total.Enrollment,
+      pct_EDS=Percent.Low.Income.Students,
+      TitleI=School.Served
+    ) %>%
+    dplyr::mutate(
+      pct_EDS=round(as.numeric(pct_EDS)),
+      charter=ifelse(charter=="Y","Yes",""),
+      TitleI=ifelse(TitleI=="Y","Yes",""),
+      total=as.numeric(total)
+    ) %>%
+    dplyr::arrange(
+      nyears,
+      district,
+      school_name
+    ) %>%
+    dplyr::select(
+      nyears,
+      district,
+      school_name,
+      school_code,
+      total,
+      pct_EDS,
+      TitleI,
+      charter
+    ) 
+  #
+  return(df_)
+  #
+}
+#
+str(fn_dfAnalyze_DisagX20_345_report(3))
+```  
+
 desiderata
 ```{r desiderata}
 quantile(
@@ -1261,6 +1617,10 @@ quantile(
 	probs=seq(0,1,0.2)
 )
 
+```  
+
+```{r save}
+save.image("3.RData")
 ```  
 
 ## Inventory  

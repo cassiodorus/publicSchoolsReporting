@@ -1,7 +1,7 @@
 ---
 title: "publicSchoolsGLPCCR Project - Report A"
 author: "D. Hopp"
-date: "September 2017"
+date: "October 2017"
 output:
   html_document: default
 ---
@@ -24,21 +24,26 @@ require(MASS)
 require(printr)
 
 load("3.RData")
+
+# https://cran.r-project.org/web/packages/knitr/vignettes/knit_print.html 
+knit_print.data.frame = function(x, ...) {
+    res = paste(c("", "", knitr::kable(x)), collapse = "\n")
+    knitr::asis_output(res)
+}
+
 ```  
 
 ## Notes on Quantitative Aspects of Black-White Equity in Grades 3, 4, and 5 Elementary Education in North Carolina Public Schools  
 
-### Abstract  
-TBP
-
 ### Introduction  
-In this report I make observations on quantitative aspects of education equity between Black and White K-12 students in North Carolina public, and public charter, schools. The sources of data are the publicly available "disaggregated" files provided by the North Carolina Department of  files Instruction (NCDPI) on the achievement of students during the academic years from 2013-14 to 2016-17, and ancillary publicly available NCDPI data. While the NCDPI data is extensive, it is not longitudinal, that is, it does not support following students from year to year. However, students in grades 3, 4, and 5 take standardized examinations that are reported in the NCDPI data. The comparability of this data provides a kind of quasi-cohort that allows for a coherent analysis of students in these grades. This report will focus on achievement data for grades 3, 4, and 5.  
+Policy-makers, educators, researchers, advocacy groups, and, via newspapers, the public, make use of K-12 student achievement data. The Grade Level Proficiency (GLP) categorization is among the most frequently mentioned quantitative criteria. In this report I make observations, based on GLP data, about quantitative aspects of education equity between Black and White K-12 students in North Carolina public, and public charter, schools. The sources of data are the publicly available "disaggregated" files provided by the North Carolina Department of  Public Instruction (NCDPI) on the achievement of students during the academic years from 2013-14 to 2016-17, and ancillary publicly available NCDPI data. While the NCDPI data is extensive, it is not longitudinal, that is, it does not support following students from year to year. However, students in grades 3, 4, and 5 take standardized examinations that are reported in the NCDPI data. The comparability of this data provides a kind of quasi-cohort that allows for a coherent analysis of students in these grades. This report will focus on achievement data for grades 3, 4, and 5.  
 
-The NCDPI data is FERPA-compliant, consequently test scores and numbers of students are reported by grade, not class, for each school. Since FERPA requires the masking of some detailed data, I will look at the reporting of Grade Level Proficiency (GLP), which is determined by students scoring into the upper three levels of these five-level standardized tests. This avoids almost all the masked data, although it prevents detailed analysis of the individual levels.  
 
-The NCDPI disaggregated data files are organized in univariate categories including ethnicity and gender. Importantly for this analysis, there is also a self-reported category of economically disadvanteged (EDS as Yes or No). These being univariate, there is no way to identify students as, for example, Black and EDS, Hispanic and not EDS, male and Hispanic, etc. Ancillary data associates Title I status (Yes or No) with each school. There is a strong, although not perfect, association between Title I status and a school's overall EDS percentage. Roughly, if a school is 40% EDS, then it will classify as a Title I school. I will make use of this relationship by considering Title I as a binary indicator of the magnitude of the continuous EDS measure.   
+Students are classified into five achievement levels based on their scores in the grades 3, 4, and 5 tests. The publicly available NCDPI data is FERPA-compliant, consequently test scores and numbers of students are reported by grade, not class, for each school. Since FERPA requires the masking of some detailed data, I will look at the reporting of Grade Level Proficiency (GLP), which is determined by students scoring into the upper three levels of these five-level standardized tests. This avoids almost all the masked data, although it prevents detailed analysis of the individual levels.  
 
-My analysis is comprised of two parts. In the first, I confirm what is commonly understood by educators and analysts who have looked closely at North Carolina student achievement scores. Namely, North Carolina is effectively two states partitioned by wealth and race. The contribution of this report is in the analysis and visualization of various aspects of this partitioning, and also in inspection of the grade 3, 4, and 5 standardized tests. In the second part, I  consider the utility of the grade 3, 4, 5 test suite, as made available in the NCDPI data files. I observe that the publicly available data yields reliable equity estimates in the aggregate, but is unreliable in detail. I also comment that the data is unnecessarily restrictive and could be released in a FERPA-compliant form that would be more useful for equity research.
+The NCDPI disaggregated data files are organized in univariate categories including ethnicity and gender. Importantly for this analysis, there is also a self-reported category of economically disadvanteged (EDS as Yes or No). These being univariate, there is no way to identify students as, for example, Black and EDS, Hispanic and not EDS, male and Hispanic, etc. Ancillary data associates Title I status (Yes or No) with each school. There is a strong association between Title I status and a school's overall EDS percentage. Roughly, if a school is 40% EDS, then it will classify as a Title I school. I will make use of this relationship by considering Title I as a binary indicator of the magnitude of the continuous EDS measure.   
+
+My analysis is comprised of two parts. In the first, I confirm what is commonly understood by educators and analysts who have looked closely at North Carolina student achievement scores. Namely, North Carolina is effectively two states partitioned by wealth and race. The contribution of this report is in the analysis and visualization of various aspects of this partitioning, and also in inspection of the grade 3, 4, and 5 standardized tests. In the second part, I  consider the utility of the grade 3, 4, 5 test suite, as made available in the NCDPI data files. I observe that the publicly available data yields reliable equity estimates in the aggregate, but is unreliable in detail.  
 
 ### Part I. North Carolina as Two States  
 
@@ -54,9 +59,9 @@ plts1 <- fn_boxplots_track(argSave = FALSE)
 plts1[[6]]
 ```  
 
-**Figure 1. ...**</div>  
-
-Figure 1 selects one year (2015-16) and one subject (Reading) across all NC schools, and presents GLP% box plots for grades 3, 4, and 5. The two left-most boxes for each grade are the EDS and non-EDS GLP%, while the three right-most boxes show GLP% for Black, Hispanic, and White students. There is in addition a box for the cumulative GLP%. Plots run for other years, as well as for Mathematics, appear much the same. Observations for other years are substantially the same. Plots for the other years can be found in Appendix 1.  
+**Figure I.1. ...**</div>  
+<br>
+Figure I.1 selects one year (2015-16) and one subject (Reading) across all NC schools, and presents GLP% box plots for grades 3, 4, and 5. The two left-most boxes for each grade are the EDS and non-EDS GLP%, while the three right-most boxes show GLP% for Black, Hispanic, and White students. There is in addition a box for the cumulative GLP%. Plots run for other years, as well as for Mathematics, appear much the same. Observations for other years are substantially the same. Plots for the other years can be found in Appendix ???.  
 
 <div style="text-align:center">
 ```{r box_2,  echo=FALSE}
@@ -64,9 +69,9 @@ plts2  <- fn_boxplots_comp(argSave = FALSE)
 plts2[[6]]
 ```  
 
-**Figure 2. ...**</div>  
-
-Figure 2 selects one grade (5) and one subject (Reading) across the four academic years from 2013-14 to 2016-17. The boxes are shown in the same order as above.  
+**Figure I.2. ...**</div>  
+<br>
+Figure I.2 selects one grade (5) and one subject (Reading) across the four academic years from 2013-14 to 2016-17. The boxes are shown in the same order as above.  
 
 <div style="text-align:center">
 ```{r box_3, echo=FALSE}
@@ -74,9 +79,9 @@ plts3 <- fn_boxplots_cohort(argSave = FALSE)
 plts3[[4]]
 ```  
 
-**Figure 3. ...**</div>  
-
-Figure 3 tracks a cohort, starting with Reading for grade 3 in 2014-15 and following it to grade 5 in 2016-17. Once again, plots run for other years, as well as for Mathematics, appear much the same.  
+**Figure I.3. ...**</div>  
+<br>
+Figure I.3 tracks a cohort, starting with Reading for grade 3 in 2014-15 and following it to grade 5 in 2016-17. Once again, plots run for other years, as well as for Mathematics, appear much the same.  
 
 From these graphics we observe that reducing reporting or evaluation to a single, state-wide number is of little utility. Whether the ALL category percentiles shift up or down, and by how much, might be due to changes up or down in White or Black. Looked at from the point of view of EDS, changes in ALL could be due to increases or decreases in EDS and not-EDS. Relying on the ALL category obscures underlying causes and can be misleading.  
 
@@ -84,15 +89,15 @@ It is also clear that the separation between EDS categories, and between White s
 
 #### I.2. GLP% Distributions   
 
-In this section I first look more closely at the GLP% profiles for the ethnicities Black, Hispanic, and White, and alos at the EDS Yes-No categories. Figure 4 shows these categories in histograms of GLP% for 2016-17 Reading for grade 5 over all schools.  
+In this section I first look more closely at the GLP% profiles for the ethnicities Black, Hispanic, and White, and alos at the EDS Yes-No categories. Figure I.4 shows these categories in histograms of GLP% for 2016-17 Reading for grade 5 over all schools.  
 
 <div style="text-align:center">
 ```{r hist_1, echo=FALSE}
 fn_plt_hist_GLPf(argYear = "D", argGrade = "5", argSave = FALSE)[[2]]
 ```  
 
-**Figure 4. 2015-16 Reading for Grade 5**</div>  
-
+**Figure I.4. 2015-16 Reading for Grade 5**</div>  
+<br>
 It is evident that the distributions for Not-EDS students differ structurally from those for the other categories. Not only are the means clearly different, but the shapes are different. The EDS data is reasonably described as a normal, symmetrical distribution, while the Not-EDS is biased toward higher percentages. The vertical bar in Not-EDS and White is an artifact of FERPA compliance and should be imagined as spread out over the 95% to 100% interval.  
 
 The differences between the Black, Hispanic, and White students are less pronounced. The Black and Hispanic distributions have long tails into higher GLP%. It would be of great value to be able to determine whether these tails are associated with Not-EDS students, but that data is not publicly available.  
@@ -101,7 +106,7 @@ Improvements in GLP% for Not-EDS could be expressed as 'sweeping' the left-hand 
 
 #### I.3. Is There "Sharing" Based on Wealth Indicators?  
 
-It is most direct to quote the NC Department of Commerce website here: "The N.C. Department of Commerce annually ranks the state's 100 counties based on economic well-being and assigns each a Tier designation. The 40 most distressed counties are designated as Tier 1, the next 40 as Tier 2 and the 20 least distressed as Tier 3." Figure 5 replicates Figure 1 except that it presents data only for the Tier 3 counties. It appears that the EDS and ethnicity differences are very much the same as those found when looking at data for entire state (Figure 1).  
+It is most direct to quote the NC Department of Commerce website here: "The N.C. Department of Commerce annually ranks the state's 100 counties based on economic well-being and assigns each a Tier designation. The 40 most distressed counties are designated as Tier 1, the next 40 as Tier 2 and the 20 least distressed as Tier 3." Figure I.5 replicates Figure I.1 except that it presents data only for the Tier 3 counties. It appears that the EDS and ethnicity differences are very much the same as those found when looking at data for entire state (Figure I.1).  
 
 <div style="text-align:center">
 ```{r box_4, echo=FALSE}
@@ -109,9 +114,8 @@ plts1 <- fn_boxplots_track(argSave = FALSE, argEDTier=3)
 plts1[[6]]
 ```  
 
-**Figure 5. ...**</div>  
-
-
+**Figure I.5. ...**</div>  
+<br>
 
 #### I.4. ???
 
@@ -122,8 +126,8 @@ I treat here some matters of equity by looking at the GLP% for Black students in
 fn_plotly_dfDisagBLCK_345_WHTE_GLP_D()
 ```  
 
-**Figure 5. ...**</div>  
-
+**Figure I.6. ...**</div>  
+<br>
 The interactive scatter plot provides the opportunity to pursue further the best and worst performing schools.  
 
 <div style="text-align:center">
@@ -131,19 +135,47 @@ The interactive scatter plot provides the opportunity to pursue further the best
 fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D()
 ```  
 
-**Figure 6. ...**</div>  
+**Figure I.7. ...**</div>  
+<br>
+Figure I.7 addresses a follow-up question: how do Black students perform in the better performing predominantly White schools. In this plot the schools are limited to those where the White GLP% was at least 75% and there were more White than Black students.  There does not appear to be any correlation between the scores of Black and White students. The interactive scatter plot can be used to identify the schools in which the Black students were best and worst performing.  
 
-Figure 6 addresses a follow-up question: how do Black students perform in the better performing predominantly White schools. In this plot the schools are limited to those where the White GLP% was at least 75% and there were more White than Black students.  There does not appear to be any correlation between the scores of Black and White students. The interactive scatter plot can be used to identify the schools in which the Black students were best and worst performing.  
+#### I.5 Identifying Some Schools With High Achievement for EDS Students  
+In this section I redirect and broaden attention to the EDS category. This provides the opportunity to identify the schools in the right-hand tail of the EDS plot in Figure I.4. I ask the following question: In which schools are EDS students repeatedly achieving high GLP scores in grades 3, 4, and 5? In order to quantify this I make the question more precise, although it does become somewhat restrictive. This is best served by GLMM modelling, but I will defer that until a later report.  
 
+The question begins with recognizing that NCDPI makes comparable GLP% data on three grades (3, 4, and 5), two subjects (mathematics and reading), and four years of data (2013 through 2016). That provides twenty-four possible reports of GLP%. The criteria I somewhat arbitrarily specify is the following: a school will be considered notable if EDS students achieve 75% GLP% in three out of the six grade-subject (three grades and two subjects) in at least two of the years. This is carried out irrespective of the particular grade and subject, i.e., it is across all grades and subjects. Note that successful schools may be excluded if they do not have students in all of the grades (for instance, KIPP Gastonia), or if they have not been in existence for all four years.  
+
+Here are some results. "total" is the school enrollment across all grades, not just 3, 4, and 5. "pct_EDS" is also across all grades. "nyears" is the number of years for which the criterion of three instances of GLP% 75% are satisfied.  
+```{r fn_dfAnalyze_DisagX20_345_report, echo=FALSE}
+dfRes <- fn_dfAnalyze_DisagX20_345_report(3) %>% as.data.frame()
+```  
+A total of `r nrow(dfRes)` schools out of the approximately `r signif(nrow(dfDisagX20_345_Yr %>% dplyr::filter(acYear=="2016-17") %>% dplyr::distinct(school_code)),3)` elementary schools qualify as notable. Notice that some of the charter schools qualify for Title I assistance even though their overall EDS percentage is low.  
+
+These are the schools that had four years of high GLP%, as described above:  
+```{r fn_dfAnalyze_DisagX20_345_report_4, echo=FALSE}
+x <- dfRes %>% dplyr::filter(nyears==4)
+x
+```  
+<br>
+These schools had three years of high GLP%:  
+```{r fn_dfAnalyze_DisagX20_345_report_3, echo=FALSE}
+x <- dfRes %>% dplyr::filter(nyears==3)
+x
+```  
+<br>
+These schools had two years of high GLP%:    
+```{r fn_dfAnalyze_DisagX20_345_report_2, echo=FALSE}
+x <- dfRes %>% dplyr::filter(nyears==2)
+x
+```  
 
 ### Part II. The Nature of the Grade 3, 4, 5 Tests  
 
 #### II.1. Score-Frequency Tables  
-The extent of aggregation in response to FERPA requirements makes it difficult to use the NCDPI publicly available data to fully understand the characteristics of the tests. However, we can make some useful observations. The NCDPI Green Books provide score-frequency tables for the tests from 2013-14 to 2015-16 (this will be extended to 2016-17 later this year).  
+The extent of aggregation in the pub;ic;y available NCDPI data in response to FERPA requirements makes it difficult to use this data to fully understand the characteristics of the tests. However, we can make some useful observations. The NCDPI Green Books provide score-frequency tables for the tests from 2013-14 to 2015-16 (this will be extended to 2016-17 later this year).  
 
 There is, of course, a different test for each year for each grade, and for each of the two subjects, ELA and MA. The tests are constructed by educators and psychometricians. The process of validation is not, to my knowledge, documented in any publicly accessible way. The tests are used to classify students into five levels. Students testing into any of the three higher levels are considered to be grade level proficient (GLP). If they test into the two highest levels they are considered to be career and college ready (CCR). The weighted median score lies in Level 3, that is, within GLP but not in CCR.  
 
-Figure 7 is a visualization of a score-frequency table. This is one of the eighteen tests covering the 2013-14 to 2015-16 years. While all the tests are similar, there are significant differences in their details. A complete exposition of the available score-frequency data is presented in "Score Frequency" Appendix.  
+Figure II.1 is a visualization of a score-frequency table. This is one of the eighteen tests covering the 2013-14 to 2015-16 years. While all the tests are similar, there are significant differences in their details. An extensive exposition of the available score-frequency data is presented in "Score Frequency" Appendix.  
 
 <div style="text-align:center">
 ```{r score_freq, echo=FALSE}
@@ -151,12 +183,101 @@ plt_scorefreq <- fn_pltScoreFreqNCDPI(argSave = FALSE)
 plt_scorefreq[["C4MA"]]
 ```  
 
-**Figure 7. ...**</div>  
+**Figure II.1. ...**</div>  
+<br>
+Salient characteristics of the tests include the small range of scores, about 60 points of the maximum 470, that students score into. A similar methodology is used in many tests including those for higher grades, such as the SAT. Nevertheless, we are looking at 60 points, not 470. It is also evident that there is a step, or discontinuity, that 'guards' level 3 (the start of GLP). Level 3 is narrow, only two or three points. It does not appear to be a 'trap' of consequence, since the counts of students in level 4 (CCR) are high.  
 
-Salient characteristics of the tests include the small range of scores, about 60 points of the maximum 470, that students score into. It is also evident that there is a step, or discontinuity, that 'guards' level 3 (the start of GLP). Level 3 is narrow, only two or three points. It does not appear to be a 'trap' of consequence, since the counts of students in level 4 (CCR) are high.  
+#### II.2. Reliability of the Tests  
+The NCDPI Score-Frequency data gives the impression of precision, of exactness and completeness. However, students being susceptible to illnesses, emotional stress and so on, the same tests given to the same students on some different days would result in at least slightly different results. This is expressed in the randomness that is associated with almost all testing. In the aggregate of 1400 schools some small differences may not be of consequence, but that might not hold when looking more closely at these tests.  
 
-#### II.2. Consequences of the Tests  
-The classification of students into GLP and the reporting of GLP percentages are consequences of the tests. Whether, and to what extent, we are discussing characteristics of students, or characteristics of the tests, can only be understood in light of insights of education professionals. We discuss an example of this below.  
+The classification of students into GLP% and the reporting of GLP percentages are consequences of the tests. Thus far in these notes I have been considering aggregations of data, taking advantage of "properties of large numbers." Now I will consider two questions and show that they have at best doubtful answers. First, how much confidence can be put in GLP% for the same school, for the same grade and subject, from year to year. That is, when tracking grades and subjects from year to year and looking at individual schools, how consistent are the GLP%? The implication of a negative answer is that the GLP% scores may themselves be considered of questionable utility. This is well served by a GLMM analysis, which I will undertake in a subsequent report. 
+
+Another consideration is whether this data can be used to compare year-to-year changes between schools. If policy decisions are based on comparisons of GLP% between schools, then the randomnicity apparent in these plots casts doubt on their utility.  
+
+Figure II.2 compares the changes in GLP% by school from one year to the next, for instance, from 2014-15 to 2015-16, to the changes in the succeeding year, 2015-16 to 2016-17. Additional plots are in the "Plot Compares" Appendix.  
 
 
+```{r comp1, echo=FALSE}
+plt <- fn_scatterplots_plotly_comp()
+```  
+  
+<div style="text-align:center">
+```{r comp7, echo=FALSE}
+plt[[7]]
+```  
 
+**Figure II.2. All Schools Math Grade 3**</div>
+<br>
+
+This shows several important aspects of the grade 3, 4, and 5 GLP% test results. There is a grouping in the center of the plot, that is, around small changes. This is to be expected and is reflective of the realities mentioned above. Schools in the upper right-hand quadrant performed better in 2015-16 and 2016-17 as compared with 2014-15. The lower left-hand quadrant contains schools that performed worse for both years, etc. One might expect some schools to do remarkably better or worse as interventions, population shifts, staff changes, or finances change. However, the size of the "cloud", where we see shifts up and down by over ten percent from year to year, requires explanation. Are the schools in the cloud distinguished by some internal or external circumstances? Are there additional influences that might be available in other data sources, or that are not quantitative? To what extent do large changes cast doubt on the utility of the tests and testing procedures?  
+
+The appearance of this data for specific LEAs is similar to that for the whole. Figure II.3 shows a comparable plot for Wake.  
+
+```{r comp920_1, echo=FALSE}
+plt920 <- fn_scatterplots_plotly_comp(argLEA="920")
+```  
+  
+<div style="text-align:center">
+```{r comp920_2, echo=FALSE}
+plt920[[7]]
+```  
+
+**Figure II.3. Wake County Math Grade 3**</div>
+<br>
+The second question I address is how much confidence can be put in GLP% for the same school, for the same subject, when following a cohort from year to year. That is, when tracking grade 3 to grade 4, and 4 to 5, from year to year and looking at individual schools, how consistent are the GLP%? Figure II.4 (and for Wake in Figure II.5) shows that the appearance of cohort tracking resembles that for same-grade, shown in Figure II.2. It appears that the utility of GLP% comparisons for cohorts is limited.  
+
+
+```{r track1, echo=FALSE}
+plt <- fn_scatterplots_plotly_track()
+```  
+  
+<div style="text-align:center">
+```{r track3, echo=FALSE}
+plt[[3]]
+```  
+
+**Figure II.4. All Schools Math Cohort**</div>
+<br>
+
+
+```{r track920_1, echo=FALSE}
+plt920 <- fn_scatterplots_plotly_track(argLEA="920")
+```  
+  
+<div style="text-align:center">
+```{r track920_2, echo=FALSE}
+plt920[[3]]
+```  
+
+**Figure II.5. Wake County Math Cohort**</div>
+<br>
+
+### Part III. Brief Remarks on Charter Schools  
+
+My analysis of charter schools is limited because they would have had to provide grade 3, 4, and 5 classes since 2014-15. Given that restriction, I present in Figures III.1 and III.2 the same plots already seen in previous sections. More extensive plots can be found in the "Charters" Appendix.  
+
+```{r charters_1, echo=FALSE}
+plt_comp <- fn_scatterplots_plotly_comp(argCharterOnly=TRUE)
+plt_track <- fn_scatterplots_plotly_track(argCharterOnly=TRUE)
+```  
+
+<div style="text-align:center">
+```{r comp_charter, echo=FALSE}
+plt_comp[[7]]
+``` 
+
+**Figure III.1 Charters Only**
+<br>
+<div style="text-align:center">
+```{r track_charter, echo=FALSE}
+plt_track[[3]]
+``` 
+
+**Figure III.2 Charters Only**
+</div>
+
+### Part IV. Conclusions  
+
+I have shown that the Grade Level Proficiency data made publicly available by NCDPI has utility when considered in its aggregations. However, when looked at in detail, this data is lacking in ways that might not be evident to policy makers and educators.  
+
+In order to move ahead in the analysis of this student achievement data, NCDPI should make publicly available student longitudinal data, which already exists and which is already FERPA compliant. At a minimum, school and grade/subject score-frequency data, categorized by EDS and ethnicity, should be made available.  

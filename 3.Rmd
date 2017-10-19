@@ -508,6 +508,165 @@ str(fn_dfDisagBLCK_345_WHTE_GLP_D())
 dfDisagBLCK_345_WHTE_GLP_D <- fn_dfDisagBLCK_345_WHTE_GLP_D()
 ```  
 
+```{r echo=FALSE}
+fn_knit_exit("fn_dfDisagEDS_345_NOT_EDS_GLP_D")
+fn_knit_exit("dfDisagEDS_345_NOT_EDS_GLP_D")
+```  
+
+```{r fn_dfDisagEDS_345_NOT_EDS_GLP_D}
+fn_dfDisagEDS_345_NOT_EDS_GLP_D <- function() {
+  # this is just an intermediate dataframe:
+  # MA and RD will be the same for dfTmp1
+  dfTmp1 <- 
+  	dfDisagX20_345_Yr %>%
+  	dplyr::filter(
+  		f_acYear=="D" &
+  		subject=="MA" &
+  		subgroup %in% c("ALL","EDS","NOT_EDS")
+  	) %>%
+  	dplyr::select(
+  		LEA,
+  		school_code,
+  		subgroup,
+  		num_tested,
+  		charter_school,
+  		TitleISchool
+  	) %>%
+  	reshape2::dcast(
+  		LEA+school_code+charter_school+TitleISchool~subgroup,
+  		sum,
+  		value.var="num_tested"
+  	) %>%
+  	dplyr::filter(
+  		EDS>0 &
+      NOT_EDS>0
+  	) %>%
+  	dplyr::mutate(
+  		pct_num_EDS=round(EDS*100/ALL,digits=1),
+  		pct_num_NOT_EDS=round(NOT_EDS*100/ALL,digits=1)
+  	) %>%
+  	dplyr::rename(
+  		num_EDS=EDS,
+  		num_NOT_EDS=NOT_EDS
+  	)
+  #
+  # another intermediate dataframe:
+  dfTmp2 <- 
+  	dfDisagX20_345_Yr %>%
+  	dplyr::filter(
+  		f_acYear=="D" &
+  		subgroup %in% c("ALL","EDS","NOT_EDS")
+  	) %>%
+  	dplyr::select(
+  		school_code,
+  		subject,
+  		subgroup,
+  		num_glp,
+  	) %>%
+  	reshape2::dcast(
+  		school_code+subject~subgroup,
+  		sum,
+  		value.var="num_glp"
+  	) %>%
+  	dplyr::rename(
+  		glp_ALL=ALL,
+  		glp_EDS=EDS,
+  		glp_NOT_EDS=NOT_EDS
+  	)
+  #
+  dfDisagEDS_345_NOT_EDS_GLP_D <- 
+  	dplyr::inner_join(
+  		dfTmp1,
+  		dfTmp2,
+  		by="school_code"
+  		) %>%
+  		dplyr::mutate(
+  			pct_glp_EDS=round(glp_EDS*100/num_EDS,digits=1),
+  			pct_glp_NOT_EDS=round(glp_NOT_EDS*100/num_NOT_EDS,digits=1)
+  	)
+  #
+  return(dfDisagEDS_345_NOT_EDS_GLP_D)
+}
+#
+str(fn_dfDisagEDS_345_NOT_EDS_GLP_D())
+dfDisagEDS_345_NOT_EDS_GLP_D <- fn_dfDisagEDS_345_NOT_EDS_GLP_D()
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_plotly_dfDisagEDS_345_NOT_EDS_GLP_D")
+```  
+
+```{r fn_plotly_dfDisagEDS_345_NOT_EDS_GLP_D}
+fn_plotly_dfDisagEDS_345_NOT_EDS_GLP_D <- function() {
+  dfTmp_ <- 
+	dfDisagEDS_345_NOT_EDS_GLP_D %>%
+	dplyr::select(
+		school_code,
+    num_EDS,
+    num_NOT_EDS,
+		pct_glp_EDS,
+		pct_glp_NOT_EDS,
+		TitleISchool,
+		charter_school,
+		subject
+	) %>% 
+	dplyr::filter(
+		subject=="RD"
+	) %>%
+	dplyr::mutate(
+		pl_symbol=ifelse(charter_school,2,1),
+		pl_color=ifelse(TitleISchool,2,1)
+	) %>%
+	na.omit()
+  #
+  n_schools <- length(unique(dfTmp_$school_code))
+	#
+	# colors:
+	pl_plot_pal <- c("red","blue")
+	#
+  plt_ <- 
+  dfTmp_ %>%
+	plot_ly(
+		type="scatter",
+		mode="markers",
+		hoverinfo="text",
+		x=~pct_glp_NOT_EDS,
+		y=~pct_glp_EDS,
+		symbol=~pl_symbol,
+		color=~pl_color,
+		colors=pl_plot_pal,
+		text=~paste0(school_code,"\n#EDS=",num_EDS,"\n#not EDS=",num_NOT_EDS)
+	) %>%
+	hide_colorbar() %>%
+	plotly::layout(
+		title="2016-17 Grades 3-5 RD Cumulative GLP% for EDS and Not-EDS Students",
+		xaxis=list(range=c(0,100),title="GLP% for Not-EDS Students"),
+		yaxis=list(range=c(0,100),title="GLP% for EDS Students"),
+		shapes=list(
+			type="line",
+			x0=0,
+			x1=100,
+			y0=0,
+			y1=100,
+			line=list(width=1),
+			dash="dot"
+		)
+	) %>%
+	plotly::add_annotations(
+		x=20,
+		y=95,
+		text=paste0(
+      n_schools," Schools\n",
+      "Blue: Title I Schools\n",
+      "Triangles: Charters"
+    ),
+		showarrow=FALSE
+	)
+  #
+  return(plt_)
+}
+```  
+
 
 ### Now look at all grades  
 
@@ -648,6 +807,8 @@ fn_plotly_dfDisagBLCK_345_WHTE_GLP_D <- function() {
 	dfDisagBLCK_345_WHTE_GLP_D %>%
 	dplyr::select(
 		school_code,
+    num_BLCK,
+    num_WHTE,
 		pct_glp_BLCK,
 		pct_glp_WHTE,
 		TitleISchool,
@@ -679,7 +840,7 @@ fn_plotly_dfDisagBLCK_345_WHTE_GLP_D <- function() {
 		symbol=~pl_symbol,
 		color=~pl_color,
 		colors=pl_plot_pal,
-		text=~school_code
+		text=~paste0(school_code,"\n# BLCK=",num_BLCK,"\n# WHTE=",num_WHTE)
 	) %>%
 	hide_colorbar() %>%
 	plotly::layout(
@@ -721,6 +882,8 @@ fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
 	dfDisagBLCK_best345_WHTE_GLP_D %>%
 	dplyr::select(
 		school_code,
+    num_BLCK,
+    num_WHTE,
 		pct_glp_BLCK,
 		pct_glp_WHTE,
 		TitleISchool,
@@ -750,7 +913,7 @@ fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
 		symbol=~pl_symbol,
 		color=~pl_color,
 		colors=pl_plot_pal,
-		text=~school_code
+		text=~paste0(school_code,"\n# BLCK=",num_BLCK,"\n# WHTE=",num_WHTE)
 	) %>%
 	hide_colorbar() %>%
 	plotly::layout(

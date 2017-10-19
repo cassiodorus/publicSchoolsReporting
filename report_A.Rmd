@@ -61,7 +61,7 @@ plts1[[6]]
 
 **Figure I.1. ...**</div>  
 <br>
-Figure I.1 selects one year (2015-16) and one subject (Reading) across all NC schools, and presents GLP% box plots for grades 3, 4, and 5. The two left-most boxes for each grade are the EDS and non-EDS GLP%, while the three right-most boxes show GLP% for Black, Hispanic, and White students. There is in addition a box for the cumulative GLP%. Plots run for other years, as well as for Mathematics, appear much the same. Observations for other years are substantially the same. Plots for the other years can be found in Appendix ???.  
+Figure I.1 selects one year (2015-16) and one subject (Reading) across all NC schools, and presents GLP% box plots for grades 3, 4, and 5. The two left-most boxes for each grade are the EDS and non-EDS GLP%, while the three right-most boxes show GLP% for Black, Hispanic, and White students. There is in addition a box for the cumulative GLP%.  Plots run for other years, as well as for Mathematics, appear much the same. Observations for other years are substantially the same. Plots for the other years can be found in Appendix ???. Keep in mind that due to compliance with FERPA, GLP% above 100% is always shown as 97.5%, while GLP% less than 5% is shown as 2.5%. This results in some lumpiness at the top and bottom of the GLP% axis.  
 
 <div style="text-align:center">
 ```{r box_2,  echo=FALSE}
@@ -71,7 +71,7 @@ plts2[[6]]
 
 **Figure I.2. ...**</div>  
 <br>
-Figure I.2 selects one grade (5) and one subject (Reading) across the four academic years from 2013-14 to 2016-17. The boxes are shown in the same order as above.  
+Figure I.2 selects one grade (5) and one subject (Reading) across the four academic years from 2013-14 to 2016-17.   
 
 <div style="text-align:center">
 ```{r box_3, echo=FALSE}
@@ -121,6 +121,8 @@ plts1[[6]]
 
 I treat here some matters of equity by looking at the GLP% for Black students in schools where the number of White students exceeds the number of Black students. Following are two interactive scatter plots for grades 3, 4, and 5 in the year 2016-17. In the interest of brevity, I treat the cumulative grades 3, 4, and 5 GLP% across all North Carolina schools. Placing the cursor on a point displays the school code. Schools above the diagonal line have GLP% for Black students exceeding that for White students.  
 
+IMPORTANT NOTE: The smaller the count of students, the less dependable is the GLP%. That is, since we are looking at percentages, GLP% for student counts of under twenty or so can be substantially affected if only one or two students were to move from the GLP to not GLP, or vice versa. I have not included error bars in the scatterplots because this would make them very cluttered and difficult to read.  
+
 <div style="text-align:center">
 ```{r plotly_1, echo=FALSE}
 fn_plotly_dfDisagBLCK_345_WHTE_GLP_D()
@@ -130,14 +132,24 @@ fn_plotly_dfDisagBLCK_345_WHTE_GLP_D()
 <br>
 The interactive scatter plot provides the opportunity to pursue further the best and worst performing schools.  
 
+Figure I.7 is similar to Figure I.6, but shows a comparison of EDS and not-EDS students. The same striking dichotomy persists.
+
+<div style="text-align:center">
+```{r plotly_3, echo=FALSE}
+fn_plotly_dfDisagEDS_345_NOT_EDS_GLP_D()
+```  
+
+**Figure I.7. ...**</div>  
+<br>
+Figure I.8 addresses a follow-up question: how do Black students perform in the better performing predominantly White schools. In this plot the schools are limited to those where 1) the White GLP% was at least 75% and 2) there were more White than Black students.  There does not appear to be any correlation between the scores of Black and White students. Put another way, Black students do not appear to consistently benefit from being in high-performing, majority White schools. Factors that contribute to high performance for Black (and for EDS) students are beyond a simplistic attribution to a high White proportion. The interactive scatter plot can be used to identify the schools in which the Black students were best and worst performing.  
+
 <div style="text-align:center">
 ```{r plotly_2, echo=FALSE}
 fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D()
 ```  
 
-**Figure I.7. ...**</div>  
+**Figure I.8. ...**</div>  
 <br>
-Figure I.7 addresses a follow-up question: how do Black students perform in the better performing predominantly White schools. In this plot the schools are limited to those where the White GLP% was at least 75% and there were more White than Black students.  There does not appear to be any correlation between the scores of Black and White students. The interactive scatter plot can be used to identify the schools in which the Black students were best and worst performing.  
 
 #### I.5 Identifying Some Schools With High Achievement for EDS Students  
 In this section I redirect and broaden attention to the EDS category. This provides the opportunity to identify the schools in the right-hand tail of the EDS plot in Figure I.4. I ask the following question: In which schools are EDS students repeatedly achieving high GLP scores in grades 3, 4, and 5? In order to quantify this I make the question more precise, although it does become somewhat restrictive. This is best served by GLMM modelling, but I will defer that until a later report.  
@@ -145,24 +157,30 @@ In this section I redirect and broaden attention to the EDS category. This provi
 The question begins with recognizing that NCDPI makes comparable GLP% data on three grades (3, 4, and 5), two subjects (mathematics and reading), and four years of data (2013 through 2016). That provides twenty-four possible reports of GLP%. The criteria I somewhat arbitrarily specify is the following: a school will be considered notable if EDS students achieve 75% GLP% in three out of the six grade-subject (three grades and two subjects) in at least two of the years. This is carried out irrespective of the particular grade and subject, i.e., it is across all grades and subjects. Note that successful schools may be excluded if they do not have students in all of the grades (for instance, KIPP Gastonia), or if they have not been in existence for all four years.  
 
 Here are some results. "total" is the school enrollment across all grades, not just 3, 4, and 5. "pct_EDS" is also across all grades. "nyears" is the number of years for which the criterion of three instances of GLP% 75% are satisfied.  
+
 ```{r fn_dfAnalyze_DisagX20_345_report, echo=FALSE}
 dfRes <- fn_dfAnalyze_DisagX20_345_report(3) %>% as.data.frame()
 ```  
 A total of `r nrow(dfRes)` schools out of the approximately `r signif(nrow(dfDisagX20_345_Yr %>% dplyr::filter(acYear=="2016-17") %>% dplyr::distinct(school_code)),3)` elementary schools qualify as notable. Notice that some of the charter schools qualify for Title I assistance even though their overall EDS percentage is low.  
 
-These are the schools that had four years of high GLP%, as described above:  
+These are the schools that had four years of high GLP% for EDS students, as described above:  
+
 ```{r fn_dfAnalyze_DisagX20_345_report_4, echo=FALSE}
 x <- dfRes %>% dplyr::filter(nyears==4)
 x
 ```  
 <br>
-These schools had three years of high GLP%:  
+
+These schools had three years of high GLP% for EDS students:  
+
 ```{r fn_dfAnalyze_DisagX20_345_report_3, echo=FALSE}
 x <- dfRes %>% dplyr::filter(nyears==3)
 x
 ```  
 <br>
-These schools had two years of high GLP%:    
+
+These schools had two years of high GLP% for EDS students (this list has less statistical significance than the preceding lists):  
+
 ```{r fn_dfAnalyze_DisagX20_345_report_2, echo=FALSE}
 x <- dfRes %>% dplyr::filter(nyears==2)
 x
@@ -188,7 +206,7 @@ plt_scorefreq[["C4MA"]]
 Salient characteristics of the tests include the small range of scores, about 60 points of the maximum 470, that students score into. A similar methodology is used in many tests including those for higher grades, such as the SAT. Nevertheless, we are looking at 60 points, not 470. It is also evident that there is a step, or discontinuity, that 'guards' level 3 (the start of GLP). Level 3 is narrow, only two or three points. It does not appear to be a 'trap' of consequence, since the counts of students in level 4 (CCR) are high.  
 
 #### II.2. Reliability of the Tests  
-The NCDPI Score-Frequency data gives the impression of precision, of exactness and completeness. However, students being susceptible to illnesses, emotional stress and so on, the same tests given to the same students on some different days would result in at least slightly different results. This is expressed in the randomness that is associated with almost all testing. In the aggregate of 1400 schools some small differences may not be of consequence, but that might not hold when looking more closely at these tests.  
+The NCDPI Score-Frequency data gives the impression of precision, of exactness and completeness. However, students being susceptible to illnesses, emotional stress and so on, the same tests given to the same students on some different days would result in at least slightly different results. There are also influences such as change in principal, teacher turnover, student ethnic composition, number of students who need English development, and so on. This is expressed in the randomness that is associated with almost all testing. There are also the statistical variances where schools with very small numbers of students in an ethnic category may show exaggerated variability. In the aggregate of 1400 schools some small differences may not be of consequence, but that might not hold when looking more closely at these tests.  
 
 The classification of students into GLP% and the reporting of GLP percentages are consequences of the tests. Thus far in these notes I have been considering aggregations of data, taking advantage of "properties of large numbers." Now I will consider two questions and show that they have at best doubtful answers. First, how much confidence can be put in GLP% for the same school, for the same grade and subject, from year to year. That is, when tracking grades and subjects from year to year and looking at individual schools, how consistent are the GLP%? The implication of a negative answer is that the GLP% scores may themselves be considered of questionable utility. This is well served by a GLMM analysis, which I will undertake in a subsequent report. 
 

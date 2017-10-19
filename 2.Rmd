@@ -288,10 +288,10 @@ fn_boxplots_comp <- function(
         ret[[iret_]] <- df3_ %>%
         ggplot( 
           aes( 
-            x=acYear,
+            x=subgroup,
             y=pct_glp,
-            dodge=subgroup,
-            fill=subgroup
+            dodge=acYear,
+            fill=acYear
           )
         ) + 
         geom_boxplot() +
@@ -299,7 +299,7 @@ fn_boxplots_comp <- function(
           title=paste(lstSubjLong[[S_]],"Grade",G_,"GLP% by Group",ifelse(argCharterOnly," Charters Only","")),
           subtitle=paste("EDTier",EDTierTxt,"   LEA",LEA_,"   By Year    ",n_schools,"Schools")
           ) +
-        labs( x="Year", y="GLP%" ) +
+        labs( x="Group", y="GLP%" ) +
         ylim( 0, 100 ) +
         theme(   
           legend.text=element_text(size=8),
@@ -449,10 +449,10 @@ fn_boxplots_cohort<- function(
         ret[[iret_]] <- df3_ %>%
         ggplot( 
           aes( 
-            x=grade,
+            x=subgroup,
             y=pct_glp,
-            dodge=subgroup,
-            fill=subgroup
+            dodge=grade,
+            fill=grade
           )
         ) + 
         geom_boxplot() +
@@ -461,13 +461,12 @@ fn_boxplots_cohort<- function(
           title=paste("Cohort",yrs_,"for",lstSubjLong[[S_]],"GLP% by Group",ifelse(argCharterOnly," Charters Only","")),
           subtitle=paste("EDTier",EDTierTxt,"   LEA",LEA_,"    ",n_schools,"Schools")
           ) +
-        labs( x="Grade", y="GLP%" ) +
+        labs( x="Group", y="GLP%" ) +
         theme(   
           legend.text=element_text(size=8),
           plot.title=element_text(size=8, hjust=0.5),
           plot.subtitle=element_text(size=8, hjust=0.5)
-          ) +
-        guides( fill=guide_legend(title=NULL) )
+          )
         #
         if (argSave) {
           ggsave(

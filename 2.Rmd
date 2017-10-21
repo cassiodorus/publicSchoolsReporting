@@ -2278,6 +2278,7 @@ fn_pltScoreFreqNCDPI <- function(
 }
 ``` 
 
+
 ### Histograms of GLP% by ethnicity and EDS  
 Use dfDisagX20_345_Yr  
 ```{r echo=FALSE}
@@ -2314,6 +2315,7 @@ fn_plt_hist_GLPf <- function(
   }
   #
   ret <- list()
+  iret_ <- 0
   df1_ <-  
   dfDisagX20_345_Yr %>%
   dplyr::select(
@@ -2347,7 +2349,8 @@ fn_plt_hist_GLPf <- function(
         )
       }
       #
-      ret[[paste0(argYear,argGrade,S_,"_",argLEA)]] <-
+      iret_ <- iret_+1
+      ret[[iret_]] <-
       df2_ %>%
       ggplot( aes(x=pct_glp) ) +
       geom_histogram(

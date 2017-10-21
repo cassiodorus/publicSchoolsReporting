@@ -63,6 +63,8 @@ plts1[[6]]
 <br>
 Figure I.1 selects one year (2015-16) and one subject (Reading) across all NC schools, and presents GLP% box plots for grades 3, 4, and 5. The two left-most boxes for each grade are the EDS and non-EDS GLP%, while the three right-most boxes show GLP% for Black, Hispanic, and White students. There is in addition a box for the cumulative GLP%.  Plots run for other years, as well as for Mathematics, appear much the same. Observations for other years are substantially the same. Plots for the other years can be found in Appendix ???. Keep in mind that due to compliance with FERPA, GLP% above 100% is always shown as 97.5%, while GLP% less than 5% is shown as 2.5%. This results in some lumpiness at the top and bottom of the GLP% axis.  
 
+Figure I.2 selects one grade (5) and one subject (Reading) across the four academic years from 2013-14 to 2016-17.  
+
 <div style="text-align:center">
 ```{r box_2,  echo=FALSE}
 plts2  <- fn_boxplots_comp(argSave = FALSE)
@@ -71,7 +73,8 @@ plts2[[6]]
 
 **Figure I.2. ...**</div>  
 <br>
-Figure I.2 selects one grade (5) and one subject (Reading) across the four academic years from 2013-14 to 2016-17.   
+  
+Figure I.3 tracks a cohort, starting with Reading for grade 3 in 2014-15 and following it to grade 5 in 2016-17. Once again, plots run for other years, as well as for Mathematics, appear much the same.  
 
 <div style="text-align:center">
 ```{r box_3, echo=FALSE}
@@ -89,7 +92,7 @@ It is also clear that the separation between EDS categories, and between White s
 
 #### I.2. GLP% Distributions   
 
-In this section I first look more closely at the GLP% profiles for the ethnicities Black, Hispanic, and White, and alos at the EDS Yes-No categories. Figure I.4 shows these categories in histograms of GLP% for 2016-17 Reading for grade 5 over all schools.  
+In this section I first look more closely at the GLP% profiles for the ethnicities Black, Hispanic, and White, and also at the EDS Yes-No categories. Figure I.4 shows these categories in histograms of GLP% for 2016-17 Reading for grade 5 over all schools.  
 
 <div style="text-align:center">
 ```{r hist_1, echo=FALSE}
@@ -141,7 +144,7 @@ fn_plotly_dfDisagEDS_345_NOT_EDS_GLP_D()
 
 **Figure I.7. ...**</div>  
 <br>
-Figure I.8 addresses a follow-up question: how do Black students perform in the better performing predominantly White schools. In this plot the schools are limited to those where 1) the White GLP% was at least 75% and 2) there were more White than Black students.  There does not appear to be any correlation between the scores of Black and White students. Put another way, Black students do not appear to consistently benefit from being in high-performing, majority White schools. Factors that contribute to high performance for Black (and for EDS) students are beyond a simplistic attribution to a high White proportion. The interactive scatter plot can be used to identify the schools in which the Black students were best and worst performing.  
+Figure I.8 addresses a follow-up question: how do Black students perform in the better performing predominantly White schools. In this plot the schools are limited to those where 1) the White GLP% was at least 75% and 2) there were more White than Black students.  There does not appear to be any correlation between the scores of Black and White students. Put another way, Black students do not appear to consistently benefit from being in high-performing, majority White schools, the GLP% of the Black students being as likely high as low. Factors that contribute to high performance for Black (and for EDS) students are beyond a simplistic attribution to a high White proportion. The interactive scatter plot can be used to identify the schools in which the Black students were best and worst performing.  
 
 <div style="text-align:center">
 ```{r plotly_2, echo=FALSE}
@@ -154,16 +157,16 @@ fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D()
 #### I.5 Identifying Some Schools With High Achievement for EDS Students  
 In this section I redirect and broaden attention to the EDS category. This provides the opportunity to identify the schools in the right-hand tail of the EDS plot in Figure I.4. I ask the following question: In which schools are EDS students repeatedly achieving high GLP scores in grades 3, 4, and 5? In order to quantify this I make the question more precise, although it does become somewhat restrictive. This is best served by GLMM modelling, but I will defer that until a later report.  
 
-The question begins with recognizing that NCDPI makes comparable GLP% data on three grades (3, 4, and 5), two subjects (mathematics and reading), and four years of data (2013 through 2016). That provides twenty-four possible reports of GLP%. The criteria I somewhat arbitrarily specify is the following: a school will be considered notable if EDS students achieve 75% GLP% in three out of the six grade-subject (three grades and two subjects) in at least two of the years. This is carried out irrespective of the particular grade and subject, i.e., it is across all grades and subjects. Note that successful schools may be excluded if they do not have students in all of the grades (for instance, KIPP Gastonia), or if they have not been in existence for all four years.  
+The question begins with recognizing that NCDPI makes available comparable GLP% data on three grades (3, 4, and 5), two subjects (mathematics and reading), and four years of data (2013 through 2016). That provides twenty-four possible reports of GLP%. The criteria I arbitrarily specify is the following: a school will be considered notable if EDS students achieve 75% GLP% in three out of the six grade-subject (three grades and two subjects) in at least two of the years. This is carried out irrespective of the particular grade and subject, i.e., it is across all grades and subjects. Note that successful schools may be excluded if they do not have students in all of the grades (for instance, KIPP Gastonia), or if they have not been in existence for all four years.  
 
-Here are some results. "total" is the school enrollment across all grades, not just 3, 4, and 5. "pct_EDS" is also across all grades. "nyears" is the number of years for which the criterion of three instances of GLP% 75% are satisfied.  
+Here are some results. "total" is the school enrollment across all grades, not just 3, 4, and 5. "pct_EDS" is also across all grades. "nyears" is the number of years for which the criterion of three instances of GLP% 75% are satisfied over the years 2013-14 through 2016-17.  
 
 ```{r fn_dfAnalyze_DisagX20_345_report, echo=FALSE}
 dfRes <- fn_dfAnalyze_DisagX20_345_report(3) %>% as.data.frame()
 ```  
 A total of `r nrow(dfRes)` schools out of the approximately `r signif(nrow(dfDisagX20_345_Yr %>% dplyr::filter(acYear=="2016-17") %>% dplyr::distinct(school_code)),3)` elementary schools qualify as notable. Notice that some of the charter schools qualify for Title I assistance even though their overall EDS percentage is low.  
 
-These are the schools that had four years of high GLP% for EDS students, as described above:  
+These are the schools that had four years of high GLP% for EDS students over the years 2013-14 through 2016-17, as described above:  
 
 ```{r fn_dfAnalyze_DisagX20_345_report_4, echo=FALSE}
 x <- dfRes %>% dplyr::filter(nyears==4)
@@ -171,7 +174,7 @@ x
 ```  
 <br>
 
-These schools had three years of high GLP% for EDS students:  
+These schools had three years of high GLP% for EDS students over the years 2013-14 through 2016-17:  
 
 ```{r fn_dfAnalyze_DisagX20_345_report_3, echo=FALSE}
 x <- dfRes %>% dplyr::filter(nyears==3)
@@ -179,7 +182,7 @@ x
 ```  
 <br>
 
-These schools had two years of high GLP% for EDS students (this list has less statistical significance than the preceding lists):  
+These schools had two years of high GLP% for EDS students over the years 2013-14 through 2016-17 (this list has less statistical significance than the preceding lists):  
 
 ```{r fn_dfAnalyze_DisagX20_345_report_2, echo=FALSE}
 x <- dfRes %>% dplyr::filter(nyears==2)

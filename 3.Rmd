@@ -363,7 +363,10 @@ fn_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
   		num_tested,
   		charter_school,
   		TitleISchool
-  	) %>%
+  	)  %>%
+    dplyr::mutate_all(
+      funs(ifelse(is.na(.), 0, .))
+    ) %>%
   	reshape2::dcast(
   		LEA+school_code+charter_school+TitleISchool~subgroup,
   		sum,
@@ -397,6 +400,9 @@ fn_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
   		subgroup,
   		num_glp,
   	) %>%
+    dplyr::mutate_all(
+      funs(ifelse(is.na(.), 0, .))
+    ) %>%
   	reshape2::dcast(
   		school_code+subject~subgroup,
   		sum,
@@ -448,7 +454,10 @@ fn_dfDisagBLCK_345_WHTE_GLP_D <- function() {
   		num_tested,
   		charter_school,
   		TitleISchool
-  	) %>%
+  	) %>%    
+    dplyr::mutate_all(
+      funs(ifelse(is.na(.), 0, .))
+    ) %>%
   	reshape2::dcast(
   		LEA+school_code+charter_school+TitleISchool~subgroup,
   		sum,
@@ -478,7 +487,10 @@ fn_dfDisagBLCK_345_WHTE_GLP_D <- function() {
   		subject,
   		subgroup,
   		num_glp,
-  	) %>%
+  	)  %>%
+    dplyr::mutate_all(
+      funs(ifelse(is.na(.), 0, .))
+    ) %>%
   	reshape2::dcast(
   		school_code+subject~subgroup,
   		sum,
@@ -532,6 +544,9 @@ fn_dfDisagEDS_345_NOT_EDS_GLP_D <- function() {
   		charter_school,
   		TitleISchool
   	) %>%
+    dplyr::mutate_all(
+      funs(ifelse(is.na(.), 0, .))
+    ) %>%
   	reshape2::dcast(
   		LEA+school_code+charter_school+TitleISchool~subgroup,
   		sum,
@@ -562,7 +577,10 @@ fn_dfDisagEDS_345_NOT_EDS_GLP_D <- function() {
   		subject,
   		subgroup,
   		num_glp,
-  	) %>%
+  	)  %>%
+    dplyr::mutate_all(
+      funs(ifelse(is.na(.), 0, .))
+    ) %>%
   	reshape2::dcast(
   		school_code+subject~subgroup,
   		sum,
@@ -1496,6 +1514,56 @@ fn_dfDisagX20_345_EDS_best <- function(){
 }
 #
 str(fn_dfDisagX20_345_EDS_best())
+```  
+
+Added 10/19/17
+```{r echo=FALSE}
+fn_knit_exit("fn_dfDisagX20_345_best_X")
+```  
+
+```{r fn_dfDisagX20_345_best_X}
+fn_dfDisagX20_345_best_X <- function(argYear) {
+## identify schools with BLCK or HISP GLP% > 75 over grades 3, 4 and 5
+## selected for one year
+  if (!(argYear %in% LETTERS[1:4])) {
+    stop("argYears must be in A through D.")
+  }  
+  theYear <- forYears[which(LETTERS==argYear)]
+  #
+  return(
+    dfDisagX20_345_Yr %>%
+    dplyr::filter(
+      subgroup %in% c("BLCK","HISP") &
+      acYear==theYear
+    ) %>% 
+    dplyr::select(
+      acYear,
+      LEA,
+      school_code,
+      subgroup,
+      subject,
+      num_tested,
+      num_glp
+    ) %>% 
+    dplyr::group_by(
+      acYear,
+      school_code,
+      subgroup,
+      subject
+    ) %>% 
+    dplyr::summarise(
+      tot_num_tested=sum(num_tested),
+      tot_num_glp=sum(num_glp),
+      tot_pct_glp=round(tot_num_glp*100/tot_num_tested,digits=1)
+    ) %>%
+    dplyr::filter(
+      tot_pct_glp > 75
+    ) %>%
+    dplyr::ungroup()
+  )
+}
+#
+str(fn_dfDisagX20_345_best_X("D"))
 ```  
 
 ```{r echo=FALSE}

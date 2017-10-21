@@ -908,6 +908,8 @@ fcnGetZippedLEAdata8 <- function(zFile,dFile,LEA2=NULL) {
 # 
 # there is no LEA selection here
 #
+# added 10/20/17 handle NA for glp and ccr
+#
 dfDisag_YrA <- fcnGetZippedLEAdata8( "disag1314.zip","Disag_2013-14/Disag_2013-14_Data.txt")[["All"]] %>% 
 		dplyr::mutate( 
 			acYear='2013-14', 
@@ -916,8 +918,17 @@ dfDisag_YrA <- fcnGetZippedLEAdata8( "disag1314.zip","Disag_2013-14/Disag_2013-1
 		dplyr::left_join( dfCharterTitleIyr,
 							by=c("school_code", "acYear", "f_acYear") 
 		) %>%
-		dplyr::mutate( 	num_3=num_glp-num_ccr,
-						pct_3=pct_glp-pct_ccr
+		dplyr::mutate( 	
+      num_3=num_glp-num_ccr,
+			pct_3=pct_glp-pct_ccr,
+      num_glp=ifelse(
+        (is.na(num_glp) & !is.na(pct_glp) & !is.na(num_tested)),
+        round(num_tested*pct_glp/100),
+        num_glp),
+      num_ccr=ifelse(
+        (is.na(num_ccr) & !is.na(pct_ccr) & !is.na(num_tested)),
+        round(num_tested*pct_ccr/100),
+        num_ccr)
 		)
 str(dfDisag_YrA)
 #
@@ -976,7 +987,15 @@ dfDisag_YrB <- fcnGetZippedLEAdata8( "disag1415.zip","Disag_2014-15/Disag_2014-1
 		) %>%
 		dplyr::mutate( 	
 			num_3=num_glp-num_ccr,
-			pct_3=pct_glp-pct_ccr
+			pct_3=pct_glp-pct_ccr,
+      num_glp=ifelse(
+        (is.na(num_glp) & !is.na(pct_glp) & !is.na(num_tested)),
+        round(num_tested*pct_glp/100),
+        num_glp),
+      num_ccr=ifelse(
+        (is.na(num_ccr) & !is.na(pct_ccr) & !is.na(num_tested)),
+        round(num_tested*pct_ccr/100),
+        num_ccr)
 		)
 str(dfDisag_YrB)
 #
@@ -1027,7 +1046,15 @@ dfDisag_YrC <- fcnGetZippedLEAdata8( "disag1516.zip","Disag_2015-16/Disag_2015-1
 		) %>%
 		dplyr::mutate( 	
 			num_3=num_glp-num_ccr,
-			pct_3=pct_glp-pct_ccr
+			pct_3=pct_glp-pct_ccr,
+      num_glp=ifelse(
+        (is.na(num_glp) & !is.na(pct_glp) & !is.na(num_tested)),
+        round(num_tested*pct_glp/100),
+        num_glp),
+      num_ccr=ifelse(
+        (is.na(num_ccr) & !is.na(pct_ccr) & !is.na(num_tested)),
+        round(num_tested*pct_ccr/100),
+        num_ccr)
 		)
 str(dfDisag_YrC)
 #
@@ -1078,8 +1105,17 @@ dfDisag_YrD <- fcnGetZippedLEAdata8( "disag1617.zip","Disag_2016-17/Disag_2016-1
 		dplyr::left_join( dfCharterTitleIyr,
 							by=c("school_code", "acYear", "f_acYear") 
 		) %>%
-		dplyr::mutate( 	num_3=num_glp-num_ccr,
-						pct_3=pct_glp-pct_ccr
+		dplyr::mutate( 	
+      num_3=num_glp-num_ccr,
+			pct_3=pct_glp-pct_ccr,
+      num_glp=ifelse(
+        (is.na(num_glp) & !is.na(pct_glp) & !is.na(num_tested)),
+        round(num_tested*pct_glp/100),
+        num_glp),
+      num_ccr=ifelse(
+        (is.na(num_ccr) & !is.na(pct_ccr) & !is.na(num_tested)),
+        round(num_tested*pct_ccr/100),
+        num_ccr)
 		)
 str(dfDisag_YrD)
 #
@@ -1197,14 +1233,15 @@ aggregate(
 # make sure schools are in all academic years - or at least are there for 3 years
 # useful particularly when MORE THAN two years of data
 #
-dfSchoolX20_345_allyears <- dfDisagX20_345_Yr %>% 
-				dplyr::select( school_code, acYear, f_acYear ) %>% 
-				dplyr::distinct() %>% 
-				dplyr::group_by( school_code ) %>% 
-				dplyr::count() %>% 
-				dplyr::filter( n>2 ) %>%
-				dplyr::ungroup() %>%
-				dplyr::select( school_code )
+dfSchoolX20_345_allyears <- 
+  dfDisagX20_345_Yr %>% 
+	dplyr::select( school_code, acYear, f_acYear ) %>% 
+	dplyr::distinct() %>% 
+	dplyr::group_by( school_code ) %>% 
+	dplyr::count() %>% 
+	dplyr::filter( n>2 ) %>%
+	dplyr::ungroup() %>%
+	dplyr::select( school_code )
 str(dfSchoolX20_345_allyears)
 #
 # #################################

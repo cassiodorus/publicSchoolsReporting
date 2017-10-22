@@ -107,139 +107,159 @@ Use dfDisagX20_Yr and dfDisagSubgroupsC (<- for 2016-17 only)
 
 Generate helper dataframes that hold schools with more Whites than Blacks:  
 ```{r echo=FALSE}
+fn_knit_exit("fn_dfDisagALLmoreWHTE_D")
 fn_knit_exit("dfDisagALLmoreWHTE_D")
 ```
 
-```{r dfDisagALLmoreWHTE_D}
-dfDisagALLmoreWHTE_D  <- 
-	dfDisagX20_Yr %>%
-	dplyr::filter(
-		f_acYear=="D" & 
-		subgroup %in% c("WHTE","BLCK") 
-	) %>%
-	dplyr::select(
-		LEA,
-		school_code,
-		subgroup,
-		num_tested
-	) %>%
-	dplyr::group_by(
-		LEA,
-		school_code,
-		subgroup
-	) %>%
-	dplyr::summarize(
-		num_total=sum(num_tested)
-	) %>%
-	dplyr::ungroup() %>%
-	tidyr::spread(
-		subgroup,
-		num_total
-	) %>%
-	dplyr::filter(
-		!is.na(BLCK) & 
-		!is.na(WHTE) &
-		WHTE > BLCK
-	) %>%
-	dplyr::select(
-		LEA,
-		school_code
-	)
+```{r fn_dfDisagALLmoreWHTE_D}
+fn_dfDisagALLmoreWHTE_D <- function() {
+  return(
+  	dfDisagX20_Yr %>%
+  	dplyr::filter(
+  		f_acYear=="D" & 
+  		subgroup %in% c("WHTE","BLCK") 
+  	) %>%
+  	dplyr::select(
+  		LEA,
+  		school_code,
+  		subgroup,
+  		num_tested
+  	) %>%
+  	dplyr::group_by(
+  		LEA,
+  		school_code,
+  		subgroup
+  	) %>%
+  	dplyr::summarize(
+  		num_total=sum(num_tested)
+  	) %>%
+  	dplyr::ungroup() %>%
+  	tidyr::spread(
+  		subgroup,
+  		num_total
+  	) %>%
+  	dplyr::filter(
+  		!is.na(BLCK) & 
+  		!is.na(WHTE) &
+  		WHTE > BLCK
+  	) %>%
+  	dplyr::select(
+  		LEA,
+  		school_code
+  	)
+  )
+}
 #
-str(dfDisagALLmoreWHTE_D)
+str(fn_dfDisagALLmoreWHTE_D())
+dfDisagALLmoreWHTE_D <- fn_dfDisagALLmoreWHTE_D()
 ```
 
 ```{r echo=FALSE}
+fn_knit_exit("fn_dfDisag345moreWHTE_D")
 fn_knit_exit("dfDisag345moreWHTE_D")
 ```  
 
-```{r dfDisag345moreWHTE_D}
-dfDisag345moreWHTE_D  <- 
-	dfDisagX20_345_Yr %>%
-	dplyr::filter(
-		f_acYear=="D" & 
-		subgroup %in% c("WHTE","BLCK") 
-	) %>%
-	dplyr::select(
-		LEA,
-		school_code,
-		subgroup,
-		num_tested
-	) %>%
-	dplyr::group_by(
-		LEA,
-		school_code,
-		subgroup
-	) %>%
-	dplyr::summarize(
-		num_total=sum(num_tested)
-	) %>%
-	dplyr::ungroup() %>%
-	tidyr::spread(
-		subgroup,
-		num_total
-	) %>%
-	dplyr::filter(
-		!is.na(BLCK) & 
-		!is.na(WHTE) &
-		WHTE > BLCK
-	) %>%
-	dplyr::select(
-		LEA,
-		school_code
-	)
+```{r fn_dfDisag345moreWHTE_D}
+fn_dfDisag345moreWHTE_D <- function() {
+  return(
+  	dfDisagX20_345_Yr %>%
+  	dplyr::filter(
+  		f_acYear=="D" & 
+  		subgroup %in% c("WHTE","BLCK") 
+  	) %>%
+  	dplyr::select(
+  		LEA,
+  		school_code,
+  		subgroup,
+  		num_tested
+  	) %>%
+  	dplyr::group_by(
+  		LEA,
+  		school_code,
+  		subgroup
+  	) %>%
+  	dplyr::summarize(
+  		num_total=sum(num_tested)
+  	) %>%
+  	dplyr::ungroup() %>%
+  	tidyr::spread(
+  		subgroup,
+  		num_total
+  	) %>%
+  	dplyr::filter(
+  		!is.na(BLCK) & 
+  		!is.na(WHTE) &
+  		WHTE > BLCK
+  	) %>%
+  	dplyr::select(
+  		LEA,
+  		school_code
+  	)
+  )
+}
 #
-str(dfDisag345moreWHTE_D)
+str(fn_dfDisag345moreWHTE_D())
+dfDisag345moreWHTE_D <- fn_dfDisag345moreWHTE_D()
 ```  
 
 ```{r echo=FALSE}
+fn_knit_exit("fn_dfDisag345BLCK_D")
 fn_knit_exit("dfDisag345BLCK_D")
 ```  
 
-```{r dfDisag345BLCK_D}
-dfDisag345BLCK_D <- 
-	dfDisagX20_345_Yr %>%
-	dplyr::filter(
-		f_acYear=="D" & 
-		subgroup=="BLCK"
-	) %>%
-	dplyr::select(
-		LEA,
-		school_code,
-		subject,
-		grade,
-		num_tested,
-		pct_glp,
-		charter_school,
-		TitleISchool
-	) 
-#
-str(dfDisag345BLCK_D)
+```{r fn_dfDisag345BLCK_D}
+fn_dfDisag345BLCK_D <- function() {
+  return(
+  	dfDisagX20_345_Yr %>%
+  	dplyr::filter(
+  		f_acYear=="D" & 
+  		subgroup=="BLCK"
+  	) %>%
+  	dplyr::select(
+  		LEA,
+  		school_code,
+  		subject,
+  		grade,
+  		num_tested,
+  		pct_glp,
+  		charter_school,
+  		TitleISchool
+  	) 
+  )
+}
+  #
+str(fn_dfDisag345BLCK_D())
+dfDisag345BLCK_D <- fn_dfDisag345BLCK_D()
 ```  
 
 ```{r echo=FALSE}
+fn_knit_exit("fn_dfDisag345WHTE_D")
 fn_knit_exit("dfDisag345WHTE_D")
 ```  
 
-```{r dfDisag345WHTE_D}
-dfDisag345WHTE_D <- 
-	dfDisagX20_345_Yr %>%
-	dplyr::filter(
-		f_acYear=="D" & 
-		subgroup=="WHTE"
-	) %>%
-	dplyr::select(
-		LEA,
-		school_code,
-		subject,
-		grade,
-		num_tested,
-		pct_glp,
-		charter_school,
-		TitleISchool
-	) 
+```{r fn_dfDisag345WHTE_D}
+fn_dfDisag345WHTE_D <- function() {
+  return(
+  	dfDisagX20_345_Yr %>%
+  	dplyr::filter(
+  		f_acYear=="D" & 
+  		subgroup=="WHTE"
+  	) %>%
+  	dplyr::select(
+  		LEA,
+  		school_code,
+  		subject,
+  		grade,
+  		num_tested,
+  		pct_glp,
+  		charter_school,
+  		TitleISchool
+  	) 
+  )
+}
 #
-str(dfDisag345WHTE_D)
+str(fn_dfDisag345WHTE_D())
+dfDisag345WHTE_D <- fn_dfDisag345WHTE_D()
 ```  
 
 These are some useful functions for use in producing reports:  
@@ -295,46 +315,51 @@ Suppose we select 75% WHTE GLP% for ALL three grades and BOTH subjects as the lo
 and also require a higher % of White than Black students.  
 Which schools are they?  
 ```{r echo=FALSE}
+fn_knit_exit("fn_dfDisagBest345WHTE_D")
 fn_knit_exit("dfDisagBest345WHTE_D")
 ```  
 
-```{r dfDisagBest345WHTE_D}
-dfDisagBest345WHTE_D <- 
-	dfDisagX20_345_Yr %>%
-	dplyr::filter(
-		f_acYear=="D" & 
-		subgroup=="WHTE" &
-		pct_glp >= 75
-	) %>%
-	dplyr::select(
-		LEA,
-		school_code,
-		subject,
-		grade,
-		num_tested,
-		pct_glp,
-		charter_school,
-		TitleISchool
-	) %>%
-	dplyr::group_by(
-		LEA,
-		school_code
-	) %>%
-	dplyr::filter(
-		n()==6
-	) %>%
-	dplyr::ungroup() %>%
-	dplyr::select(
-		LEA,
-		school_code
-	) %>%
-	dplyr::distinct() %>%
-	dplyr::inner_join(
-		dfDisag345moreWHTE_D,
-		by=c("LEA","school_code")
-	)
+```{r fn_dfDisagBest345WHTE_D}
+fn_dfDisagBest345WHTE_D <- function() {
+  return(
+  	dfDisagX20_345_Yr %>%
+  	dplyr::filter(
+  		f_acYear=="D" & 
+  		subgroup=="WHTE" &
+  		pct_glp >= 75
+  	) %>%
+  	dplyr::select(
+  		LEA,
+  		school_code,
+  		subject,
+  		grade,
+  		num_tested,
+  		pct_glp,
+  		charter_school,
+  		TitleISchool
+  	) %>%
+  	dplyr::group_by(
+  		LEA,
+  		school_code
+  	) %>%
+  	dplyr::filter(
+  		n()==6
+  	) %>%
+  	dplyr::ungroup() %>%
+  	dplyr::select(
+  		LEA,
+  		school_code
+  	) %>%
+  	dplyr::distinct() %>%
+  	dplyr::inner_join(
+  		dfDisag345moreWHTE_D,
+  		by=c("LEA","school_code")
+  	)
+  )
+}
 #
-str(dfDisagBest345WHTE_D)
+str(fn_dfDisagBest345WHTE_D())
+dfDisagBest345WHTE_D <- fn_dfDisagBest345WHTE_D()
 ```  
 
 ```{r echo=FALSE}
@@ -697,35 +722,40 @@ First, what is the distribution of GLP% across all grades for WHTE?
 Using 75% as cutoff and having more Whites than Blacks,  
 Select the "best" schools in 2016-17.  
 ```{r echo=FALSE}
+fn_knit_exit("fn_dfDisagBestWHTE_D")
 fn_knit_exit("dfDisagBestWHTE_D")
 ```  
 
-```{r dfDisagBestWHTE_D}
-dfDisagBestWHTE_D <- 
-	dfDisagX20_Yr %>%
-	dplyr::filter(
-		f_acYear=="D" & 
-		subgroup=="WHTE" &
-		subject=="ALL" &
-		grade=="ALL" &
-		pct_glp >= 75
-	) %>%
-	dplyr::select(
-		LEA,
-		school_code,
-		subject,
-		grade,
-		num_tested,
-		pct_glp,
-		charter_school,
-		TitleISchool
-	) %>%
-	dplyr::inner_join(
-		dfDisagALLmoreWHTE_D,
-		by=c("LEA","school_code")
-	)
+```{r fn_dfDisagBestWHTE_D}
+fn_dfDisagBestWHTE_D <- function() {
+  return(
+  	dfDisagX20_Yr %>%
+  	dplyr::filter(
+  		f_acYear=="D" & 
+  		subgroup=="WHTE" &
+  		subject=="ALL" &
+  		grade=="ALL" &
+  		pct_glp >= 75
+  	) %>%
+  	dplyr::select(
+  		LEA,
+  		school_code,
+  		subject,
+  		grade,
+  		num_tested,
+  		pct_glp,
+  		charter_school,
+  		TitleISchool
+  	) %>%
+  	dplyr::inner_join(
+  		dfDisagALLmoreWHTE_D,
+  		by=c("LEA","school_code")
+  	)
+  )
+}
 #
-str(dfDisagBestWHTE_D)
+str(fn_dfDisagBestWHTE_D())
+dfDisagBestWHTE_D <- fn_dfDisagBestWHTE_D()
 ```  
 
 Using that list of schools, compare BLCK and WHTE GLP%.  

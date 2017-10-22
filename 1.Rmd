@@ -1209,7 +1209,7 @@ save(dfDisagX20_Yr,file=paste0(RDataPath,"dfDisagX20_Yr.RData"))
 # removal to keep house clean
 # these can be loaded if necessary
 rm(dfDisag_YrA,dfDisag_YrB,dfDisag_YrC,dfDisag_YrD)
-rm(dfDisag_Yr)
+#
 rm(dfDisagX20_YrA,dfDisagX20_YrB,dfDisagX20_YrC,dfDisagX20_YrD)
 rm(dfDisagX20_345_YrA,dfDisagX20_345_YrB,dfDisagX20_345_YrC,dfDisagX20_345_YrD)
 # ########################################################

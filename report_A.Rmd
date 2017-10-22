@@ -6,6 +6,9 @@ output:
   html_document: default
 ---
 
+<style type="text/css">  pre { font-size: small } </style>
+
+
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 require(rprojroot)
 require(reshape2)
@@ -22,13 +25,14 @@ require(emdist)
 require(rlist)
 require(MASS)
 require(printr)
+require(kableExtra)
 
 load("3.RData")
 
 # https://cran.r-project.org/web/packages/knitr/vignettes/knit_print.html 
 knit_print.data.frame = function(x, ...) {
-    res = paste(c("", "", knitr::kable(x)), collapse = "\n")
-    knitr::asis_output(res)
+  res = paste(c("", "", knitr::kable(x)), collapse = "\n")
+  knitr::asis_output(res)
 }
 
 ```  
@@ -49,7 +53,9 @@ My analysis is comprised of two parts. In the first, I confirm what is commonly 
 
 #### I.1. Wealth and Ethnicity  
 
-I begin with the use of aggregated data in order to take advantage of what is sometimes called the law of large numbers. This also is expressed as the central limit theorem, and convergence to the mean. For the present purposes, I look at the means and quantiles of GLP%. A standard way of presenting this is by using Tukey box plots. In these plots, the lower edge of the box is the 25th percentile, the upper edge the 75th percentile, and the horizontal line in the middle of the box is the 50th percentile (the median). The "whiskers" extend below and above the median by 1.6 times the distance between the 75th and 25th percentiles. Points above or  below the extent of the whiskers are referred to as outliers. This does not mean that these points are in some way dubious, just that they lie far from the median.
+I begin with the use of aggregated data in order to take advantage of what is sometimes called the law of large numbers. This also is expressed as the central limit theorem, and convergence to the mean. For the present purposes, I look at the means and quantiles of GLP%. A standard way of presenting this is by using Tukey box plots. In these plots, the lower edge of the box is the 25th percentile, the upper edge the 75th percentile, and the horizontal line in the middle of the box is the 50th percentile (the median). The "whiskers" extend below and above the median by 1.6 times the distance between the 75th and 25th percentiles. Points above or  below the extent of the whiskers are referred to as outliers. This does not mean that these points are in some way dubious, just that they lie far from the median.  
+
+Since I am dealing with GLP percentages which can be very sensitive to shifts in small numbers of students if the class sizes are small, I made the decision to exclude all classes of size less than twenty students. That is, if the total number of students for a particular grade and subject for a school is less than twenty, that specific "class" is excluded. That is `r nrow(dfDisag_Yr %>% dplyr::filter(subgroup=="ALL" & subgroup=="ALL" &  subject %in% c("MA","RD") & grade %in% c("03","04","05") & num_tested<20) %>% dplyr::distinct(school_code))` of a total of `r nrow(dfDisag_Yr %>% dplyr::filter(subgroup=="ALL" & subgroup=="ALL" &  subject %in% c("MA","RD") & grade %in% c("03","04","05")) %>% dplyr::distinct(school_code))` schools over the four years. I will explore these smaller schools at a later date.  
  
 The following figures present a substantiation of the "two North Carolinas" assertion. 
 
@@ -61,7 +67,7 @@ plts1[[6]]
 
 **Figure I.1. ...**</div>  
 <br>
-Figure I.1 selects one year (2015-16) and one subject (Reading) across all NC schools, and presents GLP% box plots for grades 3, 4, and 5. The two left-most boxes for each grade are the EDS and non-EDS GLP%, while the three right-most boxes show GLP% for Black, Hispanic, and White students. There is in addition a box for the cumulative GLP%.  Plots run for other years, as well as for Mathematics, appear much the same. Observations for other years are substantially the same. Plots for the other years can be found in Appendix ???. Keep in mind that due to compliance with FERPA, GLP% above 100% is always shown as 97.5%, while GLP% less than 5% is shown as 2.5%. This results in some lumpiness at the top and bottom of the GLP% axis.  
+Figure I.1 selects one year (2015-16) and one subject (Reading) across all NC schools, and presents GLP% box plots for grades 3, 4, and 5. The two left-most boxes for each grade are the EDS and non-EDS GLP%, while the three right-most boxes show GLP% for Black, Hispanic, and White students. There is in addition a box for the cumulative GLP%.  Plots run for other years, as well as for Mathematics, appear much the same. Observations for other years are substantially the same. Plots for the other years can be found in Appendix ???. Keep in mind that in response to the data masking required by compliance with FERPA, in this report GLP% above 100% is always shown as 97.5%, while GLP% less than 5% is shown as 2.5%. This results in some lumpiness at the top and bottom of the GLP% axis.  
 
 Figure I.2 selects one grade (5) and one subject (Reading) across the four academic years from 2013-14 to 2016-17.  
 
@@ -168,17 +174,21 @@ A total of `r nrow(dfRes)` schools out of the approximately `r signif(nrow(dfDis
 
 These are the schools that had four years of high GLP% for EDS students over the years 2013-14 through 2016-17, as described above:  
 
+
 ```{r fn_dfAnalyze_DisagX20_345_report_4, echo=FALSE}
 x <- dfRes %>% dplyr::filter(nyears==4)
-x
+knitr::kable(x, "html") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
 ```  
+
 <br>
 
 These schools had three years of high GLP% for EDS students over the years 2013-14 through 2016-17:  
 
 ```{r fn_dfAnalyze_DisagX20_345_report_3, echo=FALSE}
 x <- dfRes %>% dplyr::filter(nyears==3)
-x
+knitr::kable(x, "html") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
 ```  
 <br>
 
@@ -186,7 +196,8 @@ These schools had two years of high GLP% for EDS students over the years 2013-14
 
 ```{r fn_dfAnalyze_DisagX20_345_report_2, echo=FALSE}
 x <- dfRes %>% dplyr::filter(nyears==2)
-x
+knitr::kable(x, "html") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
 ```  
 
 ### Part II. The Nature of the Grade 3, 4, 5 Tests  

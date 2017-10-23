@@ -1554,17 +1554,17 @@ fn_knit_exit("fn_dfDisagX20_345_best_X")
 ```{r fn_dfDisagX20_345_best_X}
 fn_dfDisagX20_345_best_X <- function(argYear) {
 ## identify schools with BLCK or HISP GLP% > 75 over grades 3, 4 and 5
+## rolls up over all three grades
 ## selected for one year
   if (!(argYear %in% LETTERS[1:4])) {
     stop("argYears must be in A through D.")
   }  
-  theYear <- forYears[which(LETTERS==argYear)]
   #
   return(
     dfDisagX20_345_Yr %>%
     dplyr::filter(
       subgroup %in% c("BLCK","HISP") &
-      acYear==theYear
+      f_acYear==argYear
     ) %>% 
     dplyr::select(
       acYear,
@@ -1594,6 +1594,7 @@ fn_dfDisagX20_345_best_X <- function(argYear) {
 }
 #
 str(fn_dfDisagX20_345_best_X("D"))
+dfDisagX20_345_best_X_D <- fn_dfDisagX20_345_best_X("D")
 ```  
 
 ```{r echo=FALSE}

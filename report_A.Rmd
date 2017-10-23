@@ -181,7 +181,6 @@ knitr::kable(x, "html") %>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
 ```  
 
-<br>
 
 These schools had three years of high GLP% for EDS students over the years 2013-14 through 2016-17:  
 
@@ -190,14 +189,54 @@ x <- dfRes %>% dplyr::filter(nyears==3)
 knitr::kable(x, "html") %>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
 ```  
-<br>
+
 
 These schools had two years of high GLP% for EDS students over the years 2013-14 through 2016-17 (this list has less statistical significance than the preceding lists):  
 
 ```{r fn_dfAnalyze_DisagX20_345_report_2, echo=FALSE}
+## https://haozhu233.github.io/kableExtra/awesome_table_in_html.html
 x <- dfRes %>% dplyr::filter(nyears==2)
 knitr::kable(x, "html") %>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
+```  
+
+#### I.6 Schools with High GLP% for Black and Hispanic Students  
+
+Figure I.4, above, is a histogram showing one example of the GLP% distributions of Black, Hispanic, and White students, where grades 3, 4, and 5 have been summed. It shows right-hand tails for Black and Hispanic students, indicating that some schools are doing particularly well in GLP% scores, namely those over 75%. This characteristic is replicated for other years and subjects. This is summarized below, showing the counts of schools that are involved. This has to be explored in more detail since it includes instances of small numbers of students, which makes the GLP% "jumpy." It does indicate that there tend to be markedly fewer high reading GLP% than for mathematics, which may reflect the language deficits amongst early grade Black and Hispanic students.  
+
+```{r fn_dfDisagX20_345_best_X, echo=FALSE, warning=FALSE, message=FALSE}
+x1 <- fn_dfDisagX20_345_best_X("A") %>% 
+  reshape2::dcast(acYear+subgroup+subject~.) %>% 
+  plyr::rename(c("acYear"="Year","subgroup"="Group","subject"="Sbj","."="N"))
+x2 <- fn_dfDisagX20_345_best_X("B") %>% 
+  reshape2::dcast(acYear+subgroup+subject~.) %>% 
+  plyr::rename(c("acYear"="Year","subgroup"="Group","subject"="Sbj","."="N"))
+x3 <- fn_dfDisagX20_345_best_X("C") %>% 
+  reshape2::dcast(acYear+subgroup+subject~.) %>% 
+  plyr::rename(c("acYear"="Year","subgroup"="Group","subject"="Sbj","."="N"))
+x4 <- fn_dfDisagX20_345_best_X("D") %>% 
+  reshape2::dcast(acYear+subgroup+subject~.) %>% 
+  plyr::rename(c("acYear"="Year","subgroup"="Group","subject"="Sbj","."="N"))
+```  
+
+<style>table#A td { padding: 5px; } </style>
+  
+```{r two-tables, echo=FALSE, results='asis'}
+## https://stackoverflow.com/questions/17717323/align-two-data-frames-next-to-each-other-with-knitr?noredirect=1&lq=1
+t1 = knitr::kable(x1, "html") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
+t2 = knitr::kable(x2, "html") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
+t3 = knitr::kable(x3, "html") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
+t4 = knitr::kable(x4, "html") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
+cat(c('<table id="A"><tr valign="top"><td>', 
+  t1, '</td><td> </td><td>', 
+  t2, '</td><td> </td><td>', 
+  t3, '</td><td> </td><td>', 
+  t4, '</td></tr></table>'),
+    sep = '')
 ```  
 
 ### Part II. The Nature of the Grade 3, 4, 5 Tests  

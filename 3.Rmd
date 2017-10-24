@@ -465,6 +465,9 @@ fn_knit_exit("dfDisagBLCK_345_WHTE_GLP_D")
 fn_dfDisagBLCK_345_WHTE_GLP_D <- function() {
   # this is just an intermediate dataframe:
   # MA and RD will be the same for dfTmp1
+  # NOTE that num_WHTE is 0 for many rows
+  # added 10/23/17 remove rows with num_WHTE=0
+  #
   dfTmp1 <- 
   	dfDisagX20_345_Yr %>%
   	dplyr::filter(
@@ -533,10 +536,13 @@ fn_dfDisagBLCK_345_WHTE_GLP_D <- function() {
   		dfTmp2,
   		by="school_code"
   		) %>%
+      dplyr::filter(
+        num_WHTE > 0
+      ) %>%
   		dplyr::mutate(
   			pct_glp_WHTE=round(glp_WHTE*100/num_WHTE,digits=1),
   			pct_glp_BLCK=round(glp_BLCK*100/num_BLCK,digits=1)
-  	)
+  	) 
   #
   return(dfDisagBLCK_345_WHTE_GLP_D)
 }
@@ -869,8 +875,7 @@ fn_plotly_dfDisagBLCK_345_WHTE_GLP_D <- function() {
 	dplyr::mutate(
 		pl_symbol=ifelse(charter_school,2,1),
 		pl_color=ifelse(TitleISchool,2,1)
-	) %>%
-	na.omit()
+	)
   #
   n_schools <- length(unique(dfTmp_$school_code))
 	#
@@ -1081,7 +1086,6 @@ fn_pltDisagBLCK_345_WHTE_GLP_D <- function() {
   		charter_school,
   		subject
   	) %>% 
-  	na.omit() %>%
   	dplyr::filter(
   		subject=="RD"
   	) %>%
@@ -1295,8 +1299,7 @@ fn_plotly_scatterplot_75 <- function() {
   	dplyr::mutate(
   		pl_symbol=ifelse(charter_school,2,1),
   		pl_color=ifelse(TitleISchool,2,1)
-  	) %>%
-  	na.omit()
+  	)
   	#
   	# colors:
   	pl_plot_pal <- c("red","blue")

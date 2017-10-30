@@ -6,7 +6,10 @@ output:
   html_document: default
 ---
 
-<style type="text/css">  pre { font-size: small } </style>
+<style type="text/css">
+  pre { font-size: small } 
+  table.center { margin-left:auto; margin-right:auto; }
+</style>
 
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
@@ -55,7 +58,7 @@ My analysis is comprised of two parts. In the first, I confirm what is commonly 
 
 I begin with the use of aggregated data in order to take advantage of what is sometimes called the law of large numbers. This also is expressed as the central limit theorem, and convergence to the mean. For the present purposes, I look at the means and quantiles of GLP%. A standard way of presenting this is by using Tukey box plots. In these plots, the lower edge of the box is the 25th percentile, the upper edge the 75th percentile, and the horizontal line in the middle of the box is the 50th percentile (the median). The "whiskers" extend below and above the median by 1.6 times the distance between the 75th and 25th percentiles. Points above or  below the extent of the whiskers are referred to as outliers. This does not mean that these points are in some way dubious, just that they lie far from the median.  
 
-Since I am dealing with GLP percentages which can be very sensitive to shifts in small numbers of students if the class sizes are small, I made the decision to exclude all classes of size less than twenty students. That is, if the total number of students for a particular grade and subject for a school is less than twenty, that specific "class" is excluded. That is `r nrow(dfDisag_Yr %>% dplyr::filter(subgroup=="ALL" & subgroup=="ALL" &  subject %in% c("MA","RD") & grade %in% c("03","04","05") & num_tested<20) %>% dplyr::distinct(school_code))` of a total of `r nrow(dfDisag_Yr %>% dplyr::filter(subgroup=="ALL" & subgroup=="ALL" &  subject %in% c("MA","RD") & grade %in% c("03","04","05")) %>% dplyr::distinct(school_code))` schools over the four years. I will explore these smaller schools at a later date.  
+Since I am dealing with GLP percentages which can be very sensitive to shifts in small numbers of students if the class sizes are small, I made the decision to exclude all classes of size less than twenty students. That is, if the total number of students for a particular grade and subject for a school is less than twenty, that specific "class" is excluded. That is `r nrow(dfDisagX_Yr %>% dplyr::filter(subgroup=="ALL" & subgroup=="ALL" &  subject %in% c("MA","RD") & grade %in% c("03","04","05") & num_tested<20) %>% dplyr::distinct(school_code))` of a total of `r nrow(dfDisagX_Yr %>% dplyr::filter(subgroup=="ALL" & subgroup=="ALL" &  subject %in% c("MA","RD") & grade %in% c("03","04","05")) %>% dplyr::distinct(school_code))` schools over the four years. I will explore these smaller schools at a later date.  
  
 The following figures present a substantiation of the "two North Carolinas" assertion. 
 
@@ -204,22 +207,20 @@ knitr::kable(x, "html") %>%
 
 Figure I.4, above, is a histogram showing one example of the GLP% distributions of Black, Hispanic, and White students, where grades 3, 4, and 5 have been summed. It shows right-hand tails for Black and Hispanic students, indicating that some schools are doing particularly well in GLP% scores, namely those over 75%. This characteristic is replicated for other years and subjects. This is summarized below, showing the counts of schools that are involved. This has to be explored in more detail since it includes instances of small numbers of students, which makes the GLP% "jumpy." It does indicate that there tend to be markedly fewer high reading GLP% than for mathematics, which may reflect the language deficits amongst early grade Black and Hispanic students.  
 
-```{r fn_dfDisagX20_345_best_X, echo=FALSE, warning=FALSE, message=FALSE}
-x1 <- fn_dfDisagX20_345_best_X("A") %>% 
+```{r fn_dfDisagX_345_best_X, echo=FALSE, warning=FALSE, message=FALSE}
+x1 <- fn_dfDisagX_345_best_X("A") %>% 
   reshape2::dcast(acYear+subgroup+subject~.) %>% 
   plyr::rename(c("acYear"="Year","subgroup"="Group","subject"="Sbj","."="N"))
-x2 <- fn_dfDisagX20_345_best_X("B") %>% 
+x2 <- fn_dfDisagX_345_best_X("B") %>% 
   reshape2::dcast(acYear+subgroup+subject~.) %>% 
   plyr::rename(c("acYear"="Year","subgroup"="Group","subject"="Sbj","."="N"))
-x3 <- fn_dfDisagX20_345_best_X("C") %>% 
+x3 <- fn_dfDisagX_345_best_X("C") %>% 
   reshape2::dcast(acYear+subgroup+subject~.) %>% 
   plyr::rename(c("acYear"="Year","subgroup"="Group","subject"="Sbj","."="N"))
-x4 <- fn_dfDisagX20_345_best_X("D") %>% 
+x4 <- fn_dfDisagX_345_best_X("D") %>% 
   reshape2::dcast(acYear+subgroup+subject~.) %>% 
   plyr::rename(c("acYear"="Year","subgroup"="Group","subject"="Sbj","."="N"))
 ```  
-
-<style>table#A td { padding: 5px; } </style>
   
 ```{r two-tables, echo=FALSE, results='asis'}
 ## https://stackoverflow.com/questions/17717323/align-two-data-frames-next-to-each-other-with-knitr?noredirect=1&lq=1
@@ -231,10 +232,10 @@ t3 = knitr::kable(x3, "html") %>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
 t4 = knitr::kable(x4, "html") %>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
-cat(c('<table id="A"><tr valign="top"><td>', 
-  t1, '</td><td> </td><td>', 
-  t2, '</td><td> </td><td>', 
-  t3, '</td><td> </td><td>', 
+cat(c('<table class="center"><tr valign="top"><td>', 
+  t1, '</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>', 
+  t2, '</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>', 
+  t3, '</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>', 
   t4, '</td></tr></table>'),
     sep = '')
 ```  

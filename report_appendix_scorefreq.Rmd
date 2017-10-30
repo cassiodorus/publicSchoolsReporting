@@ -33,7 +33,7 @@ library(printr)
 [comment]: # (use fn_pltScoreFreqNCDPI)
 
 ```{r fetch, echo=FALSE, message=FALSE}
-load("2.RData")
+load("3.RData")
 ```  
 
 ```{r grab_grobs, echo=FALSE}

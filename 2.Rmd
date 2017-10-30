@@ -46,7 +46,7 @@ fn_knit_exit("fn_boxplots_track")
 ```
 
 ```{r fn_boxplots_track}
-
+inventory[nrow(inventory) + 1,] = list("fn_boxplots_track","plts","","dfDisagX20_Yr","2")
 fn_boxplots_track <- function( 
   argEDTier="ALL", 
   argLEAs="ALL", 
@@ -195,6 +195,7 @@ fn_knit_exit("fn_boxplots_comp")
 ```  
 
 ```{r fn_boxplots_comp}
+inventory[nrow(inventory) + 1,] = list("fn_boxplots_comp","plts","","dfDisagX20_Yr","2")
 fn_boxplots_comp <- function( 
   argEDTier="ALL", 
   argLEAs="ALL", 
@@ -333,6 +334,7 @@ fn_knit_exit("fn_boxplots_cohort")
 ```  
 
 ```{r fn_boxplots_cohort}
+inventory[nrow(inventory) + 1,] = list("fn_boxplots_cohort","plts","","dfDisagX20_Yr","2")
 fn_boxplots_cohort<- function( 
   argEDTier="ALL", 
   argLEAs="ALL", 
@@ -492,6 +494,7 @@ fn_knit_exit("fn_boxplots_sbs_cohort")
 ### NOT FINISHED:
 
 ```{r fn_boxplots_sbs_cohort}
+inventory[nrow(inventory) + 1,] = list("fn_boxplots_sbs_cohort","plts","side-by-side","dfDisagX20_Yr","2")
 fn_boxplots_sbs_cohort<- function( 
   argEDTier="ALL", 
   argLEAs="ALL", 
@@ -678,6 +681,7 @@ fn_knit_exit("dfDisagX20_345_comp")
 # keep all four years
 # use dfDisagX20_345_Yr
 #
+inventory[nrow(inventory) + 1,] = list("fn_dfDisagX20_345_comp","df","","dfDisagX20_Yr","2")
 fn_dfDisagX20_345_comp <- function() 
 {
   dfDisagX20_345_comp <-
@@ -830,6 +834,7 @@ fn_knit_exit("dfDisagX20_345_ABCD_track")
 # "track" means track grade 3->4 and 4->5 across years
 # each row contains grades 3, 4, and 5 for succesive years
 #
+inventory[nrow(inventory) + 1,] = list("fn_dfDisagX20_345_ABCD_track","df","four years","dfDisagX20_Yr","2")
 fn_dfDisagX20_345_ABCD_track <- function() {
   dfDisagX20_345_ABCD_track <-
   dplyr::inner_join(
@@ -1057,6 +1062,137 @@ str(fn_dfDisagX20_345_ABCD_track())
 dfDisagX20_345_ABCD_track <- fn_dfDisagX20_345_ABCD_track()
 ```  
 
+```{r echo=FALSE}
+fn_knit_exit("fn_boxplots_Xcharter")
+```  
+### compare charter and non-charter schools  
+
+```{r fn_boxplots}
+inventory[nrow(inventory) + 1,] = list("fn_boxplots_Xcharter","plts","compare charter/non-charter GLP%","dfDisagX20_Yr","2")
+fn_boxplots_Xcharter <- function(argYear,argEDTier="ALL") {
+  # compare charters and non-charters for subgroups and argYear and argTier
+  # compare one grade at a time
+  # use dfDisagX20_Yr
+  df_ <- 
+    dfDisagX20_Yr %>%
+    dplyr::filter(
+      f_acYear==argYear
+    ) %>%
+    dplyr::select(
+      LEA,
+      school_code,
+      charter_school,
+      TitleISchool,
+      subject,
+      grade,
+      subgroup,
+      num_tested,
+      num_glp
+    )  
+    df_$subgroup <- factor(
+      df_$subgroup, 
+      levels=c("NOT_EDS","EDS","ALL","BLCK","HISP","WHTE")
+    )
+  #
+  if ( argEDTier == "ALL") {
+    EDTierTxt <- "ALL"
+  }
+  if ( argEDTier %in% c("1","2","3") ) {
+    df_ %<>%
+      dplyr::inner_join(
+        dfLEA %>% 
+          dplyr::filter( 
+            EDTier==argEDTier 
+          ) %>%
+          dplyr::select( LEA ),
+        by="LEA"
+      )
+    EDTierTxt <- argEDTier
+  }
+  if ( argEDTier == "3-" ) {
+    df_ %<>%
+      dplyr::inner_join(
+        dfLEA %>% 
+          dplyr::filter( 
+            EDTier==3 & 
+            !(LEA %in% c("600","900")) 
+          ) %>%
+          dplyr::select( LEA ),
+        by="LEA"
+      )
+    EDTierTxt <- "3 less 600 & 320"
+  }
+  #
+  ret <- list()
+  iret_ <- 0
+  #
+  for (G_ in forGrades345) {
+    for (S_ in forSubjects ) {
+      df2_ <-
+        df_ %>%
+        dplyr::filter(
+          subject == S_ &
+          grade == G_ &
+          subgroup %in% c("NOT_EDS","EDS","ALL","BLCK","HISP","WHTE")
+      ) %>% 
+      dplyr::group_by(
+        school_code,
+        subgroup,
+        charter_school
+      ) %>%
+      dplyr::summarise(
+        tot_tested=sum(num_tested),
+        tot_glp=sum(num_glp)
+      ) %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(
+        pct_tot_glp=round(tot_glp*100/tot_tested),
+        charter=ifelse(charter_school,"Yes","No"),
+        Group=subgroup
+      ) %>%
+      dplyr::select(
+        charter,
+        school_code,
+        Group,
+        pct_tot_glp
+      )
+      #      
+      n_schoolsP <- nrow(dplyr::distinct(df2_ %>% dplyr::filter(charter=="No") %>% dplyr::select(school_code)))
+      n_schoolsC <- nrow(dplyr::distinct(df2_ %>% dplyr::filter(charter=="Yes") %>% dplyr::select(school_code)))
+      #
+      iret_ <- iret_+1
+      ret[[iret_]] <-
+      df2_ %>%
+      ggplot2::ggplot(
+        aes(
+          x=factor(Group),
+          y=pct_tot_glp,
+          dodge=charter,
+          fill=charter
+        )
+      ) +
+      geom_boxplot() +
+      labs( 
+        title=paste(names(acYearToLETTER[which(LETTERS==argYear)]),"Public and Charter School GLP% by Group for", lstSubjLong[[S_]],"Grade",G_),
+        subtitle=paste(
+          "EDTier",EDTierTxt,
+          "   ",n_schoolsP,"Public Schools","   ",n_schoolsC,"Charter Schools"
+        )
+      ) +
+      labs( x="Group", y="GLP%" ) +
+      ylim( 0, 100 ) +
+      theme(   
+        legend.text=element_text(size=8),
+        plot.title=element_text(size=8, hjust=0.5),
+        plot.subtitle=element_text(size=8, hjust=0.5)
+      ) 
+      #
+    }
+  }
+  return(ret)
+}
+```  
+
 ### scatterplot functions  
   
  use dfDisagX20_345_track and dfDisagX20_345_comp   
@@ -1072,6 +1208,7 @@ fn_knit_exit("fn_scatterplots_comp")
 ```  
 
 ```{r fn_scatterplots_comp}
+inventory[nrow(inventory) + 1,] = list("fn_scatterplots_comp","plts","","dfDisagX20_345_comp","2")
 fn_scatterplots_comp <- function(
   argEDTier="ALL",
   argLEAs="ALL",
@@ -1292,6 +1429,7 @@ fn_knit_exit("fn_scatterplots_track")
 ```  
 
 ```{r fn_scatterplots_track}
+inventory[nrow(inventory) + 1,] = list("fn_scatterplots_track","plts","","dfDisagX20_345_track","2")
 fn_scatterplots_track <- function(
   argEDTier="ALL",
   argLEAs="ALL",
@@ -1515,6 +1653,7 @@ fn_knit_exit("fn_scatterplots_plotly_comp")
 ```  
 
 ```{r fn_scatterplots_plotly_comp}  
+inventory[nrow(inventory) + 1,] = list("fn_scatterplots_plotly_comp","plts","","dfDisagX20_345_comp","2")
 fn_scatterplots_plotly_comp <- function(
   argEDTier="ALL",
   argLEAs="ALL",
@@ -1771,6 +1910,7 @@ fn_knit_exit("fn_scatterplots_plotly_track")
 use dfDisagX20_345_ABC_track and dfDisagX20_345_BCD_track
 
 ```{r fn_scatterplots_plotly_track}  
+inventory[nrow(inventory) + 1,] = list("fn_scatterplots_plotly_track","plts","","dfDisagX20_345_track","2")
 fn_scatterplots_plotly_track <- function(
   argEDTier="ALL",
   argLEAs="ALL", 
@@ -1989,6 +2129,7 @@ fn_knit_exit("dfScoreFreqNCDPI")
 ```  
 
 ```{r fn_dfScoreFreqNCDPI}
+inventory[nrow(inventory) + 1,] = list("fn_dfScoreFreqNCDPI","df","score freq","score freq data","2")
 fn_dfScoreFreqNCDPI <- function() {
   # read raw data
   dfScoreFreqNCDPI <- 
@@ -2020,6 +2161,7 @@ fn_knit_exit("dfScoreFreqNCDPIpct")
 ```  
 
 ```{r fn_dfScoreFreqNCDPIpct}
+inventory[nrow(inventory) + 1,] = list("fn_dfScoreFreqNCDPIpct","df","score freq","dfScoreFreqNCDPI","2")
 fn_dfScoreFreqNCDPIpct <- function()
 {
   dfScoreFreqNCDPIpct <- 
@@ -2057,6 +2199,7 @@ fn_knit_exit("fn_scoreFreqNCDPIBreaks")
 ```  
 
 ```{r fn_scoreFreqNCDPIBreaks}
+inventory[nrow(inventory) + 1,] = list("fn_scoreFreqNCDPIBreaks","df","score freq","dfScoreFreqNCDPI","2")
 # produce list of vectors of break Score for each Level
 fn_scoreFreqNCDPIBreaks <- function() {
   ret <- list()
@@ -2083,7 +2226,8 @@ fn_scoreFreqNCDPIBreaks <- function() {
 fn_knit_exit("fn_dfScoreFreqNCDPIBreaks")
 ```  
 
-```{r fn_dfScoreFreqNCDPIBreaks}
+```{r fn_dfScoreFreqNCDPIBreaks} 
+inventory[nrow(inventory) + 1,] = list("fn_dfScoreFreqNCDPIBreaks","df","score freq","fn_scoreFreqNCDPIBreaks","2")
 fn_dfScoreFreqNCDPIBreaks <- function() {
 # convert list of breaks to a dataframe
   df_ <- data.frame(t(sapply(fn_scoreFreqNCDPIBreaks(),c)))
@@ -2145,6 +2289,7 @@ fn_knit_exit("dfScoreFreqNCDPIquartiles")
 Score-Freq Quartiles  
 
 ```{r fn_dfScoreFreqQuartiles}
+inventory[nrow(inventory) + 1,] = list("fn_dfScoreFreqQuartiles","df","score freq","dfScoreFreqNCDPI","2")
 fn_dfScoreFreqNCDPIquartiles <- function(){
 # quartiles of the score-freq data
   dfScoreFreqNCDPIquartiles <-
@@ -2197,6 +2342,7 @@ fn_knit_exit("fn_pltScoreFreqNCDPI")
 
 modified 10/6/17
 ```{r fn_pltScoreFreqNCDPI}
+inventory[nrow(inventory) + 1,] = list("fn_pltScoreFreqNCDPI","plts","score freq","dfScoreFreqNCDPI etc","2")
 fn_pltScoreFreqNCDPI <- function(
   argCOW=FALSE,
   argSave=TRUE ) {
@@ -2286,6 +2432,7 @@ fn_knit_exit("fn_plt_hist_GLPf")
 ```  
 
 ```{r fn_plt_hist_GLPf}
+inventory[nrow(inventory) + 1,] = list("fn_plt_hist_GLPf","plts","GLP histograms","dfDisagX20_345_Yr","2")
 fn_plt_hist_GLPf <- function(
   argYear,
   argGrade,
@@ -2397,57 +2544,6 @@ print(ls())
 save.image(
   file="2.RData" 
  )
-```  
-
-### Inventory of functions:
-
-fn_boxplots_track <- function(  
-  argEDTier="ALL",  
-  argLEAs="ALL",  
-  argCharterOnly=FALSE,  
-  argSave=TRUE )  
-
-fn_boxplots_comp <- function(  
-  argEDTier="ALL",  
-  argLEAs="ALL",  
-  argCharterOnly=FALSE,  
-  argSave=TRUE )  
-
-fn_boxplots_cohort<- function(  
-  argEDTier="ALL",  
-  argLEAs="ALL",  
-  argCharterOnly=FALSE,  
-  argSave=TRUE )  
-
-fn_scatterplots_comp <- function(  
-  argEDTier="ALL",  
-  argLEAs="ALL",  
-  argCharterOnly=FALSE,  
-  argSave=TRUE )  
-
-fn_scatterplots_track <- function(  
-  argEDTier="ALL",  
-  argLEAs="ALL",  
-  argCharterOnly=FALSE,  
-  argSave=TRUE )  
-
-fn_scatterplots_plotly_comp <- function(  
-  argEDTier="ALL",  
-  argLEAs="ALL" )  
-
-fn_scatterplots_plotly_track <- function(  
-  argEDTier="ALL",  
-  argLEAs="ALL",  
-  argCharterOnly=FALSE )  
-
-fn_pltScoreFreqNCDPI <- function(  
-  argCOW=FALSE,  
-  argSave=TRUE )  
-
-fn_plt_hist_GLPffn_plt_hist_GLPf <- function(  
-  argYear,  
-  argGrade,  
-  argLEA="ALL",  
-  argSave=TRUE )  
+```    
 
 ## FINIS  

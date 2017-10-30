@@ -1,0 +1,61 @@
+---
+title: "Public Schools Project - Group GLP% Histograms"
+author: "D. Hopp"
+date: "October 2017"
+output:
+  html_document: 
+    css: "my_css.css"
+---
+
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width=100)
+```  
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+require(rprojroot)
+require(reshape2)
+require(magrittr)
+require(plyr)
+require(tidyverse)
+require(cowplot)
+require(grid)
+require(readr)
+require(taRifx)
+require(R.utils)
+require(ggthemes)
+require(emdist)
+require(rlist)
+require(MASS)
+require(testthat)
+library(printr)
+```  
+
+```{r fetch, echo=FALSE, message=FALSE}
+load("3.RData")
+```  
+
+## Histograms for Math and Reading GLP% for 2016-17
+
+```{r getplots, echo=FALSE}
+pltD3 <- fn_plt_hist_GLPf(argSave = FALSE,argYear = "D",argGrade = 3)
+
+pltD4 <- fn_plt_hist_GLPf(argSave = FALSE,argYear = "D",argGrade = 4)
+
+pltD5 <- fn_plt_hist_GLPf(argSave = FALSE,argYear = "D",argGrade = 5)
+```  
+
+### Mathematics  
+
+```{r math, echo=FALSE}
+pltD3[[1]]
+pltD4[[1]]
+pltD5[[1]]
+```  
+<br>
+### Reading  
+
+```{r reading, echo=FALSE}
+pltD3[[2]]
+pltD4[[2]]
+pltD5[[2]]
+```  

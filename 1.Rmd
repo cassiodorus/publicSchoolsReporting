@@ -44,6 +44,16 @@ require(MASS)
 ## Initialization Steps  
 
 ```{r init}
+# metadata data frame
+inventory <- data.frame(
+    "obj_name"=character(0),
+    "obj_class"=character(0),
+    "obj_purpose"=character(0),
+    "obj_uses"=character(0),
+    "obj_created_in"=character(0),
+    stringsAsFactors=FALSE
+  )
+# inventory[nrow(inventory) + 1,] = list("v1","v2","v3","v4","v5")
 #
 # paths
 # presumes scripts are in src/ directory,
@@ -934,15 +944,18 @@ str(dfDisag_YrA)
 #
 # remove alternative schools
 # remove low count instances
-#  10/4/17 change criterion to remove class sizes <= 20
-#
-dfDisagX20_YrA <- dfDisag_YrA %>%
+# 
+dfDisagX_YrA <- dfDisag_YrA %>%
 	dplyr::anti_join(
 		dfAlternativesYrC, 
 		by="school_code"
-	) %>%
+	)
+str(dfDisagX_YrA)
+#
+dfDisagX20_YrA <-
   dplyr::inner_join(
-    dfDisag_YrA %>%
+    dfDisagX_YrA,
+    dfDisagX_YrA %>%
       dplyr::filter(
         subgroup=="ALL" &
         num_tested >= 20
@@ -958,16 +971,7 @@ dfDisagX20_YrA <- dfDisag_YrA %>%
       "grade"
     )
   )
-#
 str(dfDisagX20_YrA)
-#
-# grades 3, 4, 5
-dfDisagX20_345_YrA <- dfDisagX20_YrA %>%
-		dplyr::filter( 
-			grade %in% c("03","04","05") & 
-			subject %in% forSubjects 
-		) 
-str(dfDisagX20_345_YrA)
 #
 ```  
 
@@ -999,13 +1003,20 @@ dfDisag_YrB <- fcnGetZippedLEAdata8( "disag1415.zip","Disag_2014-15/Disag_2014-1
 		)
 str(dfDisag_YrB)
 #
-dfDisagX20_YrB <- dfDisag_YrB %>%
+# remove alternative schools
+# remove low count instances
+# 
+dfDisagX_YrB <- dfDisag_YrB %>%
 	dplyr::anti_join(
 		dfAlternativesYrC, 
 		by="school_code"
-	) %>%
+	)
+str(dfDisagX_YrB)
+#
+dfDisagX20_YrB <-
   dplyr::inner_join(
-    dfDisag_YrB %>%
+    dfDisagX_YrB,
+    dfDisagX_YrB %>%
       dplyr::filter(
         subgroup=="ALL" &
         num_tested >= 20
@@ -1022,11 +1033,6 @@ dfDisagX20_YrB <- dfDisag_YrB %>%
     )
   )
 str(dfDisagX20_YrB)
-#
-dfDisagX20_345_YrB <- dfDisagX20_YrB %>%
-		dplyr::filter( grade %in% c("03","04","05") & 
-				subject %in% forSubjects ) 
-str(dfDisagX20_345_YrB)
 #
 ```  
 
@@ -1058,13 +1064,20 @@ dfDisag_YrC <- fcnGetZippedLEAdata8( "disag1516.zip","Disag_2015-16/Disag_2015-1
 		)
 str(dfDisag_YrC)
 #
-dfDisagX20_YrC <- dfDisag_YrC %>%
+# remove alternative schools
+# remove low count instances
+# 
+dfDisagX_YrC <- dfDisag_YrC %>%
 	dplyr::anti_join(
 		dfAlternativesYrC, 
 		by="school_code"
-	) %>%
+	)
+str(dfDisagX_YrC)
+#
+dfDisagX20_YrC <-
   dplyr::inner_join(
-    dfDisag_YrC %>%
+    dfDisagX_YrC,
+    dfDisagX_YrC %>%
       dplyr::filter(
         subgroup=="ALL" &
         num_tested >= 20
@@ -1082,12 +1095,6 @@ dfDisagX20_YrC <- dfDisag_YrC %>%
   )
 str(dfDisagX20_YrC)
 #
-dfDisagX20_345_YrC <- dfDisagX20_YrC %>%
-		dplyr::filter( 
-			grade %in% c("03","04","05") & 
-			subject %in% forSubjects 
-		) 
-str(dfDisagX20_345_YrC)
 #
 ```  
 
@@ -1122,13 +1129,17 @@ str(dfDisag_YrD)
 # remove alternative schools
 # remove low count instances
 # 
-dfDisagX20_YrD <- dfDisag_YrD %>%
+dfDisagX_YrD <- dfDisag_YrD %>%
 	dplyr::anti_join(
 		dfAlternativesYrC, 
 		by="school_code"
-	) %>%
+	)
+str(dfDisagX_YrD)
+#
+dfDisagX20_YrD <-
   dplyr::inner_join(
-    dfDisag_YrD %>%
+    dfDisagX_YrD,
+    dfDisagX_YrD %>%
       dplyr::filter(
         subgroup=="ALL" &
         num_tested >= 20
@@ -1146,73 +1157,79 @@ dfDisagX20_YrD <- dfDisag_YrD %>%
   )
 str(dfDisagX20_YrD)
 #
-# grades 3, 4, 5
-dfDisagX20_345_YrD <- dfDisagX20_YrD %>%
-		dplyr::filter( 
-			grade %in% c("03","04","05") & 
-			subject %in% forSubjects 
-		) 
-str(dfDisagX20_345_YrD)
-#
 # #######################################################################
 ```
 
 ## Combine and winnow data frames  
 ```{r more_combine}
-#
-# not needed any longer
+inventory[nrow(inventory) + 1,] = list("dfDisag_Yr","df","basic disag data","disag files","1")
 dfDisag_Yr <- rbind(
-				dfDisag_YrA,
-				dfDisag_YrB,
-				dfDisag_YrC,
-				dfDisag_YrD
-			)
+  dfDisag_YrA,
+  dfDisag_YrB,
+  dfDisag_YrC,
+  dfDisag_YrD
+)
 str(dfDisag_Yr)
 #
 save(dfDisag_YrA,file=paste0(RDataPath,"dfDisag_YrA.RData"))
 save(dfDisag_YrB,file=paste0(RDataPath,"dfDisag_YrB.RData"))
 save(dfDisag_YrC,file=paste0(RDataPath,"dfDisag_YrC.RData"))
 save(dfDisag_YrD,file=paste0(RDataPath,"dfDisag_YrD.RData"))
-save(dfDisag_Yr,file=paste0(RDataPath,"dfDisag_Yr.RData"))
 #
-# keep this
-dfDisagX20_345_Yr <- rbind(
-				dfDisagX20_345_YrA,
-				dfDisagX20_345_YrB,
-				dfDisagX20_345_YrC,
-				dfDisagX20_345_YrD
-			)
-str(dfDisagX20_345_Yr)
+rm(dfDisag_Yr) # no longer used
+rm(dfDisag_YrA,dfDisag_YrB,dfDisag_YrC,dfDisag_YrD)
 #
-save(dfDisagX20_345_YrA,file=paste0(RDataPath,"dfDisagX20_345_YrA.RData"))
-save(dfDisagX20_345_YrB,file=paste0(RDataPath,"dfDisagX20_345_YrB.RData"))
-save(dfDisagX20_345_YrC,file=paste0(RDataPath,"dfDisagX20_345_YrC.RData"))
-save(dfDisagX20_345_YrD,file=paste0(RDataPath,"dfDisagX20_345_YrD.RData"))
-save(dfDisagX20_345_Yr,file=paste0(RDataPath,"dfDisagX20_345_Yr.RData"))
+inventory[nrow(inventory) + 1,] = list("dfDisagX_Yr","df","disag data disciplinary schools removed","dfDisagX_YrA etc.","1")
+dfDisagX_Yr <- rbind(
+  dfDisagX_YrA,
+  dfDisagX_YrB,
+  dfDisagX_YrC,
+  dfDisagX_YrD
+)
+str(dfDisagX_Yr)
 #
-# keep this
+save(dfDisagX_YrA,file=paste0(RDataPath,"dfDisagX_YrA.RData"))
+save(dfDisagX_YrB,file=paste0(RDataPath,"dfDisagX_YrB.RData"))
+save(dfDisagX_YrC,file=paste0(RDataPath,"dfDisagX_YrC.RData"))
+save(dfDisagX_YrD,file=paste0(RDataPath,"dfDisagX_YrD.RData"))
+#
+rm(dfDisagX_YrA,dfDisagX_YrB,dfDisagX_YrC,dfDisagX_YrD)
+#
+inventory[nrow(inventory) + 1,] = list("dfDisagX20_Yr","df","disag data small schools removed","dfDisagX20_YrA etc.","1")
 dfDisagX20_Yr <- rbind(
-				dfDisagX20_YrA,
-#				dfDisagX20_345_YrB, <- error? changed 9/7/17
-				dfDisagX20_YrB,
-				dfDisagX20_YrC,
-				dfDisagX20_YrD
-			)
+  dfDisagX20_YrA,
+  dfDisagX20_YrB,
+  dfDisagX20_YrC,
+  dfDisagX20_YrD
+)
 str(dfDisagX20_Yr)
 #
 save(dfDisagX20_YrA,file=paste0(RDataPath,"dfDisagX20_YrA.RData"))
 save(dfDisagX20_YrB,file=paste0(RDataPath,"dfDisagX20_YrB.RData"))
 save(dfDisagX20_YrC,file=paste0(RDataPath,"dfDisagX20_YrC.RData"))
 save(dfDisagX20_YrD,file=paste0(RDataPath,"dfDisagX20_YrD.RData"))
-save(dfDisagX20_Yr,file=paste0(RDataPath,"dfDisagX20_Yr.RData"))
-#
-# removal to keep house clean
-# these can be loaded if necessary
-rm(dfDisag_YrA,dfDisag_YrB,dfDisag_YrC,dfDisag_YrD)
 #
 rm(dfDisagX20_YrA,dfDisagX20_YrB,dfDisagX20_YrC,dfDisagX20_YrD)
-rm(dfDisagX20_345_YrA,dfDisagX20_345_YrB,dfDisagX20_345_YrC,dfDisagX20_345_YrD)
-# ########################################################
+#
+# grades 3, 4, 5
+#
+inventory[nrow(inventory) + 1,] = list("dfDisagX_345_Yr","df","disag 345 MA RD","dfDisagX_Yr","1")
+dfDisagX_345_Yr <-
+  dfDisagX_Yr %>%
+		dplyr::filter( 
+			grade %in% c("03","04","05") & 
+			subject %in% forSubjects 
+		)
+str(dfDisagX_345_Yr)
+#
+inventory[nrow(inventory) + 1,] = list("dfDisagX20_345_Yr","df","disag 345 MA RD small schools removed","dfDisagX20_Yr","1")
+dfDisagX20_345_Yr <- 
+  dfDisagX20_Yr %>%
+		dplyr::filter( 
+			grade %in% c("03","04","05") & 
+			subject %in% forSubjects 
+		) 
+str(dfDisagX20_345_Yr)
 ```  
 
 ## Look at grades 3, 4, and 5  
@@ -1233,6 +1250,7 @@ aggregate(
 # make sure schools are in all academic years - or at least are there for 3 years
 # useful particularly when MORE THAN two years of data
 #
+inventory[nrow(inventory) + 1,] = list("dfSchoolX20_345_allyears","df","disag 345 MA RD in >2 years, small schools removed","dfDisagX20_345_Yr","1")
 dfSchoolX20_345_allyears <- 
   dfDisagX20_345_Yr %>% 
 	dplyr::select( school_code, acYear, f_acYear ) %>% 
@@ -1249,6 +1267,7 @@ str(dfSchoolX20_345_allyears)
 
 ## Add what may be useful columns to dfLEA
 ```{r fn_dfLEAnums}
+inventory[nrow(inventory) + 1,] = list("fn_dfLEAnums","fn","add  some possibly useful columns to dfLEA","dfLEA, dfDisagX20_345_Yr","1")
 fn_dfLEAnums <- function() {
 # silently uses dfDisagX20_345_Yr
 #
@@ -1306,6 +1325,7 @@ fn_dfLEAnums <- function() {
 }
 #
 # add columns to dfLEA for all years and grades
+inventory[nrow(inventory) + 1,] = list("dfLEA","fn","dfLEA with added columns","dfLEA","1")
 dfLEA <- fn_dfLEAnums()
 str(dfLEA)
 # ###################################

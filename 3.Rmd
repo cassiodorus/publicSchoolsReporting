@@ -24,6 +24,7 @@ require(ggthemes)
 require(emdist)
 require(rlist)
 require(MASS)
+require(weights)
 ```  
 
 ```{r load}
@@ -40,6 +41,7 @@ fn_knit_exit("fn_plt_glp_density_year")
 ```
 
 ```{r fn_plt_glp_density_year}
+inventory[nrow(inventory) + 1,] = list("fn_plt_glp_density_year","plts","GLP density","dfDisagX20_345_Yr","3")
 fn_plt_glp_density_year <- function() {
   df1_ <- dfDisagX20_345_Yr %>%
   dplyr::select(
@@ -106,53 +108,6 @@ Use dfDisagX20_Yr and dfDisagSubgroupsC (<- for 2016-17 only)
 ### What is the distribution of GLP% scores for black children?  
 
 Generate helper dataframes that hold schools with more Whites than Blacks:  
-```{r echo=FALSE}
-fn_knit_exit("fn_dfDisagALLmoreWHTE_D")
-fn_knit_exit("dfDisagALLmoreWHTE_D")
-```
-
-```{r fn_dfDisagALLmoreWHTE_D}
-fn_dfDisagALLmoreWHTE_D <- function() {
-  return(
-  	dfDisagX20_Yr %>%
-  	dplyr::filter(
-  		f_acYear=="D" & 
-  		subgroup %in% c("WHTE","BLCK") 
-  	) %>%
-  	dplyr::select(
-  		LEA,
-  		school_code,
-  		subgroup,
-  		num_tested
-  	) %>%
-  	dplyr::group_by(
-  		LEA,
-  		school_code,
-  		subgroup
-  	) %>%
-  	dplyr::summarize(
-  		num_total=sum(num_tested)
-  	) %>%
-  	dplyr::ungroup() %>%
-  	tidyr::spread(
-  		subgroup,
-  		num_total
-  	) %>%
-  	dplyr::filter(
-  		!is.na(BLCK) & 
-  		!is.na(WHTE) &
-  		WHTE > BLCK
-  	) %>%
-  	dplyr::select(
-  		LEA,
-  		school_code
-  	)
-  )
-}
-#
-str(fn_dfDisagALLmoreWHTE_D())
-dfDisagALLmoreWHTE_D <- fn_dfDisagALLmoreWHTE_D()
-```
 
 ```{r echo=FALSE}
 fn_knit_exit("fn_dfDisag345moreWHTE_D")
@@ -160,9 +115,13 @@ fn_knit_exit("dfDisag345moreWHTE_D")
 ```  
 
 ```{r fn_dfDisag345moreWHTE_D}
+inventory[nrow(inventory) + 1,] = list("fn_dfDisag345moreWHTE_D","df","more Whites than Blacks by subject","dfDisagX_345_Yr","3")
 fn_dfDisag345moreWHTE_D <- function() {
-  return(
-  	dfDisagX20_345_Yr %>%
+  # more Whites than Blacks by subject
+  # rollup over grades 3,4,5
+  # added 10/24/17 use dfDisagX_345_Yr
+  df_ <-
+  	dfDisagX_345_Yr %>%
   	dplyr::filter(
   		f_acYear=="D" & 
   		subgroup %in% c("WHTE","BLCK") 
@@ -171,12 +130,14 @@ fn_dfDisag345moreWHTE_D <- function() {
   		LEA,
   		school_code,
   		subgroup,
+      subject,
   		num_tested
   	) %>%
   	dplyr::group_by(
   		LEA,
   		school_code,
-  		subgroup
+  		subgroup,
+      subject
   	) %>%
   	dplyr::summarize(
   		num_total=sum(num_tested)
@@ -186,16 +147,16 @@ fn_dfDisag345moreWHTE_D <- function() {
   		subgroup,
   		num_total
   	) %>%
+    na.omit() %>% # omit because making comparisons
   	dplyr::filter(
-  		!is.na(BLCK) & 
-  		!is.na(WHTE) &
   		WHTE > BLCK
   	) %>%
   	dplyr::select(
   		LEA,
-  		school_code
+  		school_code,
+      subject
   	)
-  )
+  return(df_)
 }
 #
 str(fn_dfDisag345moreWHTE_D())
@@ -208,8 +169,10 @@ fn_knit_exit("dfDisag345BLCK_D")
 ```  
 
 ```{r fn_dfDisag345BLCK_D}
+inventory[nrow(inventory) + 1,] = list("fn_dfDisag345BLCK_D","df","trivial talley Blacks","dfDisagX20_345_Yr","3")
 fn_dfDisag345BLCK_D <- function() {
-  return(
+  # trivial talley of Blacks
+  df_ <-
   	dfDisagX20_345_Yr %>%
   	dplyr::filter(
   		f_acYear=="D" & 
@@ -225,7 +188,7 @@ fn_dfDisag345BLCK_D <- function() {
   		charter_school,
   		TitleISchool
   	) 
-  )
+  return(df_)
 }
   #
 str(fn_dfDisag345BLCK_D())
@@ -238,8 +201,10 @@ fn_knit_exit("dfDisag345WHTE_D")
 ```  
 
 ```{r fn_dfDisag345WHTE_D}
+inventory[nrow(inventory) + 1,] = list("fn_dfDisag345BLCK_D","df","trivial talley Whites","dfDisagX20_345_Yr","3")
 fn_dfDisag345WHTE_D <- function() {
-  return(
+  # trivial talley of Whites
+  df_ <-
   	dfDisagX20_345_Yr %>%
   	dplyr::filter(
   		f_acYear=="D" & 
@@ -255,7 +220,7 @@ fn_dfDisag345WHTE_D <- function() {
   		charter_school,
   		TitleISchool
   	) 
-  )
+  return(df_)
 }
 #
 str(fn_dfDisag345WHTE_D())
@@ -270,8 +235,9 @@ fn_knit_exit("fn_q345WHTE")
 
 ```{r functions_1}
 # 
-# Functions to generate quintiles:
+# Functions to generate quantiles:
 #
+inventory[nrow(inventory) + 1,] = list("fn_q345BLCK","fn","quantiles","dfDisag345BLCK_D","3")
 fn_q345BLCK <- function(x,y) {
 	quantile(
 		dfDisag345BLCK_D %>%
@@ -291,6 +257,7 @@ fn_q345BLCK <- function(x,y) {
 #
 # Do same for WHTE
 #
+inventory[nrow(inventory) + 1,] = list("fn_q345WHTE","fn","quantiles","dfDisag345WHTE_D","3")
 fn_q345WHTE <- function(x,y) {
 	quantile(
 		dfDisag345WHTE_D %>%
@@ -311,7 +278,7 @@ fn_q345WHTE <- function(x,y) {
 
 ### "Best schools" ad hoc definition  
 
-Suppose we select 75% WHTE GLP% for ALL three grades and BOTH subjects as the lower bound for "best" schools
+Suppose we select 75% WHTE GLP% by year for ALL three grades and BOTH subjects as the lower bound for "best" schools
 and also require a higher % of White than Black students.  
 Which schools are they?  
 ```{r echo=FALSE}
@@ -320,14 +287,25 @@ fn_knit_exit("dfDisagBest345WHTE_D")
 ```  
 
 ```{r fn_dfDisagBest345WHTE_D}
+inventory[nrow(inventory) + 1,] = list("fn_dfDisagBest345WHTE_D","df","dfDisagBest345WHTE_D","dfDisagX20_345_Yr","3")
 fn_dfDisagBest345WHTE_D <- function() {
-  return(
-  	dfDisagX20_345_Yr %>%
-  	dplyr::filter(
-  		f_acYear=="D" & 
-  		subgroup=="WHTE" &
-  		pct_glp >= 75
-  	) %>%
+  # select 75% WHTE GLP% by year for ALL three grades and BOTH subjects as the lower bound for "best" schools
+  # and also require a higher % of White than Black students.    
+  #
+  # since by grade use dfDisagX20_345_Yr
+  # only works for year D
+  theYear <- "D"
+  df_ <-
+    dplyr::inner_join(
+    	dfDisagX20_345_Yr %>%
+  	  dplyr::filter(
+  		  f_acYear==theYear & 
+  		  subgroup=="WHTE" &
+  		  pct_glp >= 75
+      ),
+      dfDisag345moreWHTE_D,
+  		by=c("LEA","school_code","subject")
+    ) %>%
   	dplyr::select(
   		LEA,
   		school_code,
@@ -342,6 +320,7 @@ fn_dfDisagBest345WHTE_D <- function() {
   		LEA,
   		school_code
   	) %>%
+    # for one year there are 6 grade:subject combinations
   	dplyr::filter(
   		n()==6
   	) %>%
@@ -350,12 +329,8 @@ fn_dfDisagBest345WHTE_D <- function() {
   		LEA,
   		school_code
   	) %>%
-  	dplyr::distinct() %>%
-  	dplyr::inner_join(
-  		dfDisag345moreWHTE_D,
-  		by=c("LEA","school_code")
-  	)
-  )
+  	dplyr::distinct() 
+  return(df_)
 }
 #
 str(fn_dfDisagBest345WHTE_D())
@@ -368,14 +343,19 @@ fn_knit_exit("dfDisagBLCK_best345_WHTE_GLP_D")
 ```  
 
 ```{r fn_dfDisagBLCK_best345_WHTE_GLP_D}
+inventory[nrow(inventory) + 1,] = list("fn_dfDisagBLCK_best345_WHTE_GLP_D","df","dfDisagBLCK_best345_WHTE_GLP_D","dfDisagX_345_Yr","3")
 fn_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
+  # rolled up for grades 3,4,5
+  # by subject
   # this is just an intermediate dataframe:
   # MA and RD will be the same for dfTmp1
+  #
+  theYear <- "D"
   dfTmp1 <- dfDisagBest345WHTE_D %>%
   	dplyr::inner_join(
-  		dfDisagX20_345_Yr %>%
+  		dfDisagX_345_Yr %>%
   		dplyr::filter(
-  			f_acYear=="D" &
+  			f_acYear==theYear &
   			subject=="MA" &
   			subgroup %in% c("ALL","BLCK","WHTE")
   		),
@@ -389,9 +369,6 @@ fn_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
   		charter_school,
   		TitleISchool
   	)  %>%
-    dplyr::mutate_all(
-      funs(ifelse(is.na(.), 0, .))
-    ) %>%
   	reshape2::dcast(
   		LEA+school_code+charter_school+TitleISchool~subgroup,
   		sum,
@@ -410,11 +387,13 @@ fn_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
   	)
   #
   # another intermediate dataframe:
+  # added 10/24/17 use dfDisagX_345_Yr
+  #
   dfTmp2 <- dfDisagBest345WHTE_D %>%
   	dplyr::inner_join(
-  		dfDisagX20_345_Yr %>%
+  		dfDisagX_345_Yr %>%
   		dplyr::filter(
-  			f_acYear=="D" &
+  			f_acYear==theYear &
   			subgroup %in% c("ALL","BLCK","WHTE")
   		),
   		by=c("LEA","school_code")
@@ -423,11 +402,8 @@ fn_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
   		school_code,
   		subject,
   		subgroup,
-  		num_glp,
+  		num_glp
   	) %>%
-    dplyr::mutate_all(
-      funs(ifelse(is.na(.), 0, .))
-    ) %>%
   	reshape2::dcast(
   		school_code+subject~subgroup,
   		sum,
@@ -455,23 +431,193 @@ fn_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
 str(fn_dfDisagBLCK_best345_WHTE_GLP_D())
 dfDisagBLCK_best345_WHTE_GLP_D <- fn_dfDisagBLCK_best345_WHTE_GLP_D()
   ```  
-  
+
+## added 10/25/17  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_dfDisagX_345_nEDS_D")
+fn_knit_exit("dfDisagX_345_nEDS_D")
+```  
+
+```{r fn_dfDisagX_345_nEDS_D}
+inventory[nrow(inventory) + 1,] = list("fn_dfDisagX_345_nEDS_D","df","dfDisagX_345_nEDS_D","dfDisagX_345_Yr","3")
+fn_dfDisagX_345_nEDS_D <- function() {
+  # composition balances or unbalances
+  # grades 3,4,5 rollup
+  # 2016-17
+  # EDS counts
+  # use dfDisagX_345_Yr
+  #
+  theYear <- "D"
+  df_ <- 
+  dfDisagX_345_Yr %>%
+  dplyr::filter(
+    f_acYear==theYear &
+    subgroup %in% c("EDS","NOT_EDS") &
+    subject=="MA"
+  ) %>%
+  dplyr::select(
+    LEA,
+    school_code,
+    grade,
+    subgroup,
+    num_tested,
+    TitleISchool,
+    charter_school
+  ) %>%
+  reshape2::dcast(
+    LEA+school_code+grade+TitleISchool+charter_school~subgroup,
+    value.var="num_tested"
+  )  %>%
+  dplyr::group_by(
+    LEA,
+    school_code,
+    TitleISchool,
+    charter_school
+  ) %>%
+  dplyr::summarize(
+    nEDS=sum(EDS),
+    nNOT_EDS=sum(NOT_EDS)
+  ) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate_all(
+      funs(ifelse(is.na(.), 0, .))
+    ) %>%
+  dplyr::filter(
+    nEDS+nNOT_EDS>0
+  ) %>%
+  dplyr::mutate(
+    pct_nEDS=round(nEDS*100/(nEDS+nNOT_EDS)),
+    pct_nNOT_EDS=round(nNOT_EDS*100/(nEDS+nNOT_EDS))
+  )
+  return(df_)
+}
+str(fn_dfDisagX_345_nEDS_D())
+dfDisagX_345_nEDS_D <- fn_dfDisagX_345_nEDS_D()
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_hist_dfDisagX_345_nEDS_D")
+```
+
+```{r fn_hist_dfDisagX_345_nEDS_D}
+inventory[nrow(inventory) + 1,] = list("fn_hist_dfDisagX_345_nEDS_D","plts","histograms EDS","dfDisagX_345_nEDS_D","3")
+fn_hist_dfDisagX_345_nEDS_D <- function() {
+  # simple histograms of EDS% for charter and non-charter schools
+  # 2016-17 rollup grades 3,4,5
+  #
+  ret <- list()
+  # public non-charter
+  df_ <- dfDisagX_345_nEDS_D %>%
+  dplyr::filter(
+    charter_school==FALSE
+  )
+  n_schools <- length(unique(df_$school_code))
+  #
+  ret[[1]] <-
+  df_ %>%
+  ggplot(
+    aes(x=pct_nEDS)
+  ) +
+  geom_histogram(
+    binwidth=1,
+    colour="black",
+    fill="white"
+  ) +
+  labs( 
+    x="EDS% Students",
+    y="Number of Instances",
+    title="EDS Percentage Enrollment 2016-17 Grades 3,4,5 Public Non-Charters",
+    subtitle=paste(n_schools,"Schools")
+  ) +
+  theme(   
+    legend.text=element_text(size=8),
+    plot.title=element_text(size=8, hjust=0.5),
+    plot.subtitle=element_text(size=8, hjust=0.5),
+    axis.title.x=element_text(size=8),
+    axis.title.y=element_text(size=8),
+    axis.text.x=element_text(size=8),
+    axis.text.y=element_text(size=8)
+  ) +
+  scale_y_continuous(
+    sec.axis=sec_axis(
+      ~.*10/n_schools, # I have no idea why multiplier should be 10 and not 100
+      name="% of Schools"
+    )
+  )
+  #
+  # charter
+  df_ <- dfDisagX_345_nEDS_D %>%
+  dplyr::filter(
+    charter_school==TRUE
+  )
+  n_schools <- length(unique(df_$school_code))
+  #
+  ret[[2]] <-
+  df_ %>%
+  ggplot(
+    aes(x=pct_nEDS)
+  ) +
+  geom_histogram(
+    binwidth=1,
+    colour="black",
+    fill="white"
+  ) +
+  labs( 
+    x="EDS% Students",
+    y="Number of Instances",
+    title="EDS Percentage Enrollment 2016-17 Grades 3,4,5 Public Charters",
+    subtitle=paste(n_schools,"Schools")
+  ) +
+  theme(
+    legend.text=element_text(size=8),
+    plot.title=element_text(size=8, hjust=0.5),
+    plot.subtitle=element_text(size=8, hjust=0.5),
+    axis.title.x=element_text(size=8),
+    axis.title.y=element_text(size=8),
+    axis.text.x=element_text(size=8),
+    axis.text.y=element_text(size=8)
+  )  +
+  scale_y_continuous(
+    sec.axis=sec_axis(
+      ~.*100/n_schools,
+      name="% of Schools"
+    )
+  )
+  #
+  return(ret)
+}
+```  
+
+## end 10/25/17  
+## added 10/27/17  
+
+
+## end 10/27/17
+
 ```{r echo=FALSE}
 fn_knit_exit("fn_dfDisagBLCK_345_WHTE_GLP_D")
 fn_knit_exit("dfDisagBLCK_345_WHTE_GLP_D")
 ```  
 
 ```{r fn_dfDisagBLCK_345_WHTE_GLP_D}
+inventory[nrow(inventory) + 1,] = list("fn_dfDisagBLCK_345_WHTE_GLP_D","df","dfDisagBLCK_345_WHTE_GLP_D","dfDisagX_345_Yr","3")
 fn_dfDisagBLCK_345_WHTE_GLP_D <- function() {
+  # talley schools with BOTH BLCK and WHTE students
+  # show their numbers (and %) and numbers glp (and %)
+  # rollup over grades 3,4,5
+  #
   # this is just an intermediate dataframe:
   # MA and RD will be the same for dfTmp1
   # NOTE that num_WHTE is 0 for many rows
   # added 10/23/17 remove rows with num_WHTE=0
+  # added 10/24/17 use dfDisagX_345_Yr
   #
+  theYear <- "D"
   dfTmp1 <- 
-  	dfDisagX20_345_Yr %>%
+  	dfDisagX_345_Yr %>%
   	dplyr::filter(
-  		f_acYear=="D" &
+  		f_acYear==theYear &
   		subject=="MA" &
   		subgroup %in% c("ALL","BLCK","WHTE")
   	) %>%
@@ -483,16 +629,14 @@ fn_dfDisagBLCK_345_WHTE_GLP_D <- function() {
   		charter_school,
   		TitleISchool
   	) %>%    
-    dplyr::mutate_all(
-      funs(ifelse(is.na(.), 0, .))
-    ) %>%
   	reshape2::dcast(
   		LEA+school_code+charter_school+TitleISchool~subgroup,
   		sum,
   		value.var="num_tested"
   	) %>%
   	dplyr::filter(
-  		BLCK>0
+  		BLCK>0 &
+      WHTE>0
   	) %>%
   	dplyr::mutate(
   		pct_num_BLCK=round(BLCK*100/ALL,digits=1),
@@ -505,9 +649,9 @@ fn_dfDisagBLCK_345_WHTE_GLP_D <- function() {
   #
   # another intermediate dataframe:
   dfTmp2 <- 
-  	dfDisagX20_345_Yr %>%
+  	dfDisagX_345_Yr %>%
   	dplyr::filter(
-  		f_acYear=="D" &
+  		f_acYear==theYear &
   		subgroup %in% c("ALL","BLCK","WHTE")
   	) %>%
   	dplyr::select(
@@ -516,14 +660,15 @@ fn_dfDisagBLCK_345_WHTE_GLP_D <- function() {
   		subgroup,
   		num_glp,
   	)  %>%
-    dplyr::mutate_all(
-      funs(ifelse(is.na(.), 0, .))
-    ) %>%
   	reshape2::dcast(
   		school_code+subject~subgroup,
   		sum,
   		value.var="num_glp"
   	) %>%
+    dplyr::filter(
+      BLCK>0 &
+      WHTE>0
+    ) %>%
   	dplyr::rename(
   		glp_ALL=ALL,
   		glp_WHTE=WHTE,
@@ -536,9 +681,6 @@ fn_dfDisagBLCK_345_WHTE_GLP_D <- function() {
   		dfTmp2,
   		by="school_code"
   		) %>%
-      dplyr::filter(
-        num_WHTE > 0
-      ) %>%
   		dplyr::mutate(
   			pct_glp_WHTE=round(glp_WHTE*100/num_WHTE,digits=1),
   			pct_glp_BLCK=round(glp_BLCK*100/num_BLCK,digits=1)
@@ -557,13 +699,18 @@ fn_knit_exit("dfDisagEDS_345_NOT_EDS_GLP_D")
 ```  
 
 ```{r fn_dfDisagEDS_345_NOT_EDS_GLP_D}
+inventory[nrow(inventory) + 1,] = list("fn_dfDisagEDS_345_NOT_EDS_GLP_D","df","dfDisagEDS_345_NOT_EDS_GLP_D","dfDisagX_345_Yr","3")
 fn_dfDisagEDS_345_NOT_EDS_GLP_D <- function() {
+  # rollup over grades 3,4,5
+  #
   # this is just an intermediate dataframe:
   # MA and RD will be the same for dfTmp1
+  # added 10/24/17 use dfDisagX_345_Yr
+  theYear <- "D"
   dfTmp1 <- 
-  	dfDisagX20_345_Yr %>%
+  	dfDisagX_345_Yr %>%
   	dplyr::filter(
-  		f_acYear=="D" &
+  		f_acYear==theYear &
   		subject=="MA" &
   		subgroup %in% c("ALL","EDS","NOT_EDS")
   	) %>%
@@ -575,9 +722,6 @@ fn_dfDisagEDS_345_NOT_EDS_GLP_D <- function() {
   		charter_school,
   		TitleISchool
   	) %>%
-    dplyr::mutate_all(
-      funs(ifelse(is.na(.), 0, .))
-    ) %>%
   	reshape2::dcast(
   		LEA+school_code+charter_school+TitleISchool~subgroup,
   		sum,
@@ -598,9 +742,9 @@ fn_dfDisagEDS_345_NOT_EDS_GLP_D <- function() {
   #
   # another intermediate dataframe:
   dfTmp2 <- 
-  	dfDisagX20_345_Yr %>%
+  	dfDisagX_345_Yr %>%
   	dplyr::filter(
-  		f_acYear=="D" &
+  		f_acYear==theYear &
   		subgroup %in% c("ALL","EDS","NOT_EDS")
   	) %>%
   	dplyr::select(
@@ -609,14 +753,15 @@ fn_dfDisagEDS_345_NOT_EDS_GLP_D <- function() {
   		subgroup,
   		num_glp,
   	)  %>%
-    dplyr::mutate_all(
-      funs(ifelse(is.na(.), 0, .))
-    ) %>%
   	reshape2::dcast(
   		school_code+subject~subgroup,
   		sum,
   		value.var="num_glp"
   	) %>%
+    dplyr::filter(
+      EDS>0 &
+      NOT_EDS>0
+    ) %>%
   	dplyr::rename(
   		glp_ALL=ALL,
   		glp_EDS=EDS,
@@ -646,6 +791,7 @@ fn_knit_exit("fn_plotly_dfDisagEDS_345_NOT_EDS_GLP_D")
 ```  
 
 ```{r fn_plotly_dfDisagEDS_345_NOT_EDS_GLP_D}
+inventory[nrow(inventory) + 1,] = list("fn_plotly_dfDisagEDS_345_NOT_EDS_GLP_D","plts","","dfDisagEDS_345_NOT_EDS_GLP_D","3")
 fn_plotly_dfDisagEDS_345_NOT_EDS_GLP_D <- function() {
   dfTmp_ <- 
 	dfDisagEDS_345_NOT_EDS_GLP_D %>%
@@ -716,292 +862,6 @@ fn_plotly_dfDisagEDS_345_NOT_EDS_GLP_D <- function() {
 }
 ```  
 
-
-### Now look at all grades  
-
-WHTE and BLCK proportion at school, all grades (not just 3,4,5).  
-Exclude if not BLCK and WHTE at school.  
-
-First, what is the distribution of GLP% across all grades for WHTE?  
-(selecting only 2015-16 gives almost the same result)  
-
-Using 75% as cutoff and having more Whites than Blacks,  
-Select the "best" schools in 2016-17.  
-```{r echo=FALSE}
-fn_knit_exit("fn_dfDisagBestWHTE_D")
-fn_knit_exit("dfDisagBestWHTE_D")
-```  
-
-```{r fn_dfDisagBestWHTE_D}
-fn_dfDisagBestWHTE_D <- function() {
-  return(
-  	dfDisagX20_Yr %>%
-  	dplyr::filter(
-  		f_acYear=="D" & 
-  		subgroup=="WHTE" &
-  		subject=="ALL" &
-  		grade=="ALL" &
-  		pct_glp >= 75
-  	) %>%
-  	dplyr::select(
-  		LEA,
-  		school_code,
-  		subject,
-  		grade,
-  		num_tested,
-  		pct_glp,
-  		charter_school,
-  		TitleISchool
-  	) %>%
-  	dplyr::inner_join(
-  		dfDisagALLmoreWHTE_D,
-  		by=c("LEA","school_code")
-  	)
-  )
-}
-#
-str(fn_dfDisagBestWHTE_D())
-dfDisagBestWHTE_D <- fn_dfDisagBestWHTE_D()
-```  
-
-Using that list of schools, compare BLCK and WHTE GLP%.  
-First, get populations and require higher pct White than Black.
-```{r echo=FALSE}
-fn_knit_exit("fn_dfDisagBLCK_best_WHTE_GLP_D")
-fn_knit_exit("dfDisagBLCK_best_WHTE_GLP_D")
-```  
-
-```{r fn_dfDisagBLCK_best_WHTE_GLP_D}
-fn_dfDisagBLCK_best_WHTE_GLP_D <- function() {
-  # this is just an intermediate dataframe:
-  dfDisagBLCK_best_WHTE_D <-
-  	dfDisagX20_Yr %>%
-  	dplyr::filter(
-  		f_acYear=="D" &
-  		grade=="ALL" &
-  		subject=="ALL" &
-  		subgroup %in% c("ALL","BLCK","WHTE")
-  	) %>%
-  	dplyr::select(
-  		school_code,
-  		subgroup,
-  		num_tested
-  	) %>%
-  	dplyr::inner_join(
-  		dfDisagBestWHTE_D %>% 
-  			dplyr::select(LEA,school_code),
-  		by="school_code"
-  	) %>%
-  	tidyr::spread(
-  		subgroup,
-  		num_tested
-  	) %>%
-  	dplyr::mutate(
-  		pct_num_BLCK=round(BLCK*100/ALL,digits=1),
-  		pct_num_WHTE=round(WHTE*100/ALL,digits=1)
-  	) %>%
-  	dplyr::select(
-  		-BLCK,
-  		-WHTE
-  	)
-  #
-  # now paste back together to get GLP% for 2016-17
-  #
-  dfDisagBLCK_best_WHTE_GLP_D <-
-  	dplyr::inner_join(
-  		dfDisagBLCK_best_WHTE_D %>%
-  			dplyr::select(
-  				school_code,
-  				ALL,
-  				pct_num_BLCK,
-  				pct_num_WHTE
-  			),
-  		dfDisagX20_Yr %>% 
-  			dplyr::filter(
-  				f_acYear=="D" &
-  				grade=="ALL" &
-  				subject=="ALL" &
-  				subgroup %in% c("BLCK","WHTE")
-  			),
-  		by="school_code"
-  	) %>%
-  	dplyr::select(
-  		LEA,
-  		school_code,
-  		ALL,
-  		pct_num_BLCK,
-  		pct_num_WHTE,
-  		subgroup,
-  		pct_glp
-  	) %>%
-  	tidyr::spread(
-  		subgroup,
-  		pct_glp
-  	) %>%
-  	dplyr::rename(
-  		num_tested=ALL,
-  		pct_glp_BLCK=BLCK,
-  		pct_glp_WHTE=WHTE
-  	)
-  #
-  return(dfDisagBLCK_best_WHTE_GLP_D)
-}
-#
-str(fn_dfDisagBLCK_best_WHTE_GLP_D())
-dfDisagBLCK_best_WHTE_GLP_D <- fn_dfDisagBLCK_best_WHTE_GLP_D()
-```  
-
-```{r echo=FALSE}
-fn_knit_exit("fn_plotly_dfDisagBLCK_345_WHTE_GLP_D")
-```  
-
-```{r fn_plotly_dfDisagBLCK_345_WHTE_GLP_D}
-fn_plotly_dfDisagBLCK_345_WHTE_GLP_D <- function() {
-  dfTmp_ <- 
-	dfDisagBLCK_345_WHTE_GLP_D %>%
-	dplyr::select(
-		school_code,
-    num_BLCK,
-    num_WHTE,
-		pct_glp_BLCK,
-		pct_glp_WHTE,
-		TitleISchool,
-		charter_school,
-		subject
-	) %>% 
-	dplyr::filter(
-		subject=="RD"
-	) %>%
-	dplyr::mutate(
-		pl_symbol=ifelse(charter_school,2,1),
-		pl_color=ifelse(TitleISchool,2,1)
-	)
-  #
-  n_schools <- length(unique(dfTmp_$school_code))
-	#
-	# colors:
-	pl_plot_pal <- c("red","blue")
-	#
-  plt_ <- 
-  dfTmp_ %>%
-	plot_ly(
-		type="scatter",
-		mode="markers",
-		hoverinfo="text",
-		x=~pct_glp_WHTE,
-		y=~pct_glp_BLCK,
-		symbol=~pl_symbol,
-		color=~pl_color,
-		colors=pl_plot_pal,
-		text=~paste0(school_code,"\n# BLCK=",num_BLCK,"\n# WHTE=",num_WHTE)
-	) %>%
-	hide_colorbar() %>%
-	plotly::layout(
-		title="2016-17 Grades 3-5 RD Cumulative GLP% for Black and White Students",
-		xaxis=list(range=c(0,100),title="GLP% for White Students"),
-		yaxis=list(range=c(0,100),title="GLP% for Black Students"),
-		shapes=list(
-			type="line",
-			x0=0,
-			x1=100,
-			y0=0,
-			y1=100,
-			line=list(width=1),
-			dash="dot"
-		)
-	) %>%
-	plotly::add_annotations(
-		x=20,
-		y=95,
-		text=paste0(
-      n_schools," Schools\n",
-      "Blue: Title I Schools\n",
-      "Triangles: Charters"
-    ),
-		showarrow=FALSE
-	)
-  #
-  return(plt_)
-}
-```  
-
-```{r echo=FALSE}
-fn_knit_exit("fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D")
-```  
-
-```{r fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D}
-fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
-  dfTmp_ <- 
-	dfDisagBLCK_best345_WHTE_GLP_D %>%
-	dplyr::select(
-		school_code,
-    num_BLCK,
-    num_WHTE,
-		pct_glp_BLCK,
-		pct_glp_WHTE,
-		TitleISchool,
-		charter_school,
-		subject
-	) %>% 
-	dplyr::filter(
-		subject=="RD"
-	) %>%
-	dplyr::mutate(
-		pl_symbol=ifelse(charter_school,2,1),
-		pl_color=ifelse(TitleISchool,2,1)
-	) %>%
-	na.omit()
-	#
-  n_schools <- length(unique(dfTmp_$school_code))
-	# colors:
-	pl_plot_pal <- c("red","blue")
-	#
-  plt_ <- dfTmp_ %>%
-	plot_ly(
-		type="scatter",
-		mode="markers",
-		hoverinfo="text",
-		x=~pct_glp_WHTE,
-		y=~pct_glp_BLCK,
-		symbol=~pl_symbol,
-		color=~pl_color,
-		colors=pl_plot_pal,
-		text=~paste0(school_code,"\n# BLCK=",num_BLCK,"\n# WHTE=",num_WHTE)
-	) %>%
-	hide_colorbar() %>%
-	plotly::layout(
-		title=paste0(
-			"2016-17 Grades 3-5 RD Cumulative GLP% for Black and White Students\n",
-			" - GLP% for White Students 75% and Higher -"
-		),
-		xaxis=list(range=c(0,100),title="GLP% for White Students"),
-		yaxis=list(range=c(0,100),title="GLP% for Black Students"),
-		shapes=list(
-			type="line",
-			x0=0,
-			x1=100,
-			y0=0,
-			y1=100,
-			line=list(width=1),
-			dash="dot"
-		)
-	) %>%
-	plotly::add_annotations(
-		x=20,
-		y=90,
-		text=paste0(
-      n_schools," Schools\n",
-      "Blue: Title I Schools\n",
-      "Triangles: Charters"
-    ),
-		showarrow=FALSE
-	)
-  #
-  return(plt_)
-}
-```  
-
-
 #### Functions to get mean and confidence interval.  
 
 ```{r echo=FALSE}
@@ -1009,6 +869,7 @@ fn_knit_exit("fn.boot.mean")
 ```  
 
 ```{r fn.boot.mean}
+inventory[nrow(inventory) + 1,] = list("fn.boot.mean","fn","confidence interval for the mean","","3")
 fn.boot.mean = function(x,B,binwidth=NULL) {
 # Bret Larget
 # http://www.stat.wisc.edu/~larget/stat302/chap3.pdf
@@ -1040,6 +901,7 @@ fn.boot.mean = function(x,B,binwidth=NULL) {
 	)
 }
 #
+inventory[nrow(inventory) + 1,] = list("fn_q345bestWHTE","fn","quantiles","dfDisagBestWHTE_D","3")
 fn_q345bestWHTE <- function(x,y) {
 	quantile(
 		dfDisagBestWHTE_D %>%
@@ -1057,6 +919,7 @@ fn_q345bestWHTE <- function(x,y) {
 		)
 }
 #
+inventory[nrow(inventory) + 1,] = list("fn_q345BLCK_best_WHTE","fn","quantiles","dfDisagBLCK_best_WHTE_D","3")
 fn_q345BLCK_best_WHTE <- function(x,y) {
 	quantile(
 		dfDisagBLCK_best_WHTE_D %>%
@@ -1076,6 +939,7 @@ fn_q345BLCK_best_WHTE <- function(x,y) {
 ```  
 
 ```{r fn_pltDisagBLCK_345_WHTE_GLP_D}
+inventory[nrow(inventory) + 1,] = list("fn_pltDisagBLCK_345_WHTE_GLP_D","plts","scatterplot","dfDisagBLCK_345_WHTE_GLP_D","3")
 fn_pltDisagBLCK_345_WHTE_GLP_D <- function() {
   plt_ <- dfDisagBLCK_345_WHTE_GLP_D %>%
   	dplyr::select(
@@ -1146,6 +1010,7 @@ fn_pltDisagBLCK_345_WHTE_GLP_D <- function() {
 ```  
 
 ```{r fn_pltDisagBLCK_best345_WHTE_GLP_D
+inventory[nrow(inventory) + 1,] = list("fn_pltDisagBLCK_best345_WHTE_GLP_D","plts","scatterplot","dfDisagBLCK_best345_WHTE_GLP_D","3")
 fn_pltDisagBLCK_best345_WHTE_GLP_D <- function() {
   plt_ <- dfDisagBLCK_best345_WHTE_GLP_D %>%
   	dplyr::select(
@@ -1217,6 +1082,7 @@ fn_pltDisagBLCK_best345_WHTE_GLP_D <- function() {
 ```  
 
 ```{r fn_plotly_scatterplot_all}
+inventory[nrow(inventory) + 1,] = list("fn_plotly_scatterplot_all","plts","scatterplot","dfDisagBLCK_best345_WHTE_GLP_D","3")
 fn_plotly_scatterplot_all <- function() {
   pl_dfTmp <- 
   	dfDisagBLCK_best345_WHTE_GLP_D %>%
@@ -1424,32 +1290,32 @@ Means
 
 ```{r means}
 # mean for Whites
-mean(dfDisagBLCK_best_WHTE_GLP_D$pct_glp_WHTE)
+#mean(dfDisagBLCK_best_WHTE_GLP_D$pct_glp_WHTE)
 #
 # mean for Blacks
-mean(dfDisagBLCK_best_WHTE_GLP_D$pct_glp_BLCK)
+#mean(dfDisagBLCK_best_WHTE_GLP_D$pct_glp_BLCK)
 #
 # over ALL schools for 2016-17
-boot.mean.BLCK_D <- 
-	fn.boot.mean(
-		dfDisagX20_Yr %>% 
-		dplyr::filter(
-			subject=="ALL" &
-			grade=="ALL" &
-			f_acYear=="D" & 
-			subgroup=="BLCK") %>%
-			dplyr::select(pct_glp) %>%
-			unlist(),
-		1000
-	)
+#boot.mean.BLCK_D <- 
+#	fn.boot.mean(
+#		dfDisagX20_Yr %>% 
+#		dplyr::filter(
+#			subject=="ALL" &
+#			grade=="ALL" &
+#			f_acYear=="D" & 
+#			subgroup=="BLCK") %>%
+#			dplyr::select(pct_glp) %>%
+#			unlist(),
+#		1000
+#	)
 # 
 # for grades 3,4,5
 # for dfDisag345BLCK_D$pct_glp
-boot.mean.345BLCK_D <- 
-	fn.boot.mean(
-		dfDisag345BLCK_D$pct_glp,
-		1000
-	)	
+#boot.mean.345BLCK_D <- 
+#	fn.boot.mean(
+#		dfDisag345BLCK_D$pct_glp,
+#		1000
+#	)	
 #
 ```  
 
@@ -1460,6 +1326,7 @@ fn_knit_exit("fn_dfDisagX20_345_EDS_best")
 ```  
 
 ```{r fn_dfDisagX20_345_EDS_best}
+inventory[nrow(inventory) + 1,] = list("fn_dfDisagX20_345_EDS_best","df","","dfDisagX20_345_Yr","3")
 fn_dfDisagX20_345_EDS_best <- function(){
   df_ <- 
   dplyr::inner_join(
@@ -1547,57 +1414,235 @@ fn_dfDisagX20_345_EDS_best <- function(){
 }
 #
 str(fn_dfDisagX20_345_EDS_best())
+dfDisagX20_345_EDS_best <- fn_dfDisagX20_345_EDS_best()
 ```  
 
-Added 10/19/17
+Used in comparison of EDS GLP% for charter/non-charter schools
+
 ```{r echo=FALSE}
-fn_knit_exit("fn_dfDisagX20_345_best_X")
+fn_knit_exit("fn_dfCompare_Xc")
+fn_knit_exit("dfCompare_Xc")
 ```  
 
-```{r fn_dfDisagX20_345_best_X}
-fn_dfDisagX20_345_best_X <- function(argYear) {
-## identify schools with BLCK or HISP GLP% > 75 over grades 3, 4 and 5
-## rolls up over all three grades
-## selected for one year
-  if (!(argYear %in% LETTERS[1:4])) {
-    stop("argYears must be in A through D.")
-  }  
-  #
+```{r fn_dfCompare_Xc}
+inventory[nrow(inventory) + 1,] = list("fn_dfCompare_Xc","df","","dfDisagX20_345_Yr","3")
+fn_dfCompare_Xc <- function(){
+  # used in comparing means for charter/not-charter EDS GLP%
   return(
-    dfDisagX20_345_Yr %>%
-    dplyr::filter(
-      subgroup %in% c("BLCK","HISP") &
-      f_acYear==argYear
-    ) %>% 
-    dplyr::select(
-      acYear,
-      LEA,
-      school_code,
-      subgroup,
-      subject,
-      num_tested,
-      num_glp
-    ) %>% 
-    dplyr::group_by(
-      acYear,
-      school_code,
-      subgroup,
-      subject
-    ) %>% 
-    dplyr::summarise(
-      tot_num_tested=sum(num_tested),
-      tot_num_glp=sum(num_glp),
-      tot_pct_glp=round(tot_num_glp*100/tot_num_tested,digits=1)
-    ) %>%
-    dplyr::filter(
-      tot_pct_glp > 75
-    ) %>%
-    dplyr::ungroup()
+    data.frame(
+      "acYear"=character(),
+      "subject"=character(),
+      "grade"=character(),
+      "mean.P"=numeric(),
+      "mean.C"=numeric(),
+      "p.value"=numeric(),
+      stringsAsFactors=FALSE
+    )
   )
 }
-#
-str(fn_dfDisagX20_345_best_X("D"))
-dfDisagX20_345_best_X_D <- fn_dfDisagX20_345_best_X("D")
+str(fn_dfCompare_Xc)
+dfCompare_Xc <- fn_dfCompare_Xc()
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_compare_Xc")
+```  
+
+```{r fn_compare_Xc}
+inventory[nrow(inventory) + 1,] = list("fn_dfCompare_Xc","df","","dfDisagX20_345_Yr and dfCompare_Xc","3")
+fn_compare_Xc <- function(df,argYear) {
+  #
+  theYear <- names(acYearToLETTER[which(LETTERS==argYear)])
+  #
+  df1 <- 
+    dfDisagX20_345_Yr %>%
+    dplyr::filter(
+      f_acYear==argYear &
+      subgroup=="EDS"
+    ) %>%
+    dplyr::select(
+      charter_school,
+      subject,
+      grade,
+      num_tested,
+      pct_glp
+    )
+  #
+  for (S_ in c("MA","RD")) {
+    for (G_ in c("03","04","05")) {
+      w <-
+        weights::wtd.t.test(
+        x=unlist(df1 %>% dplyr::filter(subject==S_ & grade==G_ & !charter_school) %>% dplyr::select(pct_glp)),
+        y=unlist(df1 %>% dplyr::filter(subject==S_ & grade==G_ & charter_school) %>% dplyr::select(pct_glp)),
+        weight=unlist(df1 %>% dplyr::filter(subject==S_ & grade==G_ & !charter_school) %>% dplyr::select(num_tested)),
+        weighty=unlist(df1 %>% dplyr::filter(subject==S_ & grade==G_ & charter_school) %>% dplyr::select(num_tested))
+      )
+      #
+      dfCompare_Xc[nrow(dfCompare_Xc)+1,] <-
+        list(
+          theYear,
+          S_,
+          G_,
+          w$additional["Mean.x"],
+          w$additional["Mean.y"],
+          w$coefficients["p.value"]
+        )
+    }
+  }
+  return(dfCompare_Xc)
+}
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_plotly_dfDisagBLCK_345_WHTE_GLP_D")
+```  
+
+```{r fn_plotly_dfDisagBLCK_345_WHTE_GLP_D}
+inventory[nrow(inventory) + 1,] = list("fn_plotly_dfDisagBLCK_345_WHTE_GLP_D","plotly","needs review","dfDisagBLCK_345_WHTE_GLP_D","3")
+fn_plotly_dfDisagBLCK_345_WHTE_GLP_D <- function() {
+  dfTmp_ <- 
+	dfDisagBLCK_345_WHTE_GLP_D %>%
+	dplyr::select(
+		school_code,
+    num_BLCK,
+    num_WHTE,
+		pct_glp_BLCK,
+		pct_glp_WHTE,
+		TitleISchool,
+		charter_school,
+		subject
+	) %>% 
+	dplyr::filter(
+		subject=="RD"
+	) %>%
+	dplyr::mutate(
+		pl_symbol=ifelse(charter_school,2,1),
+		pl_color=ifelse(TitleISchool,2,1)
+	)
+  #
+  n_schools <- length(unique(dfTmp_$school_code))
+	#
+	# colors:
+	pl_plot_pal <- c("red","blue")
+	#
+  plt_ <- 
+  dfTmp_ %>%
+	plot_ly(
+		type="scatter",
+		mode="markers",
+		hoverinfo="text",
+		x=~pct_glp_WHTE,
+		y=~pct_glp_BLCK,
+		symbol=~pl_symbol,
+		color=~pl_color,
+		colors=pl_plot_pal,
+		text=~paste0(school_code,"\n# BLCK=",num_BLCK,"\n# WHTE=",num_WHTE)
+	) %>%
+	hide_colorbar() %>%
+	plotly::layout(
+		title="2016-17 Grades 3-5 RD Cumulative GLP% for Black and White Students",
+		xaxis=list(range=c(0,100),title="GLP% for White Students"),
+		yaxis=list(range=c(0,100),title="GLP% for Black Students"),
+		shapes=list(
+			type="line",
+			x0=0,
+			x1=100,
+			y0=0,
+			y1=100,
+			line=list(width=1),
+			dash="dot"
+		)
+	) %>%
+	plotly::add_annotations(
+		x=20,
+		y=95,
+		text=paste0(
+      n_schools," Schools\n",
+      "Blue: Title I Schools\n",
+      "Triangles: Charters"
+    ),
+		showarrow=FALSE
+	)
+  #
+  return(plt_)
+}
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D")
+```  
+
+```{r fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D}
+inventory[nrow(inventory) + 1,] = list("fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D","plotly","needs review","dfDisagBLCK_best345_WHTE_GLP_D","3")
+fn_plotly_dfDisagBLCK_best345_WHTE_GLP_D <- function() {
+  dfTmp_ <- 
+	dfDisagBLCK_best345_WHTE_GLP_D %>%
+	dplyr::select(
+		school_code,
+    num_BLCK,
+    num_WHTE,
+		pct_glp_BLCK,
+		pct_glp_WHTE,
+		TitleISchool,
+		charter_school,
+		subject
+	) %>% 
+	dplyr::filter(
+		subject=="RD"
+	) %>%
+	dplyr::mutate(
+		pl_symbol=ifelse(charter_school,2,1),
+		pl_color=ifelse(TitleISchool,2,1)
+	) %>%
+	na.omit()
+	#
+  n_schools <- length(unique(dfTmp_$school_code))
+	# colors:
+	pl_plot_pal <- c("red","blue")
+	#
+  plt_ <- dfTmp_ %>%
+	plot_ly(
+		type="scatter",
+		mode="markers",
+		hoverinfo="text",
+		x=~pct_glp_WHTE,
+		y=~pct_glp_BLCK,
+		symbol=~pl_symbol,
+		color=~pl_color,
+		colors=pl_plot_pal,
+		text=~paste0(school_code,"\n# BLCK=",num_BLCK,"\n# WHTE=",num_WHTE)
+	) %>%
+	hide_colorbar() %>%
+	plotly::layout(
+		title=paste0(
+			"2016-17 Grades 3-5 RD Cumulative GLP% for Black and White Students\n",
+			" - GLP% for White Students 75% and Higher -"
+		),
+		xaxis=list(range=c(0,100),title="GLP% for White Students"),
+		yaxis=list(range=c(0,100),title="GLP% for Black Students"),
+		shapes=list(
+			type="line",
+			x0=0,
+			x1=100,
+			y0=0,
+			y1=100,
+			line=list(width=1),
+			dash="dot"
+		)
+	) %>%
+	plotly::add_annotations(
+		x=20,
+		y=90,
+		text=paste0(
+      n_schools," Schools\n",
+      "Blue: Title I Schools\n",
+      "Triangles: Charters"
+    ),
+		showarrow=FALSE
+	)
+  #
+  return(plt_)
+}
 ```  
 
 ```{r echo=FALSE}
@@ -1605,6 +1650,7 @@ fn_knit_exit("fn_dfAnalyze_DisagX20_EDS_345")
 ```  
 
 ```{r fn_dfAnalyze_DisagX20_EDS_345}
+inventory[nrow(inventory) + 1,] = list("fn_dfAnalyze_DisagX20_EDS_345","df","needs review","fn_dfDisagX20_345_EDS_best","3")
 fn_dfAnalyze_DisagX20_EDS_345 <- function(perYear){
   # at least perYear instances by year
   #
@@ -1636,19 +1682,17 @@ fn_dfAnalyze_DisagX20_EDS_345 <- function(perYear){
 str(fn_dfAnalyze_DisagX20_EDS_345(2))
 ```  
 
+
 ```{r echo=FALSE}
 fn_knit_exit("fn_dfAnalyze.2_DisagX20_EDS_345")
 ```  
 
 ```{r fn_dfAnalyze.2_DisagX20_EDS_345}
-#
-# ################################
-#
+inventory[nrow(inventory) + 1,] = list("fn_dfAnalyze.2_DisagX20_EDS_345","df","needs review","fn_dfAnalyze_DisagX20_EDS_345","3")
+fn_dfAnalyze.2_DisagX20_EDS_345 <- function(perYear){
 # simple capture
 # shows schools with => perYear grade-subject tuples in a year
 # then identifies those that appear in more than one year
-#
-fn_dfAnalyze.2_DisagX20_EDS_345 <- function(perYear){
   df_ <- 
   fn_dfAnalyze_DisagX20_EDS_345(perYear) %>% 
   dplyr::arrange(
@@ -1679,127 +1723,11 @@ str(fn_dfAnalyze.2_DisagX20_EDS_345(2))
 ```  
 
 ```{r echo=FALSE}
-fn_knit_exit("fn_dfDisagX20_345_NOT_EDS_best")
-```  
-
-```{r fn_dfDisagX20_345_NOT_EDS_best}
-#
-# ################################################
-# 
-# consider NOT_EDS
-#
-fn_dfDisagX20_345_NOT_EDS_best <- function(){
-  df_ <- 
-    dfDisagX20_345_Yr %>% 
-    dplyr::filter(
-      subgroup=="NOT_EDS" & 
-      pct_glp>75
-    ) %>% 
-    dplyr::select(
-      acYear,
-      LEA,
-      school_code,
-      subject,
-      grade,
-      num_tested,
-      num_glp,
-      pct_glp,
-      charter_school,
-      TitleISchool
-    )
-  #
-  return(df_)
-}
-#
-str(fn_dfDisagX20_345_NOT_EDS_best())
-#
-```  
-
-```{r echo=FALSE}
-fn_knit_exit("fn_dfAnalyze_DisagX20_NOT_EDS_345")
-```  
-
-```{r fn_dfAnalyze_DisagX20_NOT_EDS_345}
-fn_dfAnalyze_DisagX20_NOT_EDS_345 <- function(perYear){
-  # at least perYear instances by year
-  #
-  df_ <- 
-  fn_dfDisagX20_345_NOT_EDS_best() %>% 
-  dplyr::select(
-    acYear,
-    LEA,
-    school_code,
-    subject,
-    grade
-  ) %>% 
-  dplyr::group_by(
-    acYear,
-    LEA,
-    school_code
-  ) %>% 
-  dplyr::summarise(
-    n=n()
-  ) %>% 
-  dplyr::filter(
-    n >= perYear
-  ) %>%
-  dplyr::ungroup()
-  #
-  return(df_)
-}
-#
-str(fn_dfAnalyze_DisagX20_NOT_EDS_345(2))
-#
-```  
-
-```{r echo=FALSE}
-fn_knit_exit("fn_dfAnalyze.2_DisagX20_NOT_EDS_345")
-```  
-
-```{r fn_dfAnalyze.2_DisagX20_NOT_EDS_345}
-# simple capture
-# shows schools with => perYear grade-subject tuples in a year
-# then identifies those that appear in more than one year
-#
-fn_dfAnalyze.2_DisagX20_NOT_EDS_345 <- function(perYear){
-  df_ <- 
-  fn_dfAnalyze_DisagX20_NOT_EDS_345(perYear) %>% 
-  dplyr::arrange(
-    acYear,
-    desc(n),
-    LEA,
-    school_code
-  ) %>% 
-  dplyr::group_by(
-    LEA,
-    school_code
-  ) %>% 
-  dplyr::select(
-    -n
-  ) %>% 
-  dplyr::summarise(
-    nyears=n()
-  ) %>%
-  dplyr::filter(
-    nyears > 1
-  ) %>%
-  dplyr::ungroup()
-  #
-  return(df_)
-}
-#
-str(fn_dfAnalyze.2_DisagX20_NOT_EDS_345(2))
-#
-```  
-
-```{r echo=FALSE}
 fn_knit_exit("fn_dfAnalyze_DisagX20_345_report")
 ```  
 
 ```{r fn_dfAnalyze_DisagX20_345_report}
-# #########################################
-#
-# 
+inventory[nrow(inventory) + 1,] = list("fn_dfAnalyze_DisagX20_345_report","df","needs review","fn_dfAnalyze.2_DisagX20_EDS_345","3")
 fn_dfAnalyze_DisagX20_345_report <- function(perYear) {
   # use fn_dfAnalyze.2_DisagX20_EDS_345 
   # returns schools with >= perYear instances >= 75%
@@ -1864,7 +1792,59 @@ fn_dfAnalyze_DisagX20_345_report <- function(perYear) {
 str(fn_dfAnalyze_DisagX20_345_report(3))
 ```  
 
-desiderata
+```{r echo=FALSE}
+fn_knit_exit("fn_dfDisagX_345_best_X")
+```  
+
+```{r fn_dfDisagX_345_best_X}
+inventory[nrow(inventory) + 1,] = list("fn_dfDisagX_345_best_X","df","needs review","dfDisagX_345_Yr","3")
+fn_dfDisagX_345_best_X <- function(argYear) {
+## identify schools with BLCK or HISP GLP% > 75 over grades 3, 4 and 5
+## rolls up over all three grades
+## selected for one year
+  if (!(argYear %in% LETTERS[1:4])) {
+    stop("argYears must be in A through D.")
+  }  
+  #
+  df_ <-
+    dfDisagX_345_Yr %>%
+    dplyr::filter(
+      subgroup %in% c("BLCK","HISP") &
+      f_acYear==argYear
+    ) %>% 
+    dplyr::select(
+      acYear,
+      LEA,
+      school_code,
+      subgroup,
+      subject,
+      num_tested,
+      num_glp
+    ) %>% 
+    dplyr::group_by(
+      acYear,
+      school_code,
+      subgroup,
+      subject
+    ) %>% 
+    dplyr::summarise(
+      tot_num_tested=sum(num_tested),
+      tot_num_glp=sum(num_glp),
+      tot_pct_glp=round(tot_num_glp*100/tot_num_tested,digits=1)
+    ) %>%
+    dplyr::filter(
+      tot_pct_glp > 75
+    ) %>%
+    dplyr::ungroup()
+  return(df_)
+}
+#
+str(fn_dfDisagX_345_best_X("D"))
+dfDisagX_345_best_X_D <- fn_dfDisagX_345_best_X("D")
+```  
+
+desiderata  
+
 ```{r desiderata}
 quantile(
 	dfDisagX20_Yr %>%
@@ -1888,72 +1868,3 @@ quantile(
 save.image("3.RData")
 ```  
 
-## Inventory  
-
-
-fn_boxplots_track <- function(  
-  argEDTier="ALL",  
-  argLEAs="ALL",  
-  argCharterOnly=FALSE,  
-  argSave=TRUE )  
-
-fn_boxplots_comp <- function(  
-  argEDTier="ALL",  
-  argLEAs="ALL",  
-  argCharterOnly=FALSE,  
-  argSave=TRUE )  
-
-fn_boxplots_cohort<- function(  
-  argEDTier="ALL",  
-  argLEAs="ALL",  
-  argCharterOnly=FALSE,  
-  argSave=TRUE )  
-
-fn_scatterplots_comp <- function(  
-  argEDTier="ALL",  
-  argLEAs="ALL",  
-  argCharterOnly=FALSE,  
-  argSave=TRUE )  
-
-fn_scatterplots_track <- function(  
-  argEDTier="ALL",  
-  argLEAs="ALL",  
-  argCharterOnly=FALSE,  
-  argSave=TRUE )  
-
-fn_scatterplots_plotly_comp <- function(  
-  argEDTier="ALL",  
-  argLEAs="ALL" )  
-
-fn_scatterplots_plotly_track <- function(  
-  argEDTier="ALL",  
-  argLEAs="ALL",  
-  argCharterOnly=FALSE )  
-
-fn_pltScoreFreqNCDPI <- function(  
-  argCOW=FALSE,  
-  argSave=TRUE )  
-
-fn_plt_hist_GLPffn_plt_hist_GLPf <- function(  
-  argYear,  
-  argGrade,  
-  argLEA="ALL",  
-  argSave=TRUE )  
-  
-fn_q345BLCK  
-
-fn_q345WHTE  
-
-fn_q345bestWHTE  
-
-fn_q345BLCK_best_WHTE  
-
-fn_pltDisagBLCK_345_WHTE_GLP_D  
-
-fn_pltDisagBLCK_best345_WHTE_GLP_D  
-
-fn_plotly_scatterplot_all  
-
-fn_plotly_scatterplot_75  
-
-## FINIS  

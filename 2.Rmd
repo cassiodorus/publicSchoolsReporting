@@ -98,12 +98,12 @@ fn_boxplots_track <- function(
         dfLEA %>% 
           dplyr::filter( 
             EDTier==3 & 
-            !(LEA %in% c("600","900")) 
+            !(LEA %in% c("600","920")) 
           ) %>%
           dplyr::select( LEA ),
         by="LEA"
       )
-    EDTierTxt <- "3 less 600 & 320"
+    EDTierTxt <- "3 less 600 & 920"
   }
   # check argCharterOnly
   if ( is.logical(argCharterOnly) == FALSE ) {
@@ -133,7 +133,7 @@ fn_boxplots_track <- function(
     } else {
       df2_ <- df_
     }
-    for ( Y_ in c("2013-14","2014-15","2015-16") ) {
+    for ( Y_ in unique(df2_$acYear) ) {
       for (S_ in c("MA","RD") ) {
         df3_ <- df2_ %>%
           dplyr::filter(
@@ -183,6 +183,120 @@ fn_boxplots_track <- function(
   }
   return( ret )
 }  
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_EDT3_tails_YrGS")
+```  
+
+```{r fn_EDT3_tails_YrGS}
+inventory[nrow(inventory) + 1,] = list("fn_EDT3_tails_YrGS","dcast","","dfDisagX_345_Yr","2")
+fn_EDT3_tails_YrGS <- function(argYear,argGrade,argSubject){
+  # added 11/2/17
+  # look at high-EDS and low-NOT_EDS performing EDTier 3 schools
+  # for 2016-17 grade 5 Reading
+  # produce list of # of schools
+  #
+  # a bit complicated because cannot use dfLEA$n_D_05 to count schools
+  # because that includes charter and traditional together
+  #
+  if (length(argYear)>1 | !(argYear %in% unique(dfDisagX_345_Yr$f_acYear))) {
+    stop("argYear must letter corresponding to a year.")
+  }
+  if (length(argGrade)>1 ){
+    stop("argGrade must one grade only.")
+  }
+  if (is.numeric(argGrade)) {
+    argGrade <- paste0("0",argGrade)
+  }
+  if (!(argGrade %in% forGrades345)) {
+    stop(paste("argGrade must be in",forGrades345))
+  }
+  if (length(argSubject)>1 | !(argSubject %in% forSubjects)) {
+    stop(paste("argSubject must be in", forSubjects))
+  }
+  #
+  df_ <-
+  dfDisagX_345_Yr %>% 
+  dplyr::filter(
+    f_acYear==argYear &
+    subject==argSubject &
+    grade==argGrade &
+    ((subgroup=="NOT_EDS" &
+    pct_glp<=30) |
+    (subgroup=="EDS" &
+    pct_glp>=80))
+  ) %>%
+  dplyr::inner_join(
+    dfLEA %>%
+      dplyr::filter(
+        EDTier==3
+      ) %>%
+      dplyr::select(
+        LEA,
+        EDTier
+      ),
+    by="LEA"
+  ) %>%
+  dplyr::select(
+    subgroup,
+    charter_school,
+    LEA,
+    school_code
+  ) %>%
+  reshape2::dcast(
+    subgroup+charter_school+LEA~.
+  ) %>%
+  plyr::rename(
+    c("."="N")
+  )
+  #
+  # now figure out how many traditional and charters
+  #
+  df2_ <-
+  dfDisagX_345_Yr %>% 
+  dplyr::filter(
+    LEA %in% unique(df_$LEA) &
+    f_acYear==argYear &
+    subject==argSubject &
+    grade==argGrade
+  ) %>%
+  dplyr::select(
+    LEA,
+    school_code,
+    charter_school
+  ) %>%
+  distinct() %>%
+  dplyr::group_by(
+    LEA,charter_school
+  ) %>%
+  dplyr::summarize(
+    Schools=n()
+  ) %>%
+  dplyr::ungroup()
+  #
+  df3_ <-
+  dplyr::inner_join(
+    df_,
+    df2_,
+    by=c("LEA","charter_school")
+  ) %>%
+  dplyr::mutate(
+    Pct=round(N*100/Schools,digits=1),
+    Charter=ifelse(charter_school,"Yes","No")   
+  ) %>%
+  dplyr::select(
+    subgroup,
+    Charter,
+    LEA,
+    N,
+    Schools,
+    Pct
+  )
+  #
+  return(df3_)
+}
+
 ```  
 
 all schools  
@@ -243,12 +357,12 @@ fn_boxplots_comp <- function(
         dfLEA %>% 
           dplyr::filter( 
             EDTier==3 & 
-            !(LEA %in% c("600","900")) 
+            !(LEA %in% c("600","920")) 
           ) %>%
           dplyr::select( LEA ),
         by="LEA"
       )
-    EDTierTxt <- "3 less 600 & 320"
+    EDTierTxt <- "3 less 600 & 920"
   }
   #
   if ( argCharterOnly ) {
@@ -384,12 +498,12 @@ fn_boxplots_cohort<- function(
         dfLEA %>% 
           dplyr::filter( 
             EDTier==3 & 
-            !(LEA %in% c("600","900")) 
+            !(LEA %in% c("600","920")) 
           ) %>%
           dplyr::select( LEA ),
         by="LEA"
       )
-    EDTierTxt <- "3 less 600 & 320"
+    EDTierTxt <- "3 less 600 & 920"
   }
   # check argCharterOnly
   if ( is.logical(argCharterOnly) == FALSE ) {
@@ -550,12 +664,12 @@ fn_boxplots_sbs_cohort<- function(
         dfLEA %>% 
           dplyr::filter( 
             EDTier==3 & 
-            !(LEA %in% c("600","900")) 
+            !(LEA %in% c("600","920")) 
           ) %>%
           dplyr::select( LEA ),
         by="LEA"
       )
-    EDTierTxt <- "3 less 600 & 320"
+    EDTierTxt <- "3 less 600 & 920"
   }
   # check argCharterOnly
   if ( is.logical(argCharterOnly) == FALSE ) {
@@ -1115,12 +1229,12 @@ fn_boxplots_Xcharter <- function(argYear,argEDTier="ALL") {
         dfLEA %>% 
           dplyr::filter( 
             EDTier==3 & 
-            !(LEA %in% c("600","900")) 
+            !(LEA %in% c("600","920")) 
           ) %>%
           dplyr::select( LEA ),
         by="LEA"
       )
-    EDTierTxt <- "3 less 600 & 320"
+    EDTierTxt <- "3 less 600 & 920"
   }
   #
   ret <- list()
@@ -2537,7 +2651,6 @@ fn_plt_hist_GLPf <- function(
 }
 ```  
 
-### SAVE THESE IN plot_helpers.RData:  
 
 ```{r save_image}
 print(ls())

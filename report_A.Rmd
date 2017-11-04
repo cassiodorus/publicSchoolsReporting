@@ -45,10 +45,11 @@ knit_print.data.frame = function(x, ...) {
 ### Introduction  
 Policy-makers, educators, researchers, advocacy groups, and, via newspapers, the public, make use of K-12 student achievement data. The Grade Level Proficiency (GLP) categorization is among the most frequently mentioned quantitative criteria. In this report I make observations, based on GLP data, about quantitative aspects of education equity between Black and White K-12 students in North Carolina public, and public charter, schools. The sources of data are the publicly available "disaggregated" files provided by the North Carolina Department of  Public Instruction (NCDPI) on the achievement of students during the academic years from 2013-14 to 2016-17, and ancillary publicly available NCDPI data. While the publicly available NCDPI data is extensive, it is not longitudinal, that is, it does not support following students from year to year. However, students in grades 3, 4, and 5 take standardized examinations that are reported in the NCDPI data. The comparability of this data provides a kind of quasi-cohort that allows for a coherent analysis of students in these grades. 
 
-
 The publicly available NCDPI data is FERPA-compliant, consequently test scores and numbers of students are reported by grade, not class, for each school. Since FERPA requires the masking of some detailed data, I will look at the reporting of Grade Level Proficiency (GLP), which is determined by students scoring into the upper three levels of these five-level standardized tests. This avoids almost all the masked data, although it prevents detailed analysis of the individual levels.  
 
 The NCDPI disaggregated data files are organized in univariate categories including ethnicity and gender. Importantly for this analysis, there is also a self-reported category of economically disadvanteged (EDS as Yes or No). These being univariate, there is no way to identify students as, for example, Black and EDS, Hispanic and not EDS, male and Hispanic, etc. Ancillary data associates Title I status (Yes or No) with each school. There is a strong association between Title I status and a school's overall EDS percentage. Roughly, if a school is 40% EDS, then it will classify as a Title I school. I will make use of this relationship by considering Title I as a binary indicator of the magnitude of the continuous EDS measure.   
+
+I deliberately avoid the use of the term "gap analysis," since this subject already has a rich research literature and complex research methodologies. My interest lies in using the NCDPI publicly available data to determine, or at least to infer, its direct implications. In the same spirit I will direct attention to the strengths and weaknesses of this data, and suggest what additions to it would be of value.  
 
 My analysis is comprised of two parts. In the first, I confirm what is commonly understood by educators and analysts who have looked closely at North Carolina student achievement scores. Namely, North Carolina is effectively two states partitioned by wealth and race. The contribution of this report is in the analysis and visualization of various aspects of this partitioning, and also in inspection of the grade 3, 4, and 5 standardized tests. In the second part, I  consider the utility of the grade 3, 4, 5 test suite, as made available in the NCDPI data files. I observe that the publicly available data yields reliable equity estimates in the aggregate, but is unreliable in detail.  
 
@@ -56,9 +57,9 @@ My analysis is comprised of two parts. In the first, I confirm what is commonly 
 
 #### I.1. Wealth and Ethnicity  
 
-I begin with the use of aggregated data in order to take advantage of what is sometimes called the law of large numbers. This also is expressed as the central limit theorem, and convergence to the mean. For the present purposes, I look at the means and quantiles of GLP%. A standard way of presenting this is by using Tukey box plots. In these plots, the lower edge of the box is the 25th percentile, the upper edge the 75th percentile, and the horizontal line in the middle of the box is the 50th percentile (the median). The "whiskers" extend below and above the median by 1.6 times the distance between the 75th and 25th percentiles. Points above or  below the extent of the whiskers are referred to as outliers. This does not mean that these points are in some way dubious, just that they lie far from the median.  
+I begin with the use of aggregated data in order to take advantage of what is sometimes called the law of large numbers, also expressed as the central limit theorem, and convergence to the mean. For the present purposes, I look at the means and quantiles of GLP%. A standard way of presenting this is by using Tukey box plots. In these plots, the lower edge of the box is the 25th percentile, the upper edge the 75th percentile, and the horizontal line in the middle of the box is the 50th percentile (the median). The "whiskers" extend below and above the median by 1.6 times the distance between the 75th and 25th percentiles. Points above or  below the extent of the whiskers are referred to as outliers. This does not mean that these points are in some way dubious, just that they lie far from the median.  
 
-Since I am dealing with GLP percentages which can be very sensitive to shifts in small numbers of students if the class sizes are small, I made the decision to exclude all classes of size less than twenty students. That is, if the total number of students for a particular grade and subject for a school is less than twenty, that specific "class" is excluded. That is `r nrow(dfDisagX_Yr %>% dplyr::filter(subgroup=="ALL" & subgroup=="ALL" &  subject %in% c("MA","RD") & grade %in% c("03","04","05") & num_tested<20) %>% dplyr::distinct(school_code))` of a total of `r nrow(dfDisagX_Yr %>% dplyr::filter(subgroup=="ALL" & subgroup=="ALL" &  subject %in% c("MA","RD") & grade %in% c("03","04","05")) %>% dplyr::distinct(school_code))` schools over the four years. I will explore these smaller schools at a later date.  
+Since I am dealing with GLP percentages which can be sensitive to shifts in small numbers of students if the class sizes are small, I made the decision to exclude all classes of size less than twenty students. That is, if the total number of students for a particular grade and subject for a school is less than twenty, that specific "class" is excluded. That is `r nrow(dfDisagX_Yr %>% dplyr::filter(subgroup=="ALL" & subgroup=="ALL" &  subject %in% c("MA","RD") & grade %in% c("03","04","05") & num_tested<20) %>% dplyr::distinct(school_code))` of a total of `r nrow(dfDisagX_Yr %>% dplyr::filter(subgroup=="ALL" & subgroup=="ALL" &  subject %in% c("MA","RD") & grade %in% c("03","04","05")) %>% dplyr::distinct(school_code))` schools over the four years. I will explore these smaller schools at a later date.  
  
 The following figures present a substantiation of the "two North Carolinas" assertion. 
 
@@ -118,22 +119,63 @@ Improvements in GLP% for Not-EDS could be expressed as 'sweeping' the left-hand 
 
 #### I.3. Is There "Sharing" Based on Wealth Indicators?  
 
-It is most direct to quote the NC Department of Commerce website here: "The N.C. Department of Commerce annually ranks the state's 100 counties based on economic well-being and assigns each a Tier designation. The 40 most distressed counties are designated as Tier 1, the next 40 as Tier 2 and the 20 least distressed as Tier 3." Figure I.5 replicates Figure I.1 except that it presents data only for the Tier 3 counties. It appears that the EDS and ethnicity differences are very much the same as those found when looking at data for entire state (Figure I.1).  
+It is most direct to quote the NC Department of Commerce website here: "The N.C. Department of Commerce annually ranks the state's 100 counties based on economic well-being and assigns each a Tier designation. The 40 most distressed counties are designated as Tier 1, the next 40 as Tier 2 and the 20 least distressed as Tier 3." Figure I.5 replicates Figure I.1 except that it presents data only for the Tier 3 counties. It appears that the EDS and ethnicity differences are much the same as those found when looking at data for entire state (Figure I.1).  
 
 <div style="text-align:center">
 ```{r box_4, echo=FALSE}
 plts1 <- fn_boxplots_track(argSave = FALSE, argEDTier=3)
-plts1[[6]]
+plts1[[8]]
 ```  
 
-**Figure I.5. Economic Tier 3 GLP% by Group for Reading in 2015-16**</div>  
+**Figure I.5. Economic Tier 3 GLP% by Group for Reading in 2016-17**</div>  
 <br>
+
+Figure I.5 contains Wake and CMS, with about 200 schools in total, as well as the other two largest North Carolina counties, Guilford and Forsyth. Notice that in Figure I.5, grade 5 appears to have several instances where there are schools for which EDS students perform well (above about a GLP% of 80%), and schools where the non-EDS students perform poorly (below about GLP% of 30%). Recall that each dot on the box plot is a school that lies outside of the whisker, which has a length of one-and-a-half times the interquartile distance from the median.  
+
+There are two sets of tables below. The left-hand two are for 2016-17 Grade 5 Reading, while the right-hand two are for 2016-17 Grade 5 Mathematics. In each set, the left-hand table applies to the schools with high-performing EDS (economically disadvantaged) students. The rows are arranged by LEA, and count the number of schools, N. The Schools column is the total number of schools for that LEA, and the Pct column is the percentage of those schools in column N. Charter and traditional schools are counted separately. It can be seen that there are a scattering of LEAs with one or at most two such schools.  
+
+The right-hand table in each set is more striking. It applies to the low-performing non-EDS (wealthier) students. It appears that LEA 340, Forsyth, and 600, CMS, have the most such schools, although they comprise a larger percentage of the Forsyth than of the CMS schools. I will pursue this further in subsequent analysis.  
+
+```{r fn_EDT3_tails_YrGS, echo=FALSE, warning=FALSE, message=FALSE}
+x <- fn_EDT3_tails_YrGS("D",5,"RD")
+xEDS <- x %>% dplyr::filter(subgroup=="EDS") %>% dplyr::select(-subgroup)
+xNOT_EDS <- x %>% dplyr::filter(subgroup=="NOT_EDS") %>% dplyr::select(-subgroup)
+
+y <- fn_EDT3_tails_YrGS("D",5,"MA")
+yEDS <- y %>% dplyr::filter(subgroup=="EDS") %>% dplyr::select(-subgroup)
+yNOT_EDS <- y %>% dplyr::filter(subgroup=="NOT_EDS") %>% dplyr::select(-subgroup)
+```  
+
+```{r Tier3, echo=FALSE, results='asis'}
+t1 = knitr::kable(xEDS, "html") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
+t2 = knitr::kable(xNOT_EDS, "html") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
+t3 = knitr::kable(yEDS, "html") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
+t4 = knitr::kable(yNOT_EDS, "html") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)    
+cat(c(
+  '<table class="center">',
+  '<tr><th colspan="3">Reading 2016-17 Grade 5</th><th> </th><th colspan="3">Math 2016-17 Grade 5</th></tr>',
+  '<tr><th>EDS GLP% Over 80%</th><th></th><th>Not-EDS GLP% Under 30%</th><th></th><th>EDS GLP% Over 80%</th><th></th><th>Not-EDS GLP% Under 30%</th></tr>',
+  '<tr valign="top"><td>', 
+  t1, '</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>', 
+  t2, '</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>', 
+  t3, '</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>', 
+  t4, '</td></tr></table>'),
+    sep = '')
+```  
+
+<div style="text-align:center">
+2016-17 Grade 5 EDS GLP% over 80% and non-EDS GLP% under 30%
+</div>
 
 #### I.4. Some Aspects of Equity of Outcomes
 
 I treat here some matters of equity by looking at the GLP% for Black students compared to that for White students. Following are two interactive scatter plots for grades 3, 4, and 5 in the year 2016-17. In the interest of brevity, I treat the cumulative grades 3, 4, and 5 GLP% across all North Carolina schools. Placing the cursor on a point displays the school code. Schools above the diagonal line have GLP% for Black students exceeding that for White students. This plot includes what might be a surprisingly small number of schools. Indeed, there were `r nrow(dfDisagX_345_Yr %>% dplyr::filter(f_acYear=="D" & subject=="MA" & subgroup %in% c("BLCK","WHTE")) %>% dplyr::select(school_code,subgroup) %>% dplyr::distinct() %>% dplyr::group_by(school_code) %>% dplyr::summarize(n=n()) %>% dplyr::filter(n==1))` schools with either no Black or no White students in the accumulated grades 3, 4, and 5 in 2016-17. These schools are not part of Figure I.6.  
 
-IMPORTANT NOTE: The smaller the count of students, the less dependable is the GLP%. That is, since we are looking at percentages, GLP% for student counts of under twenty or so can be substantially affected if only one or two students were to move from the GLP to not GLP, or vice versa. I have not included error bars in the scatterplots because this would make them very cluttered and difficult to read.  
+IMPORTANT NOTE: The smaller the count of students, the less dependable is the GLP%. That is, since we are looking at percentages, GLP% for student counts of under twenty or so can be substantially affected if only one or two students were to move from the GLP to not GLP, or vice versa. I have not included error bars in the scatterplots because this would make them cluttered and difficult to read.  
 
 <div style="text-align:center">
 ```{r plotly_1, echo=FALSE}

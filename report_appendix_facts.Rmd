@@ -1,5 +1,5 @@
 ---
-title: "publicSchoolsGLPCCR Project - Facts and Figures"
+title: "publicSchoolsReport Project - Facts and Figures"
 author: "D. Hopp"
 date: "October 2017"
 output:
@@ -30,6 +30,7 @@ require(MASS)
 require(printr)
 require(kableExtra)
 require(weights)
+require(ICC)
 
 load("3.RData")
 
@@ -120,7 +121,7 @@ In 2016-17 there were ```r nsP``` public (non-charter) schools and ```r nsC``` c
 plt1 <- fn_hist_dfDisagX_345_nEDS_D()
 ```  
 
-The schools serviced the following numbers of students in grades 3, 4, and 5. The proportion of Black, Hispanic, and White is similar between public and charter schools. The amount not shown is spread among other ethnic categories.  
+The schools serviced the following numbers of students in grades 3, 4, and 5. The proportion of Black, Hispanic, and White is similar between public and charter schools. The amount not shown, about 15 percent, is spread among other ethnic categories.  
 
 ```{r two-tables, echo=FALSE, results='asis'}
 t1 = knitr::kable(df3 %>% dplyr::filter(charter=="No"), "html") %>%
@@ -141,21 +142,42 @@ plt1[[1]]
 ```  
 
 <br>
-**Figure 1. Public Non-Charter Schools**</div>
+**Figure 1. EDS% Public Non-Charter Schools**</div>
 <hr>
 <div style="text-align:center">
 ```{r pltC, echo=FALSE}
 plt1[[2]]
 ```  
 <br>
-**Figure 2. Public Charter Schools**</div>
+**Figure 2. EDS% Public Charter Schools**</div>
 <hr>
+There was also a pronounced difference when considering the number of limited English proficiency (LEP) students in the public and the charter schools. Figures 3 and 4 show the numbers of such schools, there being ```r  nrow(dfDisagX_345_nLEP_D %>% dplyr::filter(pct_nLEP>0 & charter_school==FALSE))``` public schools (```r sum(dfDisagX_345_nLEP_D %>% dplyr::filter(charter_school==FALSE & nLEP>0) %>% dplyr::select(nLEP))``` students), and ```r  nrow(dfDisagX_345_nLEP_D %>% dplyr::filter(pct_nLEP>0 & charter_school==TRUE))``` public charter schools (```r sum(dfDisagX_345_nLEP_D %>% dplyr::filter(charter_school==TRUE & nLEP>0) %>% dplyr::select(nLEP))``` students) with LEP students in grades 3, 4, or 5 in 2016-17.  
+
+```{r pltLEP, echo=FALSE}
+plt3 <- fn_hist_dfDisagX_345_LEP_D()
+```  
+
+<div style="text-align:center">
+```{r pltLEP1, echo=FALSE}
+plt3[[2]]
+```  
+<br>
+**Figure 3. LEP% Public Non-CharterSchools**</div>
+
+<div style="text-align:center">
+```{r pltLEP2, echo=FALSE}
+plt3[[4]]
+```  
+<br>
+**Figure 4. LEP% Public Charter Schools**</div>
+
 ### Performance 2016-17 GLP%  
 
 ```{r Xcharter, echo=FALSE}
 plt2 <- fn_boxplots_Xcharter(argYear = "D")
 ```  
 
+<hr>
 Report_A shows several plots of performance (GLP%) looking at all grade 3, 4, and 5 schools. Here I will compare public non-charter to charter schools. Figure 3 shows 2016-17 Grade 5 Mathematics, and Figure 4 shows Reading. 
 
 <div style="text-align:center">
@@ -164,7 +186,7 @@ plt2[[5]]
 ```  
 
 <p></p>
-**Figure 3.**</div>
+**Figure 5.**</div>
 <hr>
 <div style="text-align:center">
 ```{r box_2, echo=FALSE}
@@ -172,7 +194,7 @@ plt2[[6]]
 ```  
 
 <p></p>
-**Figure 4.**</div>
+**Figure 6.**</div>
 <hr>
 The immediate impression is that, broadly speaking, charter schools demonstrate better performance (GLP%) that the non-charters. However, I have already shown in Figure 2 that the charters tend to have proportionately fewer EDS students than do the non-charters, and from Report A, that EDS students perform notably less well than do the non-EDS students. If follows that, at least to some extent, the charters would do better than the non-charters.  
 

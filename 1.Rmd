@@ -1,5 +1,5 @@
 ---
-title: "publicSchoolsX20 Project - Read Files"
+title: "publicSchoolsReporting Project - Read Files"
 author: "D. Hopp"
 date: "October 2017"
 output:
@@ -1328,7 +1328,190 @@ fn_dfLEAnums <- function() {
 inventory[nrow(inventory) + 1,] = list("dfLEA","fn","dfLEA with added columns","dfLEA","1")
 dfLEA <- fn_dfLEAnums()
 str(dfLEA)
-# ###################################
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_dfDisagX_345_nLEP_D")
+fn_knit_exit("dfDisagX_345_nLEP_D")
+```
+
+added 11/13/17
+
+```{r fn_dfDisagX_345_nLEP_D}
+inventory[nrow(inventory) + 1,] = list("fn_dfDisagX_345_nLEP_D","df","dfDisagX_345_nLEP_D","dfDisagX_345_Yr","3")
+fn_dfDisagX_345_nLEP_D <- function() {
+  # composition balances or unbalances
+  # grades 3,4,5 rollup
+  # 2016-17
+  # LEP counts
+  # use dfDisagX_345_Yr
+  #
+  theYear <- "D"
+  df_ <- 
+  dfDisagX_345_Yr %>%
+  dplyr::filter(
+    f_acYear==theYear &
+    subgroup %in% c("LEP","NOT_LEP") &
+    subject=="MA"
+  ) %>%
+  dplyr::select(
+    LEA,
+    school_code,
+    grade,
+    subgroup,
+    num_tested,
+    TitleISchool,
+    charter_school
+  ) %>%
+  reshape2::dcast(
+    LEA+school_code+grade+TitleISchool+charter_school~subgroup,
+    value.var="num_tested"
+  )  %>%
+  dplyr::group_by(
+    LEA,
+    school_code,
+    TitleISchool,
+    charter_school
+  ) %>%
+  dplyr::summarize(
+    nLEP=sum(LEP),
+    nNOT_LEP=sum(NOT_LEP)
+  ) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate_all(
+      funs(ifelse(is.na(.), 0, .))
+    ) %>%
+  dplyr::filter(
+    nLEP+nNOT_LEP>0
+  ) %>%
+  dplyr::mutate(
+    pct_nLEP=round(nLEP*100/(nLEP+nNOT_LEP)),
+    pct_nNOT_LEP=round(nNOT_LEP*100/(nLEP+nNOT_LEP))
+  )
+  return(df_)
+}
+str(fn_dfDisagX_345_nLEP_D())
+dfDisagX_345_nLEP_D <- fn_dfDisagX_345_nLEP_D()
+```  
+
+```{r echo=FALSE}
+fn_knit_exit("fn_hist_dfDisagX_345_LEP_D")
+```
+
+```{r fn_hist_dfDisagX_345_LEP_D}
+fn_hist_dfDisagX_345_LEP_D <- function() {
+  # simple histograms of LEP% for charter and non-charter schools
+  # 2016-17 rollup grades 3,4,5
+  # due to the sparsity of schools with LEP% > 0, two plots are needed
+  # to show first all the data, and second only non-zero data
+  #
+  ret <- list()
+  iret_ <- 0
+  # public non-charter
+  # first, all the schools
+  # second, schools with pct_LEP>0
+  #
+  for (cut_ in 0:1) {
+    df_ <- dfDisagX_345_nLEP_D %>%
+    dplyr::filter(
+      pct_nLEP>=cut_ &
+      charter_school==FALSE
+    )
+    n_schools <- length(unique(df_$school_code))
+    n_students <- sum(
+      dfDisagX_345_nLEP_D %>% 
+      dplyr::filter(charter_school==FALSE & nLEP>0) %>% 
+      dplyr::select(nLEP)
+    )
+    #
+    iret_ <- iret_+1
+    ret[[iret_]] <-
+    df_ %>%
+    ggplot(
+      aes(x=pct_nLEP)
+    ) +
+    geom_histogram(
+      binwidth=1,
+      colour="black",
+      fill="white"
+    ) +
+    labs( 
+      x="LEP% Students",
+      y="Number of Instances",
+      title="LEP Percentage Enrollment 2016-17 Grades 3,4,5 Public Non-Charters",
+      subtitle=paste(n_schools,"Schools -",n_students,"Students")
+    ) +
+    theme(   
+      legend.text=element_text(size=8),
+      plot.title=element_text(size=8, hjust=0.5),
+      plot.subtitle=element_text(size=8, hjust=0.5),
+      axis.title.x=element_text(size=8),
+      axis.title.y=element_text(size=8),
+      axis.text.x=element_text(size=8),
+      axis.text.y=element_text(size=8)
+    ) +
+    scale_y_continuous(
+      sec.axis=sec_axis(
+        ~.*10/n_schools, # I have no idea why multiplier should be 10 and not 100
+        name="% of Schools"
+      )
+    )
+  }
+  #
+  # charter
+  for (cut_ in 0:1) {
+    df_ <- dfDisagX_345_nLEP_D %>%
+    dplyr::filter(
+      pct_nLEP>=cut_ &
+      charter_school==TRUE
+    )
+    n_schools <- length(unique(df_$school_code))
+    n_students <- sum(
+      dfDisagX_345_nLEP_D %>% 
+      dplyr::filter(charter_school==TRUE & nLEP>0) %>% 
+      dplyr::select(nLEP)
+    )
+    #
+    iret_ <- iret_+1
+    ret[[iret_]] <-
+    df_ %>%
+    ggplot(
+      aes(x=pct_nLEP)
+    ) +
+    geom_histogram(
+      binwidth=1,
+      colour="black",
+      fill="white"
+    ) +
+    labs( 
+      x="LEP% Students",
+      y="Number of Instances",
+      title="LEP Percentage Enrollment 2016-17 Grades 3,4,5 Public Charters",
+      subtitle=paste(n_schools,"Schools -",n_students,"Students")
+    ) +
+    theme(
+      legend.text=element_text(size=8),
+      plot.title=element_text(size=8, hjust=0.5),
+      plot.subtitle=element_text(size=8, hjust=0.5),
+      axis.title.x=element_text(size=8),
+      axis.title.y=element_text(size=8),
+      axis.text.x=element_text(size=8),
+      axis.text.y=element_text(size=8)
+    )  +
+    scale_y_continuous(
+      sec.axis=sec_axis(
+        ~.*100/n_schools,
+        name="% of Schools"
+      )
+    )
+  }
+  #
+  return(ret)
+}
+```  
+
+```{r print_ls}
+print(ls())
 ```  
 
 ## Save R objects

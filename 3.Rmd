@@ -1,5 +1,5 @@
 ---
-title: "publicSchoolsGLPCCR Project - Compute: Compare Black and White GLP%"
+title: "publicSchoolsReporting Project - Compute: Compare Black and White GLP%"
 author: "D. Hopp"
 date: "September 2017"
 output:
@@ -1862,6 +1862,11 @@ quantile(
 	probs=seq(0,1,0.2)
 )
 
+```  
+
+
+```{r print_ls}
+print(ls())
 ```  
 
 ```{r save}

@@ -1,5 +1,5 @@
 ---
-title: "publicSchoolsGLPCCR Project - Report A"
+title: "publicSchoolsReporting Project - Report A"
 author: "D. Hopp"
 date: "October 2017"
 output:
@@ -43,11 +43,11 @@ knit_print.data.frame = function(x, ...) {
 ## Notes on Quantitative Aspects of Black-White Equity in Grades 3, 4, and 5 Elementary Education in North Carolina Public Schools  
 
 ### Introduction  
-Policy-makers, educators, researchers, advocacy groups, and, via newspapers, the public, make use of K-12 student achievement data. The Grade Level Proficiency (GLP) categorization is among the most frequently mentioned quantitative criteria. In this report I make observations, based on GLP data, about quantitative aspects of education equity between Black and White K-12 students in North Carolina public, and public charter, schools. The sources of data are the publicly available "disaggregated" files provided by the North Carolina Department of  Public Instruction (NCDPI) on the achievement of students during the academic years from 2013-14 to 2016-17, and ancillary publicly available NCDPI data. While the publicly available NCDPI data is extensive, it is not longitudinal, that is, it does not support following students from year to year. However, students in grades 3, 4, and 5 take standardized examinations that are reported in the NCDPI data. The comparability of this data provides a kind of quasi-cohort that allows for a coherent analysis of students in these grades. 
+Policy-makers, educators, researchers, advocacy groups, and, via news sources, the public, make use of K-12 student achievement data. The Grade Level Proficiency (GLP) categorization is among the most frequently mentioned quantitative criteria. In this report I make observations, based on GLP data, about quantitative aspects of education equity between Black and White K-12 students in North Carolina public, and public charter, schools. The sources of data are the publicly available "disaggregated" files provided by the North Carolina Department of  Public Instruction (NCDPI) on the achievement of students during the academic years from 2013-14 to 2016-17, and ancillary publicly available NCDPI data. While the publicly available NCDPI data is extensive, it is not longitudinal, that is, it does not support following students from year to year. However, students in grades 3, 4, and 5 take standardized examinations that are reported in the NCDPI data. The comparability of this data provides a kind of quasi-cohort that allows for a coherent analysis of students in these grades. 
 
-The publicly available NCDPI data is FERPA-compliant, consequently test scores and numbers of students are reported by grade, not class, for each school. Since FERPA requires the masking of some detailed data, I will look at the reporting of Grade Level Proficiency (GLP), which is determined by students scoring into the upper three levels of these five-level standardized tests. This avoids almost all the masked data, although it prevents detailed analysis of the individual levels.  
+The publicly available NCDPI data is FERPA-compliant, consequently test scores and numbers of students are reported by grade, not class, for each school. Since FERPA requires the masking of some detailed data, I will look at the reporting of Grade Level Proficiency (GLP), which is determined by students scoring in the upper three levels of these five-level standardized tests. This avoids almost all the masked data, although it prevents detailed analysis of the individual levels.  
 
-The NCDPI disaggregated data files are organized in univariate categories including ethnicity and gender. Importantly for this analysis, there is also a self-reported category of economically disadvanteged (EDS as Yes or No). These being univariate, there is no way to identify students as, for example, Black and EDS, Hispanic and not EDS, male and Hispanic, etc. Ancillary data associates Title I status (Yes or No) with each school. There is a strong association between Title I status and a school's overall EDS percentage. Roughly, if a school is 40% EDS, then it will classify as a Title I school. I will make use of this relationship by considering Title I as a binary indicator of the magnitude of the continuous EDS measure.   
+The NCDPI disaggregated data files are organized in univariate categories including ethnicity and gender. Importantly for this analysis, there is also a self-reported category of economically disadvanteged (EDS as Yes or No). These being univariate, there is no way to identify students as, for example, Black and EDS, Hispanic and not EDS, male and Hispanic, etc. Ancillary data associates Title I status (Yes or No) with each school. There is a strong association between Title I status and a school's overall EDS percentage. Roughly, if a school is over 40% EDS, then it will classify as a Title I school. I will make use of this relationship by considering Title I as a binary indicator of the magnitude of the continuous EDS measure.   
 
 I deliberately avoid the use of the term "gap analysis," since this subject already has a rich research literature and complex research methodologies. My interest lies in using the NCDPI publicly available data to determine, or at least to infer, its direct implications. In the same spirit I will direct attention to the strengths and weaknesses of this data, and suggest what additions to it would be of value.  
 
@@ -71,7 +71,7 @@ plts1[[6]]
 
 **Figure I.1. GLP% by Group for Reading in 2015-16**</div>  
 <br>
-Figure I.1 selects one year (2015-16) and one subject (Reading) across all NC schools, and presents GLP% box plots for grades 3, 4, and 5. The two left-most boxes for each grade are the EDS and non-EDS GLP%, while the three right-most boxes show GLP% for Black, Hispanic, and White students. There is in addition a box for the cumulative GLP%.  Plots run for other years, as well as for Mathematics, appear much the same. Observations for other years are substantially the same. Plots for the other years can be found in Appendix ???. Keep in mind that in response to the data masking required by compliance with FERPA, in this report GLP% above 100% is always shown as 97.5%, while GLP% less than 5% is shown as 2.5%. This results in some lumpiness at the top and bottom of the GLP% axis.  
+Figure I.1 selects one year (2015-16) and one subject (Reading) across all NC schools, and presents GLP% box plots for grades 3, 4, and 5. The two left-most boxes for each grade are the EDS and non-EDS GLP%, while the three right-most boxes show GLP% for Black, Hispanic, and White students. There is in addition a box for the cumulative GLP%.  Plots run for other years, as well as for Mathematics, appear much the same. Observations for other years are substantially the same. Keep in mind that in response to the data masking required by compliance with FERPA, in this report GLP% above 100% is always shown as 97.5%, while GLP% less than 5% is shown as 2.5%. This results in some lumpiness at the top and bottom of the GLP% axis.  
 
 Figure I.2 selects one grade (5) and one subject (Reading) across the four academic years from 2013-14 to 2016-17.  
 
@@ -115,7 +115,7 @@ It is evident that the distributions for Not-EDS students differ structurally fr
 
 The differences between the Black, Hispanic, and White students are less pronounced. The Black and Hispanic distributions have long tails into higher GLP%. It would be of great value to be able to determine whether these tails are associated with Not-EDS students, but that data is not publicly available.  
 
-Improvements in GLP% for Not-EDS could be expressed as 'sweeping' the left-hand tail into the mass of the data. Improvements for the other categories could be right-directed sweeping, or shifts of the entire distribution toward higher GLP%. This contrast reinforces the disutility of speaking in terms of summary data, i.e., using the ALL category.  
+Improvements in GLP% for Not-EDS could be expressed not only as shifting the mean, but as 'sweeping' the left-hand tail into the mass of the data. Improvements for the other categories could be right-directed sweeping, or shifts of the entire distribution toward higher GLP%. This contrast reinforces the disutility of speaking in terms of summary data, i.e., using the ALL category.  
 
 #### I.3. Is There "Sharing" Based on Wealth Indicators?  
 
@@ -226,7 +226,6 @@ knitr::kable(x, "html") %>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover","condensed"), font_size=11)
 ```  
 
-
 These schools had three years of high GLP% for EDS students over the years 2013-14 through 2016-17:  
 
 ```{r fn_dfAnalyze_DisagX20_345_report_3, echo=FALSE}
@@ -285,7 +284,7 @@ cat(c('<table class="center"><tr valign="top"><td>',
 ### Part II. The Nature of the Grade 3, 4, 5 Tests  
 
 #### II.1. Score-Frequency Tables  
-The extent of aggregation in the pub;ic;y available NCDPI data in response to FERPA requirements makes it difficult to use this data to fully understand the characteristics of the tests. However, we can make some useful observations. The NCDPI Green Books provide score-frequency tables for the tests from 2013-14 to 2015-16 (this will be extended to 2016-17 later this year).  
+The extent of aggregation in the publicly available NCDPI data in response to FERPA requirements makes it difficult to use this data to fully understand the characteristics of the tests. However, we can make some useful observations. The NCDPI Green Books provide score-frequency tables for the tests from 2013-14 to 2015-16 (this will be extended to 2016-17 later this year).  
 
 There is, of course, a different test for each year for each grade, and for each of the two subjects, ELA and MA. The tests are constructed by educators and psychometricians. The process of validation is not, to my knowledge, documented in any publicly accessible way. The tests are used to classify students into five levels. Students testing into any of the three higher levels are considered to be grade level proficient (GLP). If they test into the two highest levels they are considered to be career and college ready (CCR). The weighted median score lies in Level 3, that is, within GLP but not in CCR.  
 
@@ -308,7 +307,7 @@ The classification of students into GLP% and the reporting of GLP percentages ar
 
 Another consideration is whether this data can be used to compare year-to-year changes between schools. If policy decisions are based on comparisons of GLP% between schools, then the randomnicity apparent in these plots casts doubt on their utility.  
 
-Figure II.2 compares the changes in GLP% by school from one year to the next, for instance, from 2014-15 to 2015-16, to the changes in the succeeding year, 2015-16 to 2016-17. Additional plots are in the "Plot Compares" Appendix.  
+Figure II.2 compares the changes in GLP% by school from one year to the next, for instance, from 2014-15 to 2015-16, to the changes in the succeeding year, 2015-16 to 2016-17. Red denotes Title I schools, and filled circles denote schools with either under 20% or over 80% GLP%. Each school is annotated with the school ID, number of students, and GLP% for the earliest year.   
 
 
 ```{r comp1, echo=FALSE}
@@ -323,7 +322,7 @@ plt[[7]]
 **Figure II.2. All Schools Math Grade 3**</div>
 <br>
 
-This shows several important aspects of the grade 3, 4, and 5 GLP% test results. There is a grouping in the center of the plot, that is, around small changes. This is to be expected and is reflective of the realities mentioned above. Schools in the upper right-hand quadrant performed better in 2015-16 and 2016-17 as compared with 2014-15. The lower left-hand quadrant contains schools that performed worse for both years, etc. One might expect some schools to do remarkably better or worse as interventions, population shifts, staff changes, or finances change. However, the size of the "cloud", where we see shifts up and down by over ten percent from year to year, requires explanation. Are the schools in the cloud distinguished by some internal or external circumstances? Are there additional influences that might be available in other data sources, or that are not quantitative? To what extent do large changes cast doubt on the utility of the tests and testing procedures?  
+This shows several important aspects of the grade 3, 4, and 5 GLP% test results. There is a grouping in the center of the plot, that is, around small changes. This is to be expected and is reflective of the realities mentioned above. Schools in the upper right-hand quadrant performed better in 2015-16 and 2016-17 as compared with 2014-15. The lower left-hand quadrant contains schools that performed worse for both years, etc. One might expect some schools to do remarkably better or worse as interventions, population shifts, staff changes, or finances change. However, the size of the "cloud", where we see shifts up and down by over ten percent from year to year, requires explanation. Are the schools in the cloud distinguished by some internal or external circumstances? Are there additional influences that might be available in other data sources, or that are not quantitative? To what extent do large changes cast doubt on the utility of the tests and testing procedures? I address some aspects of those questions below, but more extensive work remains to be done.  
 
 The appearance of this data for specific LEAs is similar to that for the whole. Figure II.3 shows a comparable plot for Wake.  
 
@@ -338,7 +337,7 @@ plt920[[7]]
 
 **Figure II.3. Wake County Math Grade 3**</div>
 <br>
-The second question I address is how much confidence can be put in GLP% for the same school, for the same subject, when following a cohort from year to year. That is, when tracking grade 3 to grade 4, and 4 to 5, from year to year and looking at individual schools, how consistent are the GLP%? Figure II.4 (and for Wake in Figure II.5) shows that the appearance of cohort tracking resembles that for same-grade, shown in Figure II.2. It appears that the utility of GLP% comparisons for cohorts is limited.  
+The second question I address is how much confidence can be put in GLP% for the same school, for the same subject, when following a cohort from year to year. That is, when tracking grade 3 to grade 4, and 4 to 5, from year to year and looking at individual schools, how consistent are the GLP%? Figure II.4 (and for Wake in Figure II.5) shows that the appearance of cohort tracking resembles that for same-grade, shown in Figure II.2. Red denotes Title I schools, and filled circles denote schools with either under 20% or over 80% GLP%. Each school is annotated with the school ID, number of students, and GLP% for the earliest year. It appears that the utility of GLP% comparisons for cohorts is limited.  
 
 
 ```{r track1, echo=FALSE}

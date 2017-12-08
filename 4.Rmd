@@ -1,0 +1,775 @@
+---
+title: "publicSchoolsReporting Project - NCforum Read LSFR Files"
+author: "D. Hopp"
+date: "November 2017"
+output:
+  html_document: default
+---
+
+## Requires
+```{r, warning=FALSE}
+require(rprojroot)
+require(reshape2)
+require(magrittr)
+require(plyr)
+require(tidyverse)
+require(cowplot)
+require(grid)
+require(readr)
+require(taRifx)
+require(R.utils)
+require(ggthemes)
+require(emdist)
+require(rlist)
+require(MASS)
+require(Hmisc)
+require(grid)
+require(scales)
+require(corrplot)
+```
+
+### fetch objects:
+```{r fetch}
+load("3.RData")
+```  
+
+
+## 2017 Local School Finance Report  
+
+Public School Forum data
+
+```{r echo=FALSE}
+fn_knit_exit("fn_df_lsfr_tables")
+```  
+
+```{r fn_df_lsfr_tables}
+inventory[nrow(inventory) + 1,] = list("fn_df_lsfr_tables","df","ncforum tables","read ncforum files","4")
+inventory[nrow(inventory) + 1,] = list("fn_df_lsfr_tables","list","ncforum_2017_LSFS_longnames","item names of ncforum files","4")
+fn_df_lsfr_tables <- function() {
+#
+# 2017 Local School Finance Study, Tables Ranks;1;2;2A;3;4;5
+  ret <- list()
+  ret[[1]] <- readr::read_csv(
+    paste0(dataPath,"ncforum_2017_LSFS_ranks.csv")
+    )
+  ret[[2]] <- readr::read_csv(
+    paste0(dataPath,"ncforum_2017_LSFS_T1.csv")
+    )
+  ret[[3]] <- readr::read_csv(
+    paste0(dataPath,"ncforum_2017_LSFS_T2.csv")
+    )
+  ret[[4]] <- readr::read_csv(
+    paste0(dataPath,"ncforum_2017_LSFS_T2A.csv")
+    )
+  ret[[5]] <- readr::read_csv(
+    paste0(dataPath,"ncforum_2017_LSFS_T3.csv")
+    )
+  ret[[6]] <- readr::read_csv(
+    paste0(dataPath,"ncforum_2017_LSFS_T4.csv")
+    )
+  ret[[7]] <- readr::read_csv(
+    paste0(dataPath,"ncforum_2017_LSFS_T5.csv")
+    )    
+  return(ret)
+}
+str(fn_df_lsfr_tables())
+tmp_ls_df_ <- fn_df_lsfr_tables()
+df_ncforum_2017_LSFS_ranks <- tmp_ls_df_[[1]]
+df_ncforum_2017_LSFS_T1 <- tmp_ls_df_[[2]]
+df_ncforum_2017_LSFS_T2 <- tmp_ls_df_[[3]]
+df_ncforum_2017_LSFS_T2A <- tmp_ls_df_[[4]]
+df_ncforum_2017_LSFS_T3 <- tmp_ls_df_[[5]]
+df_ncforum_2017_LSFS_T4 <- tmp_ls_df_[[6]]
+df_ncforum_2017_LSFS_T5 <- tmp_ls_df_[[7]]
+rm(tmp_ls_df_)
+#
+# added 11/26/17
+# append FIPS
+df_ncforum_2017_LSFS_ranks %<>%
+  dplyr::inner_join(
+    dfFIPS,
+    by="County"
+  )
+df_ncforum_2017_LSFS_T1 %<>%
+  dplyr::inner_join(
+    dfFIPS,
+    by="County"
+  )
+df_ncforum_2017_LSFS_T2 %<>%
+  dplyr::inner_join(
+    dfFIPS,
+    by="County"
+  )
+df_ncforum_2017_LSFS_T2A %<>%
+  dplyr::inner_join(
+    dfFIPS,
+    by="County"
+  )
+df_ncforum_2017_LSFS_T3 %<>%
+  dplyr::inner_join(
+    dfFIPS,
+    by="County"
+  )
+df_ncforum_2017_LSFS_T4 %<>%
+  dplyr::inner_join(
+    dfFIPS,
+    by="County"
+  )
+df_ncforum_2017_LSFS_T5 %<>%
+  dplyr::inner_join(
+    dfFIPS,
+    by="County"
+  )
+# 
+ncforum_2017_LSFS_longnames <- 
+  list(
+  ranks = c("COUNTY","Adjusted Property Tax Base Per ADM","Total Current Spending Per ADM","Total Current Spending Per ADM with Low Wealth and Small County Funding","Revenue Per ADM","Current Spending as Percentage of Revenue per Student","FIPS"),
+  T1 = c("COUNTY","RANK","PREVIOUS YEAR RANK","LAST YEAR REVALUED","EFFECTIVE COUNTY TAX RATE","2014-15 ADJUSTED PROPERTY TAX BASE","2014-15 FINAL ADM","ADJUSTED PROPERTY TAX BASE PER ADM","FIPS"),
+  T2 = c("COUNTY","RANK THIS YEAR","PREVIOUS YEAR RANK","2014-15 CURRENT SPENDING","2014-15 CURRENT SPENDING PER ADM","2014-15 SUPPLEMENTAL SCHOOL TAXES","2014-15 TOTAL CURRENT SPENDING (WITH SUPPLEMENTAL)","2014-15 FINAL ADM","2014-15 TOTAL CURRENT SPENDING PER ADM","FIPS"),
+  T2A = c("COUNTY","ACTUAL EFFORT RANK THIS YEAR (FROM TABLE 2)","2014-15 TOTAL CURRENT SPENDING PER ADM (FROM TABLE 2)","SIX-YEAR CAPITAL OUTLAY AVERAGE","SIX-YEAR CAPITAL DEBT SERVICE AVERAGE","2014-15 FINAL ADM","CAPITAL OUTLAY SPENDING PER ADM","DEBT SERVICE PER ADM","FIPS"),
+  T3 = c("COUNTY","RANK","PREVIOUS YEAR RANK","2014-15 TOTAL CURRENT SPENDING (FROM TABLE 2)","2014-15 TOTAL CURRENT SPENDING PER ADM","2014-15 LOW-WEALTH FUNDING","2014-15 SMALL COUNTY FUNDING","2014-15 TOTAL CURRENT SPENDING W/ LOW WEALTH & SMALL COUNTY","2014-15 FINAL ADM","2014-15 TOTAL CURRENT SPENDING PER ADM W/ LOW WEALTH & SMALL COUNTY","CHANGE IN SPENDING PER ADM W/ LOW WEALTH & SMALL COUNTY","FIPS"),
+  T4 = c("COUNTY","RANK","PREVIOUS YEAR RANK","2014-15 ADJUSTED TAX BASE","2014-15 ADJUSTED PROPERTY TAX REVENUE (BASED ON STATE AVG. EFFECTIVE PROPERTY TAX RATE OF 0.6540)","2014-15 NON-PROPERTY TAX REVENUE","2014-15 MANDATED SOCIAL SERVICES PAYMENTS","2014-15 TOTAL REVENUES LESS SOCIAL SECURITY PAYMENTS","2014 PER CAPITA INCOME","PERCENT OF STATE AVERAGE PER CAPITA INCOME","2014-15 INCOME ADJUSTED TOTAL REVENUES","2014-15 FINAL ADM","2014-15 REVENUE PER ADM","FIPS"),
+  T5 = c("COUNTY","RELATIVE EFFORT RANK: CURRENT SPENDING","ABILITY RANK","REVENUE PER ADM","EFFORT RANK","TOTAL CURRENT SPENDING PER ADM","EFFORT AS PERCENTAGE OF REVENUE PER STUDENT: CURRENT SPENDING","FIPS")
+  ) 
+```  
+
+This plot is intended for use in an rmarkdown document and vertical size must be appropriately set therein.  
+
+```{r fn_plt_ncforum_2017_LSFS_spending_1}
+inventory[nrow(inventory) + 1,] = list("fn_plt_ncforum_2017_LSFS_spending_1","plts","Cleveland plot","df_ncforum_2017_LSFS_T2","4")
+#
+fn_plt_ncforum_2017_LSFS_spending_1 <- function(){
+# plot 2014-15 TOTAL LOCAL CURRENT SPENDING PER STUDENT (page 3)
+# Cleveland dot plot
+#
+  av <- mean(df_ncforum_2017_LSFS_T2$TCSpADM)
+  w.av <- weighted.mean(df_ncforum_2017_LSFS_T2$TCSpADM,df_ncforum_2017_LSFS_T2$FADM)
+  med <- median(df_ncforum_2017_LSFS_T2$TCSpADM)
+  #
+  df_ <- df_ncforum_2017_LSFS_T2 %>% 
+  dplyr::select(
+    County,TCSpADM
+  ) %>% 
+  dplyr::arrange(
+    TCSpADM
+  ) %>% 
+  dplyr::mutate(
+    County=factor(County,levels=.$County)
+  ) 
+  #
+  whichCounty <- c("Yancey","Caldwell","Stanly","Lenoir")
+  whichCountyIndex <- lapply(whichCounty, function(x) which(df_$County==x))
+  #
+  plt_ <- df_ %>%
+  ggplot(aes(TCSpADM,County)) + 
+  geom_point() +
+  geom_vline(xintercept=w.av) +
+  geom_vline(xintercept=av) +
+  geom_vline(xintercept=med, linetype="dashed") +
+  scale_x_continuous(
+    labels=dollar,
+    breaks=seq(0,5000,500),
+    minor_breaks=seq(0,5000,100)
+  ) + 
+  labs(
+    title="2014-15 Total Local Current Spending",
+    x="Spending per Student"
+  ) +
+  theme_grey() +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.title.x=element_text(size=8),
+    axis.title.y=element_blank()
+  ) +
+  annotate(
+    "text", 
+    x=2450, 
+    hjust=0,
+    y=whichCounty[1], 
+    label=paste0("State True Average $",round(w.av)),
+    size=3
+  ) +
+  annotate(
+    "text", 
+    x=2450, 
+    hjust=0,
+    y=whichCounty[2], 
+    label=paste0("\"State Average\" $",round(av)),
+    size=3
+  ) +
+  annotate(
+    "text", 
+    x=2450, 
+    hjust=0,
+    y=whichCounty[3], 
+    label=paste0("State Median $",round(med)),
+    size=3
+  ) +
+  geom_segment(
+    x=2400, y=whichCountyIndex[[1]],
+    xend=w.av+1,yend=whichCountyIndex[[1]],
+    arrow=arrow(length=unit(0.05,"inches"))
+  ) +
+  geom_segment(
+    x=2400, y=whichCountyIndex[[2]],
+    xend=av+1,yend=whichCountyIndex[[2]],
+    arrow=arrow(length=unit(0.05,"inches"))
+  ) +
+  geom_segment(
+    x=2400, y=whichCountyIndex[[3]],
+    xend=med+1,yend=whichCountyIndex[[3]],
+    arrow=arrow(length=unit(0.05,"inches"))
+  ) +
+  annotate(
+    "text",
+    x=2450,
+    hjust=0,
+    vjust=1,
+    y=whichCounty[4], 
+    label=paste0(
+      "State True Average is shifted to a high value due to Wake and Mecklenburg.",
+      "\nState Average is arithmetically incorrect.",
+      "\nState Median is the most useful measure."
+    ),
+    size=3
+  )
+  #
+  return(plt_)
+}
+```  
+
+```{r fn_plt_ncforum_2017_LSFS_spending_2}
+inventory[nrow(inventory) + 1,] = list("fn_plt_ncforum_2017_LSFS_spending_2","plts","Cleveland plot","df_ncforum_2017_LSFS_T2","4")
+fn_plt_ncforum_2017_LSFS_spending_2  <- function(){
+# plot 2014-15 TOTAL LOCAL CURRENT SPENDING PER STUDENT (page 3)
+# Cleveland bar plot using coord_flip
+#
+# unresolved problem: gap between y axis County names and the vertical zero line
+#
+  av <- mean(df_ncforum_2017_LSFS_T2$TCSpADM)
+  w.av <- weighted.mean(df_ncforum_2017_LSFS_T2$TCSpADM,df_ncforum_2017_LSFS_T2$FADM)
+  med <- median(df_ncforum_2017_LSFS_T2$TCSpADM)
+  #
+  df_ <- df_ncforum_2017_LSFS_T2 %>% 
+  dplyr::select(
+    County,TCSpADM
+  ) %>% 
+  dplyr::arrange(
+    TCSpADM
+  ) %>% 
+  dplyr::mutate(
+    County=factor(County,levels=.$County)
+  ) 
+  #
+  whichCounty <- c("Yancey","Caldwell","Stanly","Lenoir")
+  whichCountyIndex <- lapply(whichCounty, function(x) which(df_$County==x))
+  #
+  plt_ <- df_ %>%
+  ggplot(aes(County,TCSpADM)) + 
+  geom_bar(stat = "identity",colour="white",fill="dodgerblue4") +
+  geom_hline(yintercept=w.av,color="dodgerblue4") +
+  geom_hline(yintercept=av,color="dodgerblue4") +
+  geom_hline(yintercept=med, linetype="dashed",color="dodgerblue4") +
+  scale_y_continuous(
+    labels=dollar,
+    breaks=seq(0,5000,500),
+    minor_breaks=seq(0,5000,100)
+  )  + 
+  labs(
+    title="2014-15 Total Local Current Spending",
+    y="Spending per Student"
+  ) +
+  theme_grey() +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.title.y=element_text(size=8),
+    axis.title.x=element_blank(),
+    axis.text.x = element_text(color="dodgerblue4",size=8),
+    axis.text.y = element_text(color="dodgerblue4",size=8)
+  )   +
+  annotate(
+    "text", 
+    y=2450, 
+    hjust=0,
+    x=whichCounty[1], 
+    label=paste0("State True Average $",round(w.av)),
+    color="dodgerblue4",
+    size=3
+  )  +
+  annotate(
+    "text", 
+    y=2450, 
+    hjust=0,
+    x=whichCounty[2], 
+    label=paste0("\"State Average\" $",round(av)),
+    color="dodgerblue4",
+    size=3
+  ) +
+  annotate(
+    "text", 
+    y=2450, 
+    hjust=0,
+    x=whichCounty[3], 
+    label=paste0("State Median $",round(med)),
+    color="dodgerblue4",
+    size=3
+  ) +
+  geom_segment(
+    y=2400, x=whichCountyIndex[[1]],
+    yend=w.av+1,xend=whichCountyIndex[[1]],
+    arrow=arrow(length=unit(0.05,"inches")),
+    color="dodgerblue4"
+  ) +
+  geom_segment(
+    y=2400, x=whichCountyIndex[[2]],
+    yend=av+1,xend=whichCountyIndex[[2]],
+    arrow=arrow(length=unit(0.05,"inches")),
+    color="dodgerblue4"
+  ) +
+  geom_segment(
+    y=2400, x=whichCountyIndex[[3]],
+    yend=med+1,xend=whichCountyIndex[[3]],
+    arrow=arrow(length=unit(0.05,"inches")),
+    color="dodgerblue4"
+  ) +
+  annotate(
+    "text",
+    y=2300,
+    hjust=0,
+    vjust=1,
+    x=whichCounty[4], 
+    label=paste0(
+      "State True Average is shifted to a high value due to Wake and Mecklenburg.",
+      "\nState Average is arithmetically incorrect.",
+      "\nState Median is the most useful measure."
+    ),
+    color="dodgerblue4",
+    size=3
+  ) +
+coord_flip()
+#
+return(plt_)
+}
+```  
+
+```{r fn_plt_ncforum_2017_LSFS_T1_rank}
+inventory[nrow(inventory) + 1,] = list("fn_plt_ncforum_2017_LSFS_T1_rank","plts","Cleveland plot","df_ncforum_2017_LSFS_T1","4")
+#
+fn_plt_ncforum_2017_LSFS_T1_rank <- function(){
+# plot 2014-15 Table 1 Ranks: Adjudted Property Tax Base per ADM
+  av <- mean(df_ncforum_2017_LSFS_T1$APTBpADM)
+  w.av <- weighted.mean(df_ncforum_2017_LSFS_T1$APTBpADM,df_ncforum_2017_LSFS_T1$FADM)
+  med <- median(df_ncforum_2017_LSFS_T1$APTBpADM)
+  #
+  df_ <- df_ncforum_2017_LSFS_T1 %>% 
+  dplyr::select(
+    County,APTBpADM
+  ) %>% 
+  dplyr::arrange(
+    APTBpADM
+  ) %>% 
+  dplyr::mutate(
+    County=factor(County,levels=.$County)
+  ) 
+  #
+  whichCounty <- c("Stanly","Lee","Gates")
+  whichCountyIndex <- lapply(whichCounty, function(x) which(df_$County==x))
+  #
+  plt_ <- df_ %>%
+  ggplot(aes(APTBpADM,County)) + 
+  geom_point() +
+  geom_vline(xintercept=w.av) +
+  geom_vline(xintercept=av) +
+  geom_vline(xintercept=med, linetype="dashed") +
+  scale_x_continuous(
+    labels=dollar,
+    breaks=seq(0,3000000,500000),
+    minor_breaks=seq(0,3000000,100000)
+  ) + 
+  labs(
+    title="Adjusted Property Valuations per Student",
+    x="$ per Student"
+  ) +
+  theme_grey() +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.title.x=element_text(size=8),
+    axis.title.y=element_blank()
+  ) +
+  annotate(
+    "text", 
+    x=1250000, 
+    y=whichCounty[1], 
+    label=paste0("State Weighted Average $",round(w.av)),
+    size=3
+  ) +
+  annotate(
+    "text", 
+    x=1200000, 
+    y=whichCounty[2], 
+    label=paste0("\"State Average\" $",round(av)),
+    size=3
+  ) +
+  annotate(
+    "text", 
+    x=1190000, 
+    y=whichCounty[3], 
+    label=paste0("State Median $",round(med)),
+    size=3
+  ) +
+  geom_segment(
+    x=1000000, y=whichCountyIndex[[1]],
+    xend=w.av+1,yend=whichCountyIndex[[1]],
+    arrow=arrow(length=unit(0.05,"inches"))
+  ) +
+  geom_segment(
+    x=1000000, y=whichCountyIndex[[2]],
+    xend=av+1,yend=whichCountyIndex[[2]],
+    arrow=arrow(length=unit(0.05,"inches"))
+  ) +
+  geom_segment(
+    x=1000000, y=whichCountyIndex[[3]],
+    xend=med+1,yend=whichCountyIndex[[3]],
+    arrow=arrow(length=unit(0.05,"inches"))
+  )
+  #
+  return(plt_)
+}
+```  
+
+```{r fn_plotly_ncforum_2017_LSFS_T5_1}
+inventory[nrow(inventory) + 1,] = list("fn_plotly_ncforum_2017_LSFS_T5_1","plotly","ncforum tables","df_ncforum_2017_LSFS_T5","4")
+fn_plotly_ncforum_2017_LSFS_T5_1 <- function() { 
+  # Table 5
+  # Column 3 vs. Column5
+  # by quartile of column 1
+  df_ <-
+    df_ncforum_2017_LSFS_T5 %>%
+    dplyr::mutate(
+        RERq=1+((RER-1) %/% 25)
+    )
+  #
+  df2_ <-
+    df_ %>%     
+    dplyr::select(
+        RER,
+        RERq,
+        County,
+        RpADM,
+        TCSpADM
+    ) %>%
+    reshape2::dcast(RER+RpADM~RERq,value.var = "TCSpADM") %>%
+    plyr::rename(c("1"="val.1","2"="val.2","3"="val.3","4"="val.4")) %>%
+    dplyr::inner_join(
+        df_ %>% dplyr::select(RER,County,Epct),
+        by="RER"
+    )
+  #
+  plt_ <-
+  df2_ %>%
+  plot_ly(
+    type="scatter",
+    mode="markers",
+    hoverinfo="text",
+    x=~RpADM,
+    y=~val.1,
+    symbol=1,
+    name="Q1",
+    text=~paste0(
+      County,
+      "\nRank: ",
+      RER,
+      "\n%Effort: ",
+      Epct)
+  ) %>%
+  add_trace(
+    y=~val.2,
+    symbol=2,
+    name="Q2",
+    mode="markers",
+    text=~paste0(
+      County,
+      "\nRank: ",
+      RER,
+      "\n%Effort: ",
+      Epct)
+  ) %>%
+    add_trace(
+    y=~val.3,
+    symbol=3,
+    name="Q3",
+    mode="markers",
+    text=~paste0(
+      County,
+      "\nRank: ",
+      RER,
+      "\n%Effort: ",
+      Epct)
+  ) %>%
+  add_trace(
+    y=~val.4,
+    symbol=4,
+    name="Q4",
+    mode="markers",
+    text=~paste0(
+      County,
+      "\nRank: ",
+      RER,
+      "\n%Effort: ",
+      Epct)
+  ) %>%
+  plotly::layout(
+    title="Table 5 - Relative Effort Showing Rank Quartiles",
+    xaxis=list(
+      range=c(0,30000),
+      title="Revenue per ADM ($)",
+      zeroline=FALSE
+    ),
+    yaxis=list(
+      range=c(0,5000),
+      title="Total Current Spending per ADM ($)",
+      zeroline=FALSE
+    ),
+    legend=list(
+      orientation='h'
+    )
+  )
+  return(plt_)
+}
+```  
+
+```{r fn_plotly_ncforum_2017_LSFS_T2_1}
+inventory[nrow(inventory) + 1,] = list("fn_plotly_ncforum_2017_LSFS_T2_1","plotly","ncforum tables","df_ncforum_2017_LSFS_T2","4")
+fn_plotly_ncforum_2017_LSFS_T2_1 <- function() { 
+  df_ <-
+  df_ncforum_2017_LSFS_T2 %>%
+  dplyr::select(
+    County,
+    CS,
+    TCS,
+    TCSpADM,
+    FADM
+  ) 
+  #
+  med_ <- median(df_ncforum_2017_LSFS_T2$TCSpADM)
+  #
+  med_line <- list(
+  xref = 'x',
+  x = 100000,
+  y_ref='y',
+  y = med_,
+  xanchor = 'middle',
+  yanchor = 'middle',
+  text = paste0('Median  $', med_),
+    font = list(family = 'Arial',
+    size = 12,
+    color = 'rgba(67,67,67,1)'),
+    showarrow = FALSE
+  )
+  #
+  plt_ <-
+  df_ %>%
+  plot_ly(
+    type="scatter",
+    mode="markers",
+    hoverinfo="text",
+    x=~FADM,
+    y=~TCSpADM,
+    text=~County
+  ) %>%
+  plotly::layout(
+    title="Table 2 - 2014-15 Total Current Spending Per ADM",
+    xaxis=list(
+      range=c(0,200000),
+      title="ADM",
+      zeroline=FALSE
+    ),
+    yaxis=list(
+      range=c(0,5000),
+      title="Total Current Spending per ADM ($)",
+      zeroline=FALSE
+    ),
+    legend=list(
+      orientation='h'
+    ),
+    shapes = list(
+      type = "line", 
+      fillcolor = "red",
+      line = list(color = "red"),
+      opacity = .5,
+      x0 = 0, x1 = 200000, xref = 'x', 
+      y0 = med_, y1 = med_, yref = 'y'
+      ),
+    annotations=med_line
+  )
+  return(plt_)
+}
+```  
+
+```{r fn_df_ncforum_2017_LSFS_rankings}
+inventory[nrow(inventory) + 1,] = list("fn_df_ncforum_2017_LSFS_rankings","df","ncforum tables","df_ncforum_2017_LSFS_...","4")
+fn_df_ncforum_2017_LSFS_rankings <- function(){
+  # page 5 Rankings at a Glance as original data
+  #
+  df_ <-  dplyr::inner_join( 
+    df_ncforum_2017_LSFS_ranks,
+    df_ncforum_2017_LSFS_T1 %>%
+      dplyr::select(
+        County,
+        APTBpADM
+      ),
+    by="County"
+  ) %>%
+  dplyr::inner_join(
+    df_ncforum_2017_LSFS_T2 %>%
+      dplyr::select(
+        County,
+        TCSpADM
+      ),
+    by="County"
+  ) %>%
+  dplyr::inner_join(
+    df_ncforum_2017_LSFS_T3 %>%
+      dplyr::select(
+        County,
+        TCStotpADM
+      ),
+    by="County"
+  ) %>%
+  dplyr::inner_join(
+    df_ncforum_2017_LSFS_T4 %>%
+      dplyr::select(
+        County,
+        RpADM
+      ),
+    by="County"
+  ) %>% 
+  dplyr::inner_join(
+    df_ncforum_2017_LSFS_T5 %>%
+      dplyr::select(
+        County,
+        Epct
+      ),
+    by="County"
+  ) %>%
+  dplyr::mutate(
+    PVRrev=101-PVR,
+    AERrev=101-AER,
+    AER2rev=101-AER2,
+    ATPRrev=101-ATPR,
+    RERrev=101-RER
+  )
+  return(df_)
+}
+str(fn_df_ncforum_2017_LSFS_rankings())
+df_ncforum_2017_LSFS_rankings <- fn_df_ncforum_2017_LSFS_rankings()
+```  
+
+Some corr plots as functions although they only do one specific thing  
+added 11/21/17  
+
+```{r fn_corr_1_ncforum_2017_LSFS_rankings}
+inventory[nrow(inventory) + 1,] = list("fn_corr_1_ncforum_2017_LSFS_rankings","corr","ncforum tables","db_ncforum_2017_LSFS_rankings","4")
+fn_corr_1_ncforum_2017_LSFS_rankings <- function(){
+  # one way to plot correlations
+  # THIS FORCES PLOT IMMEDIATELY SINCE IT USES BASIC PLOTTING FUNCTIONS
+  cormat <- cor(
+    df_ncforum_2017_LSFS_rankings %>%
+    dplyr::select(
+      APTBpADM,
+      TCSpADM,
+      TCStotpADM,
+      RpADM,   
+      Epct
+    )
+  )
+  #
+  corrplot(
+    cormat,
+    type="upper",
+    tl.col="black",
+    tl.srt=45
+  )
+}
+```  
+
+```{r fn_corr_2_ncforum_2017_LSFS_rankings}
+inventory[nrow(inventory) + 1,] = list("fn_corr_2_ncforum_2017_LSFS_rankings","corr","ncforum tables","df_ncforum_2017_LSFS_rankings","4")
+fn_corr_2_ncforum_2017_LSFS_rankings <- function(){
+  # one way to plot correlations
+  # THIS FORCES PLOT IMMEDIATELY SINCE IT USES BASIC PLOTTING FUNCTIONS
+  #
+  PerformanceAnalytics::chart.Correlation(
+    df_ncforum_2017_LSFS_rankings %>%
+    dplyr::select(
+      APTBpADM,
+      TCSpADM,
+      TCStotpADM,
+      RpADM,   
+      Epct
+    ),
+    histogram=TRUE
+  )
+}
+```  
+
+```{r fn_corr_3_ncforum_2017_LSFS_rankings}
+inventory[nrow(inventory) + 1,] = list("fn_corr_3_ncforum_2017_LSFS_rankings","corr","ncforum tables","df_ncforum_2017_LSFS_rankings","4")
+fn_corr_3_ncforum_2017_LSFS_rankings <- function(){
+  # one way to plot correlations
+  # THIS FORCES PLOT IMMEDIATELY SINCE IT USES BASIC PLOTTING FUNCTIONS
+  # excludes Dare and Jones
+  #
+  PerformanceAnalytics::chart.Correlation(
+    df_ncforum_2017_LSFS_rankings %>%
+    dplyr::filter(
+      County!="Dare" &
+      County!="Jones"
+    ) %>%
+    dplyr::select(
+      APTBpADM,
+      TCSpADM,
+      TCStotpADM,
+      RpADM,   
+      Epct
+    ),
+    histogram=TRUE
+  )
+}
+```  
+
+```{r  fn_corrByQ_df_ncforum_2017_LSFS_ranks}
+inventory[nrow(inventory) + 1,] = list("fn_corrByQ_df_ncforum_2017_LSFS_ranks","corr","ncforum tables","df_ncforum_2017_LSFS_rankings","4")
+fn_corrByQ_df_ncforum_2017_LSFS_ranks <- function(Q){
+  # one way to plot correlations
+  # THIS FORCES PLOT IMMEDIATELY SINCE IT USES BASIC PLOTTING FUNCTIONS
+  #
+  if (!(Q %in% 1:4)) {
+    stop("Q must be 1 to 4")
+  }
+  df_ <- 
+    df_ncforum_2017_LSFS_rankings %>%
+    dplyr::filter(
+      PVR > (Q-1)*25 &
+      PVR <= Q*25
+    ) %>%
+  dplyr::select(
+    APTBpADM,
+    TCSpADM,
+    TCStotpADM,
+    RpADM,   
+    Epct
+  )
+  #
+  PerformanceAnalytics::chart.Correlation(
+    df_,
+    histogram=TRUE
+  )
+}
+```  
+
+```{r save}
+print(ls())
+save.image("4.RData")
+```  
+  

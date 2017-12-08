@@ -1,7 +1,7 @@
 ---
 title: "publicSchoolsReporting Project - Read Files"
 author: "D. Hopp"
-date: "October 2017"
+date: "November 2017"
 output:
   html_document: default
 ---
@@ -776,6 +776,27 @@ dfLEA <- dplyr::distinct(
 				LEA=School.Code 
 			)
 #
+# added 11/23/17
+# clean up District so that it matches Census Bureau school district shapefiles
+#
+dfLEA %<>%
+  dplyr::mutate(
+    District=stringr::str_replace(District," Public","")
+  )
+dfLEA %<>%
+  dplyr::mutate(
+    District=stringr::str_replace(District,"Newton Conover","Newton-Conover")
+  )
+dfLEA %<>% 
+  dplyr::mutate(
+    District=ifelse(
+      stringr::str_detect(District,"Schools"),
+      District,
+      stringr::str_replace(District,"School","Schools")
+    )
+  )
+# ########################################################
+#
 # add column economic development tier as per http://www.ncleg.net/PED/Reports/documents/EDTiers/ED_Tiers_Report.pdf page 33
 # rating for "extra" LEAs are my interpolations
 #
@@ -1508,6 +1529,17 @@ fn_hist_dfDisagX_345_LEP_D <- function() {
   #
   return(ret)
 }
+```  
+
+added 11/26/17
+```{r FIPS}
+# grab FIPS
+# note that dfFIPS$FIPS is numeric
+inventory[nrow(inventory) + 1,] = list("dfFIPS","df","county FIPS values","FIPS.csv","1")
+dfFIPS <- read.csv(paste0(dataPath,"FIPS.csv"),sep=",",stringsAsFactors = FALSE)
+dfFIPS %<>% dplyr::mutate(
+  County=ifelse(County=="New Hanover","New_Hanover",County)
+)
 ```  
 
 ```{r print_ls}

@@ -2651,26 +2651,6 @@ fn_plt_hist_GLPf <- function(
 }
 ```  
 
-Public School Forum data
-
-```{r echo=FALSE}
-fn_knit_exit("fn_df_lsfr")
-fn_knit_exit("df_lsfr")
-```  
-
-```{r fn_df_lsfr}
-inventory[nrow(inventory) + 1,] = list("fn_df_lsfr","df","df_lsfr","read ncforum file","2")
-fn_df_lsfr <- function() {
-  df_lsfr <- readr::read_csv(
-    paste0(dataPath,"ncforum_local_school_finance_ranks.csv"), 
-    skip = 3
-    )
-  return(df_lsfr)
-}
-str(fn_df_lsfr())
-df_lsfr <- fn_df_lsfr()
-```  
-
 ```{r save_image}
 print(ls())
 save.image(

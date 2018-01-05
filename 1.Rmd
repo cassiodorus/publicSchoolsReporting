@@ -229,7 +229,7 @@ fn_multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 	}
 }
 # #################################################################
-fc_ApplyLEA <- function(df) {
+fn_ApplyLEA <- function(df) {
     # usage:
     # df: any data frame that has a school_code column and does NOT have an LEA column
     # value: add an LEA column to df
@@ -673,7 +673,7 @@ dfTitleI_c_T_Yr <-
 		dfTitleI_c_T_YrC,
 		dfTitleI_c_T_YrD
 	) %>%
-	fc_ApplyLEA()
+	fn_ApplyLEA()
 rm(dfTitleI_c_T_YrA,dfTitleI_c_T_YrB,dfTitleI_c_T_YrC,dfTitleI_c_T_YrD)
 #
 dfTitleI_c_T_Yr %>% reshape2::dcast(acYear+TitleISchool~.)
@@ -687,7 +687,7 @@ dfCharterTitleIyr <-
 		dfAcctsumm_c_T_YrC,
 		dfAcctsumm_c_T_YrD
 		) %>%
-	fc_ApplyLEA()
+	fn_ApplyLEA()
 rm(dfAcctsumm_c_T_YrA,dfAcctsumm_c_T_YrB,dfAcctsumm_c_T_YrC,dfAcctsumm_c_T_YrD)
 #
 dfCharterTitleIyr %>% reshape2::dcast(acYear+TitleISchool~.)
@@ -1540,6 +1540,20 @@ dfFIPS <- read.csv(paste0(dataPath,"FIPS.csv"),sep=",",stringsAsFactors = FALSE)
 dfFIPS %<>% dplyr::mutate(
   County=ifelse(County=="New Hanover","New_Hanover",County)
 )
+```  
+
+added 12/21/17
+```{r fn_capwords}
+inventory[nrow(inventory) + 1,] = list("fn_capwords","fn","caps on 1st char","","1")
+fn_capwords <- function(s, strict = FALSE) {
+  cap <- function(s) 
+    paste(
+      toupper(substring(s, 1, 1)),
+      {s <- substring(s, 2); if(strict) tolower(s) else s},
+      sep = "", collapse = " " 
+    )
+  sapply(strsplit(s, split = " "), cap, USE.NAMES = !is.null(names(s)))
+}
 ```  
 
 ```{r print_ls}

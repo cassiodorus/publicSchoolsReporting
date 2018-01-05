@@ -1,5 +1,5 @@
 ---
-title: "publicSchoolsReporting Project - NCforum Read LSFR Files"
+title: "publicSchoolsReporting Project - NCforum Read Files"
 author: "D. Hopp"
 date: "November 2017"
 output:
@@ -133,6 +133,75 @@ ncforum_2017_LSFS_longnames <-
   ) 
 ```  
 
+## NCForum Roadmap 2017  
+
+added 12/19/17  
+
+```{r df_ncforum_roadmap}
+inventory[nrow(inventory) + 1,] = list("df_ncforum_2016_roadmap","db","read ncforum_2016_roadmapOverall.csv","df_ncforum_2016_roadmap","4")
+inventory[nrow(inventory) + 1,] = list("ncforum_roadmap_longnames","list","ncforum_2017_roadmap_longnames","item names of ncforum files","4")
+inventory[nrow(inventory) + 1,] = list("df_ncforum_2017_roadmap","db","read ncforum_2017_roadmapOverall.csv","df_ncforum_2017_roadmap","4")
+#
+inventory[nrow(inventory) + 1,] = list("df_ncforum_2016_roadmap_ranks","db","read ncforum_2016_roadmapOverall.ranks.csv","df_ncforum_2016_roadmap","4")
+inventory[nrow(inventory) + 1,] = list("ncforum_roadmap_longnames","list","ncforum_2017_roadmap_longnames","item names of ncforum files","4")
+inventory[nrow(inventory) + 1,] = list("df_ncforum_2017_roadmap_ranks","db","read ncforum_2017_roadmapOverall.ranks.csv","df_ncforum_2017_roadmap","4")
+#
+df_ncforum_2017_roadmap <- readr::read_csv(
+  paste0(dataPath,"ncforum_2017_roadmapOverall.csv")
+   ) %>%
+  dplyr::inner_join(
+    dfFIPS %>% dplyr::mutate(countyname=toupper(County)),
+    by="countyname"
+  ) %>%
+  dplyr::select(
+    -countyname
+  )
+#
+df_ncforum_2016_roadmap <- readr::read_csv(
+  paste0(dataPath,"ncforum_2016_roadmapOverall.csv")
+   ) %>%
+  dplyr::inner_join(
+    dfFIPS %>% dplyr::mutate(countyname=toupper(County)),
+    by="countyname"
+  ) %>%
+  dplyr::select(
+    -countyname
+  )
+#
+# ranks
+#
+df_ncforum_2017_roadmap_ranks <- readr::read_csv(
+  paste0(dataPath,"ncforum_2017_roadmapOverall.ranks.csv")
+   ) %>%
+  dplyr::inner_join(
+    dfFIPS %>% dplyr::mutate(countyname=toupper(County)),
+    by="countyname"
+  ) %>%
+  dplyr::select(
+    -countyname
+  )
+#
+df_ncforum_2016_roadmap_ranks <- readr::read_csv(
+  paste0(dataPath,"ncforum_2016_roadmapOverall.ranks.csv")
+   ) %>%
+  dplyr::inner_join(
+    dfFIPS %>% dplyr::mutate(countyname=toupper(County)),
+    by="countyname"
+  ) %>%
+  dplyr::select(
+    -countyname
+  )
+#
+ncforum_roadmap_longnames <- c(
+  "TEEN PREGNANCY RATE PER 1,000","NUMBER OF PHYSICIANS PER 10,000","CHILD FATALITY RATE PER 10,000","CHILD FOOD INSECURITY PERCENTAGE","CHILD OBESITY PERCENTAGE","JUVENILE DELINQUENCY RATE PER 1,000","SHORT-TERM SUSPENSION RATE PER 1,000","JUVENILE DETENTION ADMISSION RATE PER 1,000","CHILDREN IN DSS CUSTODY RATE PER 1,000","CHILD ABUSE & NEGLECT RATE PER 1,000","GRADUATION RATE","3RD GRADE READING PROFICIENCY","MATH I PROFICIENCY","ACT COMPOSITE SCORE","PERCENTAGE OF AMO TARGETS MET","MEDIAN HOUSEHOLD INCOME","PERCENTAGE OF CHILDREN LIVING IN POVERTY","UNEMPLOYMENT RATE","ADULTS WITH AT LEAST A BACHELOR DEGREE","CHILDREN LIVING IN SINGLEPARENT HOUSEHOLDS","COUNTY","FIPS"
+)
+#
+ncforum_roadmap_ranks_longnames <- c(
+"Overall","Teen Pregnancy Rate per 1,000","Number of Physicians per 10,000","Child Fatality Rate per 10,000","Child Food Insecurity Percentage","Child Obesity Percentage","Juvenile Detention Admission Rate per 1,000","Short-Term Suspension Rate per 1,000","Juvenile Delinquency Rate per 1,000","Children in DSS Custody Rate per 1,000","Child Abuse & Neglect Rate per 1,000","Graduation Rate","3rd Grade Reading Proficiency","Math I Proficiency","ACT Composite Score","Percentage of AMO Targets Met","Median Household Income","Percentage of Children Living in Poverty","Unemployment Rate","Adults with at least a Bachelor Degree","Children Living in Single-Parent Households","County","FIPS"
+)
+```  
+
+## Plots  
 This plot is intended for use in an rmarkdown document and vertical size must be appropriately set therein.  
 
 ```{r fn_plt_ncforum_2017_LSFS_spending_1}
@@ -261,15 +330,15 @@ fn_plt_ncforum_2017_LSFS_spending_2  <- function(){
     County=factor(County,levels=.$County)
   ) 
   #
-  whichCounty <- c("Yancey","Caldwell","Stanly","Lenoir")
+  whichCounty <- c("Yancey","Cleveland","Rockingham","Lenoir")
   whichCountyIndex <- lapply(whichCounty, function(x) which(df_$County==x))
   #
   plt_ <- df_ %>%
   ggplot(aes(County,TCSpADM)) + 
   geom_bar(stat = "identity",colour="white",fill="dodgerblue4") +
-  geom_hline(yintercept=w.av,color="dodgerblue4") +
-  geom_hline(yintercept=av,color="dodgerblue4") +
-  geom_hline(yintercept=med, linetype="dashed",color="dodgerblue4") +
+  geom_hline(yintercept=w.av,color="dodgerblue4",size=4, alpha=.6) +
+  geom_hline(yintercept=av,color="dodgerblue4",size=4, alpha=.6) +
+  geom_hline(yintercept=med, linetype="dashed",color="dodgerblue4",size=4, alpha=.6) +
   scale_y_continuous(
     labels=dollar,
     breaks=seq(0,5000,500),
@@ -316,19 +385,19 @@ fn_plt_ncforum_2017_LSFS_spending_2  <- function(){
   ) +
   geom_segment(
     y=2400, x=whichCountyIndex[[1]],
-    yend=w.av+1,xend=whichCountyIndex[[1]],
+    yend=w.av+25,xend=whichCountyIndex[[1]],
     arrow=arrow(length=unit(0.05,"inches")),
     color="dodgerblue4"
   ) +
   geom_segment(
     y=2400, x=whichCountyIndex[[2]],
-    yend=av+1,xend=whichCountyIndex[[2]],
+    yend=av+25,xend=whichCountyIndex[[2]],
     arrow=arrow(length=unit(0.05,"inches")),
     color="dodgerblue4"
   ) +
   geom_segment(
     y=2400, x=whichCountyIndex[[3]],
-    yend=med+1,xend=whichCountyIndex[[3]],
+    yend=med+25,xend=whichCountyIndex[[3]],
     arrow=arrow(length=unit(0.05,"inches")),
     color="dodgerblue4"
   ) +

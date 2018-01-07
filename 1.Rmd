@@ -65,10 +65,11 @@ inventory <- data.frame(
 # this is where the NCDPI files reside:
 dataPath <- "data/"
 # SEDA data
-SEDApath <- "../SEDAdata/"
+# not in use here 1/7/18
+#SEDApath <- "../SEDAdata/"
 #
 # this is where the zipped disag files reside:
-zipPath <- "../NCPSdisagZips/"
+zipPath <- "disagZips/"
 #
 # ##########################################
 # these are write-only folders:

@@ -2016,6 +2016,215 @@ fn_scatterplots_plotly_comp <- function(
 }
 ```  
 
+```{r echo=FALSE}
+fn_knit_exit("fn_scatterplots_hist_comp")
+```  
+
+```{r fn_scatterplots_hist_comp}  
+inventory[nrow(inventory) + 1,] = list("fn_scatterplots_hist_comp","plts","","dfDisagX20_345_comp","2")
+fn_scatterplots_hist_comp <- function(
+  argEDTier="ALL",
+  argLEAs="ALL",
+  argCharterOnly=FALSE,
+  argX2080excluded=FALSE  ) {
+#
+# complementary to fn_scatterplots_plotly_comp
+# produces histograms for the scatterplot axes
+#
+# argEDTier is ALL or in 1:3 and links to dfLEA
+# at most one of 1:3
+#
+# argLEAs is ALL or a vector of LEAs
+# any number of LEAs
+# will produce one set of plots per LEA
+#
+  # check for a list of LEAs:
+  if ( length(argLEAs) > 1 | !("ALL" %in% argLEAs) ) {
+    if ( !all(argLEAs %in% dfLEA$LEA) ) {
+      stop("ERROR: all of the LEAs must be in dfLEA$LEA.")
+    }
+  }
+  # select the EDTier:
+  if ( length(argEDTier) != 1) {
+    stop("ERROR: EDTier must be ALL, 1, 2, or 3.")
+  }
+  #
+  if ( argEDTier == "ALL") {
+    df_ <- dfDisagX20_345_comp
+  } else {
+    df_ <- dfDisagX20_345_comp %>% 
+        dplyr::filter( 
+          EDTier==argEDTier
+        )
+  }
+  if (argCharterOnly) {
+    df_ %<>%
+      dplyr::filter(
+        charter_school==TRUE
+      )
+  }
+  #
+  if (argX2080excluded) {
+    df_ %<>%
+      dplyr::filter(
+        X2080==FALSE
+      )
+  }
+  # subset on subgroup ALL 
+  df_ %<>%
+    dplyr::filter(
+      subgroup == "ALL"
+    )
+  #
+  # trim df_
+  df_ %<>% dplyr::select(
+    LEA,
+    school_code,
+    grade,
+    subject,
+    num_tested.A,
+    pct_glp.A,
+    diff_AB,
+    diff_BC,
+    diff_CD,
+    EDTier,
+    X2080,
+    TitleISchool,
+    charter_school
+  )
+  #
+  ret <- list()
+  iret_ <- 0
+  #
+  # for 2013-14>2014-15>2015-16 and 2014-15>2015-16>2016-17
+  title_year <- c("2013 to 2015","2014 to 2016")
+  xaxis_text <- c("2014-15 minus 2013-14","2015-16 minus 2014-15")
+  yaxis_text <- c("2015-16 minus 2014-15","2016-17 minus 2015-16")
+  names_ <- names(df_)
+  #
+  for (Years_ in 1:2) {
+    names(df_) <- names_
+	  if (Years_==1) {
+      df_ %<>%
+        dplyr::rename(
+		  diff_12=diff_AB,
+		  diff_23=diff_BC
+	    )
+    } else {
+      df_ %<>% 
+        dplyr::rename(
+           diff_12=diff_BC,
+           diff_23=diff_CD
+        )
+    } 
+    #
+    for ( LEA_ in argLEAs ) {
+      if ( LEA_ != "ALL" ) {
+        df2_ <- df_ %>% 
+          dplyr::filter(
+            LEA == LEA_
+          )
+      } else {
+        df2_ <- df_
+      }
+      #
+      for (S_ in c("MA","RD")) {
+        for (G_ in c("03","04","05")) {
+          nschools_ <- length(
+            df2_[
+              df2_$subject==S_ & 
+              df2_$grade==G_,
+              "school_code"
+            ]
+          )
+          nschools_T1 <- length(
+            df2_[
+              df2_$subject==S_ & 
+              df2_$grade==G_ & 
+              df2_$TitleISchool==TRUE, 
+              "school_code"
+            ]
+          )
+          #
+          iret_ <- iret_+1
+          df3_ <- df2_ %>%
+            dplyr::filter(
+              subject == S_ &
+              grade == G_
+            ) %>%
+            dplyr::select(
+              school_code,
+              diff_12,
+              diff_23
+            ) %>%
+            reshape2::melt(
+              id.vars="school_code"
+            )
+          #
+          mean_12 <- round(mean(df3_[df3_$variable=="diff_12","value"]),digits=1)
+          mean_23 <- round(mean(df3_[df3_$variable=="diff_23","value"]),digits=1)
+          sd_12 <- round(sd(df3_[df3_$variable=="diff_12","value"]),digits=1)
+          sd_23 <- round(sd(df3_[df3_$variable=="diff_23","value"]),digits=1)
+          #
+          # two histograms overlapping
+          ret[[iret_]] <- 
+            ggplot(
+              data=df3_,
+              aes(x=value,fill=variable)
+            ) +
+            geom_histogram(
+              alpha=0.2, position="identity"
+            ) +
+            xlim(-50,50) +
+            theme(   
+              plot.title=element_text(size=10, hjust=0.5),
+              plot.subtitle=element_text(size=8, hjust=0.5),
+              legend.title=element_text(size=8),
+              legend.text=element_text(size=8),
+              legend.position=c(.8,.9),
+              axis.title.x=element_text(size=9),
+              axis.title.y=element_text(size=9)
+            ) +
+            labs(
+              title=paste(
+                title_year[Years_],
+                S_,
+                "GLP% Differences for Grade",
+                G_,
+                "for LEA",
+                LEA_,
+                ifelse(
+                  argEDTier=="ALL","",paste("and EDTier",argEDTier)
+                ),
+                "\n",
+                ifelse(
+                  argCharterOnly==TRUE,"Charters Only",""
+                ),
+                nschools_,
+                "Schools",
+                ifelse(
+                  argX2080excluded==TRUE," Excludes Those with GLP% <20 or >80",""
+                )
+              ),
+              subtitle=paste0(
+                "Mean/sd ",xaxis_text[Years_],": ",mean_12,"/",sd_12,
+                "   ",
+                "Mean/sd ",yaxis_text[Years_],": ",mean_23,"/",sd_23
+              ),
+              x="Differences",
+              fill="Years"
+            ) + 
+            scale_fill_discrete(
+              labels=c(xaxis_text[Years_],yaxis_text[Years_])
+            )
+        }
+      }
+    }
+  }
+  return(ret)
+}
+```  
+
 track cohort: grade 3 -> 4 -> 5 across years  
 ```{r echo=FALSE}
 fn_knit_exit("fn_scatterplots_plotly_track")
